@@ -24,6 +24,7 @@ export const useRecordsStore = defineStore('records', () => {
       type: data.type,
       isFull: data.isFull,
       endSoc: data.isFull ? 100 : (data.endSoc ?? 80),
+      cost: data.cost != null && data.cost !== '' ? Number(data.cost) : null,
       location: data.location ?? '',
       note: data.note ?? '',
       createdAt: Date.now(),
@@ -34,6 +35,11 @@ export const useRecordsStore = defineStore('records', () => {
 
   function deleteRecord(id) {
     records.value = records.value.filter(r => r.id !== id)
+    saveRecords(records.value)
+  }
+
+  function clearAll() {
+    records.value = []
     saveRecords(records.value)
   }
 
@@ -69,6 +75,32 @@ export const useRecordsStore = defineStore('records', () => {
     getRecentLocations(records.value)
   )
 
+  // Returns [{ label: 'YYYY-MM', total: number }, ...] sorted newest first, only records with cost
+  const monthlyCosts = computed(() => {
+    const map = {}
+    for (const r of records.value) {
+      if (r.cost == null) continue
+      const month = r.date.slice(0, 7)
+      map[month] = (map[month] ?? 0) + r.cost
+    }
+    return Object.entries(map)
+      .map(([label, total]) => ({ label, total: Math.round(total * 100) / 100 }))
+      .sort((a, b) => b.label.localeCompare(a.label))
+  })
+
+  // Returns [{ label: 'YYYY', total: number }, ...] sorted newest first, only records with cost
+  const yearlyCosts = computed(() => {
+    const map = {}
+    for (const r of records.value) {
+      if (r.cost == null) continue
+      const year = r.date.slice(0, 4)
+      map[year] = (map[year] ?? 0) + r.cost
+    }
+    return Object.entries(map)
+      .map(([label, total]) => ({ label, total: Math.round(total * 100) / 100 }))
+      .sort((a, b) => b.label.localeCompare(a.label))
+  })
+
   load()
 
   return {
@@ -79,7 +111,10 @@ export const useRecordsStore = defineStore('records', () => {
     daysUntilNextFullCharge,
     progressPercent,
     recentLocations,
+    monthlyCosts,
+    yearlyCosts,
     addRecord,
     deleteRecord,
+    clearAll,
   }
 })
