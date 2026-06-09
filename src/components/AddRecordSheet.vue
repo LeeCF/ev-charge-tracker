@@ -4,6 +4,7 @@
       <div v-if="visible" class="sheet-overlay" @click.self="close">
         <Transition name="sheet-slide">
           <div v-if="visible" class="sheet">
+            <div class="sheet-scroll" ref="scrollEl" @scroll="onScroll">
             <div class="sheet-handle" />
             <h2 class="sheet-title">添加充电记录</h2>
 
@@ -124,6 +125,8 @@
               </svg>
               保存记录
             </button>
+            </div><!-- end sheet-scroll -->
+            <div class="sheet-fade-hint" :class="{ 'sheet-fade-hint--hidden': scrolledToBottom }" />
           </div>
         </Transition>
       </div>
@@ -140,6 +143,15 @@ const emit = defineEmits(['update:visible'])
 
 const recordsStore = useRecordsStore()
 const recentLocations = computed(() => recordsStore.recentLocations)
+
+const scrollEl = ref(null)
+const scrolledToBottom = ref(false)
+
+function onScroll() {
+  const el = scrollEl.value
+  if (!el) return
+  scrolledToBottom.value = el.scrollHeight - el.scrollTop - el.clientHeight < 24
+}
 
 const chargeTypes = [
   { value: 'slow', label: '慢充' },
@@ -198,10 +210,33 @@ function submit() {
 .sheet {
   background: var(--color-surface);
   border-radius: 24px 24px 0 0;
-  padding: 12px 20px 48px;
   width: 100%;
   max-height: 92vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.sheet-scroll {
+  padding: 12px 20px 48px;
+  max-height: 92vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sheet-fade-hint {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--color-surface));
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.sheet-fade-hint--hidden {
+  opacity: 0;
 }
 
 .sheet-handle {
