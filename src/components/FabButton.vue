@@ -16,9 +16,9 @@ defineEmits(['click'])
   position: fixed;
   bottom: 88px;
   right: 20px;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   background: var(--gradient-accent);
   color: white;
   box-shadow: var(--shadow-fab);
@@ -31,8 +31,8 @@ defineEmits(['click'])
 
 .fab:active {
   transform: scale(0.9);
-  box-shadow: 0 2px 10px rgba(22, 163, 74, 0.25);
+  box-shadow: 0 2px 10px rgba(0, 82, 212, 0.3);
 }
 
-.fab-icon { width: 24px; height: 24px; }
+.fab-icon { width: 22px; height: 22px; }
 </style>

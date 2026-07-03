@@ -5,51 +5,54 @@
 }
 
 :root {
-  /* === Accent — use SPARINGLY, signal only === */
-  --color-accent: #16a34a;
-  --color-accent-dim: #f0fdf4;       /* only for full-charge tag bg */
-  --color-accent-text: #166534;
-  --color-accent-glow: rgba(22, 163, 74, 0.18);
+  /* === Accent — cobalt blue, precision instrument === */
+  --color-accent: #0052D4;
+  --color-accent-light: #EFF4FF;
+  --color-accent-text: #003399;
+  --color-accent-mid: rgba(0, 82, 212, 0.12);
 
-  /* === Neutral surface palette === */
-  --color-bg: #f3f4f6;               /* cool near-white */
-  --color-surface: #ffffff;
-  --color-surface-2: #f9fafb;        /* slightly lifted surface */
-  --color-border: #e4e7eb;
-  --color-border-strong: #d1d5db;
+  /* === Surface palette — cold daylight === */
+  --color-bg: #E8EEF8;
+  --color-surface: #F4F7FC;
+  --color-surface-2: #EAEEF6;
+  --color-border: #D0D9EC;
+  --color-border-strong: #A8B8D8;
 
   /* === Text hierarchy === */
-  --color-text: #111827;
-  --color-text-secondary: #6b7280;
-  --color-text-muted: #9ca3af;
+  --color-text: #0D1A2E;
+  --color-text-secondary: #4A5978;
+  --color-text-muted: #8896AF;
 
   /* === Status === */
-  --color-danger: #dc2626;
-  --color-danger-bg: #fef2f2;
-  --color-danger-text: #991b1b;
+  --color-danger: #C0392B;
+  --color-danger-bg: #FEF0EE;
+  --color-danger-text: #922B21;
 
-  /* === Radius === */
-  --radius-card: 16px;
-  --radius-card-lg: 20px;
-  --radius-btn: 24px;
-  --radius-chip: 8px;
+  /* === Radius — precise, not bubbly === */
+  --radius-card: 10px;
+  --radius-card-lg: 14px;
+  --radius-btn: 10px;
+  --radius-chip: 6px;
 
-  /* === Shadow (neutral, no color tint) === */
-  --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.05);
-  --shadow-card-hover: 0 2px 8px rgba(0,0,0,0.07), 0 8px 24px rgba(0,0,0,0.07);
-  --shadow-fab: 0 4px 20px rgba(22, 163, 74, 0.38);
-  --shadow-tab: 0 -1px 0 rgba(0,0,0,0.06), 0 -4px 16px rgba(0,0,0,0.04);
+  /* === Shadow — cool-tinted === */
+  --shadow-card: 0 1px 3px rgba(0, 30, 80, 0.07), 0 4px 16px rgba(0, 30, 80, 0.07);
+  --shadow-card-hover: 0 2px 8px rgba(0, 30, 80, 0.1), 0 8px 28px rgba(0, 30, 80, 0.1);
+  --shadow-fab: 0 4px 20px rgba(0, 82, 212, 0.42);
+  --shadow-tab: 0 -1px 0 rgba(0, 30, 80, 0.08), 0 -4px 20px rgba(0, 30, 80, 0.06);
 
   /* === Gradients === */
-  /* Hero card: dark charcoal with green breath at bottom — green pops against dark */
-  --gradient-hero: linear-gradient(150deg, #0f172a 0%, #1e293b 55%, #14422a 100%);
-  --gradient-accent: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
-  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  --gradient-hero: linear-gradient(145deg, #0D1A2E 0%, #112244 50%, #0A2060 100%);
+  --gradient-accent: linear-gradient(135deg, #0041AA 0%, #0066FF 100%);
+  --gradient-danger: linear-gradient(135deg, #C0392B 0%, #E74C3C 100%);
+
+  /* === Typography === */
+  --font-display: 'Syne', 'PingFang SC', sans-serif;
+  --font-body: 'DM Sans', 'PingFang SC', 'Helvetica Neue', sans-serif;
 }
 
 html, body, #app {
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-body);
   background: var(--color-bg);
   color: var(--color-text);
   font-size: 16px;
@@ -67,7 +70,7 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
-input {
+input, textarea {
   font-family: inherit;
   font-size: inherit;
 }

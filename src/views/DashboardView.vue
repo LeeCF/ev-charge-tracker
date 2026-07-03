@@ -54,29 +54,32 @@ const vehicleName = computed(() => settings.vehicleName)
 }
 
 .header-eyebrow {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
-  color: var(--color-text-secondary);
-  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: var(--font-body);
 }
 
 .page-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--color-text);
   letter-spacing: -0.5px;
+  font-family: var(--font-display);
 }
 
 .header-badge {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-secondary);
+  color: var(--color-accent);
 }
 
 .header-badge svg {

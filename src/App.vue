@@ -71,9 +71,9 @@
   width: 100%;
   max-width: 480px;
   display: flex;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(244, 247, 252, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-top: 1px solid var(--color-border);
   box-shadow: var(--shadow-tab);
   height: 72px;
@@ -98,20 +98,20 @@
   padding-top: 4px;
 }
 
-/* Active: darker text + heavier icon stroke. No green fill. */
+/* Active: cobalt blue */
 .tab-item--active {
-  color: var(--color-text);
+  color: var(--color-accent);
 }
 
-/* Indicator pill above icon */
+/* Indicator line above icon */
 .tab-item--active::before {
   content: '';
   position: absolute;
   top: 0;
-  width: 20px;
+  width: 24px;
   height: 2px;
   border-radius: 0 0 2px 2px;
-  background: var(--color-text);
+  background: var(--color-accent);
 }
 
 .tab-icon-wrap {
@@ -131,6 +131,7 @@
 .tab-item--active .tab-icon {
   transform: scale(1.08);
   stroke-width: 2.5;
+  stroke: var(--color-accent);
 }
 
 .tab-label { letter-spacing: 0.2px; }

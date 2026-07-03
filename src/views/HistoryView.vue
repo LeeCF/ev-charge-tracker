@@ -95,10 +95,11 @@ const currentYearCount = computed(() => {
 .page-header { padding: 20px 20px 12px; flex-shrink: 0; }
 
 .page-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--color-text);
   letter-spacing: -0.5px;
+  font-family: var(--font-display);
 }
 
 /* ── Segmented control ───────────────────────────────────── */
@@ -130,7 +131,7 @@ const currentYearCount = computed(() => {
 
 .seg-btn.active {
   background: var(--color-surface);
-  color: var(--color-text);
+  color: var(--color-accent);
   font-weight: 600;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
@@ -169,12 +170,13 @@ const currentYearCount = computed(() => {
 }
 
 .yearly-total {
-  font-size: 32px;
+  font-size: 34px;
   font-weight: 800;
-  color: #4ade80;
+  color: #6AADFF;
   letter-spacing: -1px;
   line-height: 1.1;
   margin-bottom: 4px;
+  font-family: var(--font-display);
 }
 
 .yearly-sub {

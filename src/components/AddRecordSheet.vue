@@ -348,11 +348,11 @@ function submit() {
   transition: all 0.15s;
 }
 
-/* Selected type: strong border + dark text, no green */
+/* Selected type: blue border + tint */
 .btn-option--active {
-  border-color: var(--color-text);
-  color: var(--color-text);
-  background: var(--color-surface-2);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+  background: var(--color-accent-light);
   font-weight: 600;
 }
 
@@ -401,11 +401,11 @@ function submit() {
   transition: all 0.15s;
 }
 
-/* Location chip active: neutral dark, no green */
+/* Location chip active: blue */
 .chip--active {
-  border-color: var(--color-border-strong);
-  color: var(--color-text);
-  background: var(--color-surface-2);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+  background: var(--color-accent-light);
   font-weight: 600;
 }
 

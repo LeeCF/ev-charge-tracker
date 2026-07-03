@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /c/Users/I528850/.claude/skills)",
+      "Bash(cp \"c:/Users/I528850/CC Projects/Project 1_EV Charge Tracker/.claude/skills/\"*.md /c/Users/I528850/.claude/skills/)",
+      "Bash(rm \"c:/Users/I528850/CC Projects/Project 1_EV Charge Tracker/.claude/skills/\"*.md && echo \"done\")",
+      "Bash(claude marketplace *)",
+      "Read(//c/tmp/**)",
+      "Bash(pnpm approve-builds *)",
+      "Bash(pnpm vite *)",
+      "Bash(node -e ' *)",
+      "Bash(cd \"/c/Users/I528850/CC Projects/Project 1_EV Charge Tracker/s4-ariba-diagram\" && cat dist/index.html)",
+      "Read(//c/c/Users/I528850/CC Projects/Project 1_EV Charge Tracker/s4-ariba-diagram/dist/**)",
+      "Bash(tasklist)",
+      "Bash(node run.js /tmp/playwright-test-s4ariba.js)",
+      "Bash(NODE_PATH=/c/Users/I528850/.claude/plugins/marketplaces/playwright-skill/skills/playwright-skill/node_modules node /tmp/open-diagram.js)",
+      "Bash(NODE_PATH=/c/Users/I528850/.claude/plugins/marketplaces/playwright-skill/skills/playwright-skill/node_modules node open-diagram.js)",
+      "Bash(cp open-diagram.js open-diagram.cjs)",
+      "Bash(NODE_PATH=/c/Users/I528850/.claude/plugins/marketplaces/playwright-skill/skills/playwright-skill/node_modules node open-diagram.cjs)",
+      "Bash(cp \"/c/Users/I528850/CC Projects/Project 1_EV Charge Tracker/s4-ariba-diagram/bundle.html\" \"/c/Users/I528850/Desktop/s4-ariba-diagram.html\" && echo \"已复制到桌面\")",
+      "Bash(ls \"/c/Users/I528850/\" | head -20)",
+      "Read(//c/Users/I528850//**)",
+      "Bash(cp \"/c/Users/I528850/CC Projects/Project 1_EV Charge Tracker/s4-ariba-diagram/bundle.html\" \"/c/Users/I528850/OneDrive - SAP SE/Desktop/s4-ariba-diagram.html\" && echo \"已复制到桌面\")",
+      "Bash(taskkill //F //IM \"chrome.exe\")",
+      "Bash(taskkill //F //IM \"chromium.exe\")",
+      "Bash(pkill -f \"open-diagram\")",
+      "Bash(mkdir -p \"/c/Users/I528850/CC Projects/General Workspace\" && echo \"目录已创建\")",
+      "Bash(code \"/c/Users/I528850/CC Projects/General Workspace\")",
+      "Bash(mkdir -p \"/c/Users/I528850/CC Projects/General Workspace/.claude/memory\" && echo \"记忆目录已创建\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\I528850\\CC Projects\\Project 1_EV Charge Tracker\\.claude\\skills",
+      "C:\\Users\\I528850\\.claude",
+      "\\tmp",
+      "c:\\tmp",
+      "C:\\Users\\I528850\\Desktop",
+      "C:\\Users\\I528850\\OneDrive - SAP SE\\Desktop",
+      "C:\\Users\\I528850\\CC Projects",
+      "C:\\Users\\I528850\\CC Projects\\General Workspace\\.claude"
+    ]
+  }
+}

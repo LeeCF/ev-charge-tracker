@@ -92,11 +92,12 @@ const daysAgo = computed(() => {
   gap: 2px;
 }
 .days-num {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--color-text);
   letter-spacing: -0.5px;
   font-variant-numeric: tabular-nums;
+  font-family: var(--font-display);
 }
 .days-unit {
   font-size: 12px;
@@ -135,7 +136,7 @@ const daysAgo = computed(() => {
   border: 1px solid var(--color-border);
 }
 .tag--full {
-  background: var(--color-accent-dim);
+  background: var(--color-accent-light);
   color: var(--color-accent-text);
 }
 .tag--partial {

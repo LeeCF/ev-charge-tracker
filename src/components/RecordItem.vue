@@ -272,9 +272,11 @@ function triggerDelete() {
 .record-date {
   display: block;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text);
   margin-bottom: 7px;
+  font-family: var(--font-display);
+  letter-spacing: -0.2px;
 }
 
 .tags { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -291,7 +293,7 @@ function triggerDelete() {
   border: 1px solid var(--color-border);
 }
 .tag--full {
-  background: var(--color-accent-dim);
+  background: var(--color-accent-light);
   color: var(--color-accent-text);
 }
 .tag--partial {

@@ -94,10 +94,11 @@ function confirmClear() {
 .page-header { padding: 20px 20px 12px; }
 
 .page-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--color-text);
   letter-spacing: -0.5px;
+  font-family: var(--font-display);
 }
 
 .content { padding: 4px 16px calc(80px + env(safe-area-inset-bottom, 0px)); }
@@ -133,10 +134,10 @@ function confirmClear() {
   transition: border-color 0.15s, background 0.15s;
 }
 
-/* Selected: strong border + slight tint, no green */
+/* Selected: blue border + blue accent */
 .option-btn--active {
-  border-color: var(--color-text);
-  background: var(--color-surface-2);
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
 }
 
 .option-name {
@@ -151,7 +152,8 @@ function confirmClear() {
   font-variant-numeric: tabular-nums;
 }
 
-.option-btn--active .option-days { color: var(--color-text); font-weight: 600; }
+.option-btn--active .option-days { color: var(--color-accent); font-weight: 600; }
+.option-btn--active .option-name { color: var(--color-accent-text); font-weight: 600; }
 
 .interval-row { display: flex; align-items: center; gap: 8px; }
 
