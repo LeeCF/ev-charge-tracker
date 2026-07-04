@@ -150,8 +150,6 @@ const batteryOptions = [
       <rect x="4.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.2"/>
       <rect x="14.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.2"/>
       <rect x="24.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.2"/>
-      <!-- 闪光 — 高能量标识，叠在第3格上 -->
-      <path d="M28.5 9L26.5 14h2.5l-2 5.5" stroke="#FFE080" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
     </svg>`,
   },
   {
