@@ -243,7 +243,8 @@ function confirmClear() {
 }
 
 .slider-unit {
-  font-size: 13px;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--color-text-secondary);
 }
 

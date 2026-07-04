@@ -213,10 +213,10 @@ function onScroll() {
 }
 
 .summary-unit {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--color-text-secondary);
   font-weight: 400;
-  margin-left: 2px;
+  margin-left: 1px;
   font-family: var(--font-body);
 }
 

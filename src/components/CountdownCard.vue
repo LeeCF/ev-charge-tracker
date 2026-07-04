@@ -131,12 +131,12 @@ const dashOffset = computed(() =>
 }
 
 .hero-unit {
-  font-size: 22px;
-  color: rgba(255,255,255,0.55);
-  font-weight: 500;
-  margin-bottom: 4px;
-  font-family: var(--font-body);
-  letter-spacing: 0;
+  font-size: 20px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-family: var(--font-display);
+  letter-spacing: -1px;
 }
 
 .hero-meta {
