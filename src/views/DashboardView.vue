@@ -1,25 +1,68 @@
 <template>
   <div class="view">
+    <!-- Header -->
     <header class="page-header">
-      <div class="header-title-group">
-        <span class="header-eyebrow">充电助手</span>
-        <span class="page-title">{{ vehicleName || '我的爱车' }}</span>
-      </div>
-      <div class="header-badge">
-        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-          <rect x="2" y="6" width="14" height="9" rx="2"/>
-          <path d="M16 9.5h1.5a.5.5 0 0 1 0 3H16"/>
-          <rect x="4" y="8" width="9" height="5" rx="1" fill="currentColor" stroke="none"/>
-        </svg>
+      <div>
+        <div class="header-eyebrow">{{ vehicleName || '我的爱车' }}</div>
+        <div class="page-title">充电</div>
       </div>
     </header>
 
     <div class="content">
-      <CountdownCard />
-      <LastRecordCard />
+      <!-- 英雄卡 -->
+      <CountdownCard class="card-anim card-anim-1" />
+
+      <!-- 2列摘要卡 -->
+      <div class="summary-grid card-anim card-anim-2">
+        <!-- 上次充电 -->
+        <div class="summary-card">
+          <div class="summary-label">上次充电</div>
+          <div class="summary-number">
+            {{ daysAgo }}<span class="summary-unit">天前</span>
+          </div>
+          <div class="summary-tags">
+            <span class="tag tag--type">{{ lastTypeLabel }}</span>
+            <span v-if="lastRecord?.isFull" class="tag tag--full">满充</span>
+          </div>
+        </div>
+        <!-- 本月花费 -->
+        <div class="summary-card">
+          <div class="summary-label">本月花费</div>
+          <div class="summary-number">
+            <span v-if="currentMonthCost != null">¥{{ currentMonthCost.toFixed(0) }}</span>
+            <span v-else class="summary-empty">暂无</span>
+          </div>
+          <div v-if="costDiff != null" class="summary-diff" :class="costDiff <= 0 ? 'diff--down' : 'diff--up'">
+            {{ costDiff <= 0 ? '↓' : '↑' }} {{ Math.abs(costDiff) }}%
+          </div>
+        </div>
+      </div>
+
+      <!-- 内嵌可滚动记录列表 -->
+      <div class="record-section card-anim card-anim-3">
+        <div class="record-section-header">
+          <span class="section-label">充电记录</span>
+          <span class="section-hint">↕ 可滚动</span>
+        </div>
+
+        <div v-if="sortedRecords.length === 0" class="record-empty">
+          暂无记录，点击右下角添加
+        </div>
+
+        <div v-else class="record-scroll" ref="scrollEl" @scroll="onScroll">
+          <RecordItem
+            v-for="record in sortedRecords"
+            :key="record.id"
+            :record="record"
+            @delete="recordsStore.deleteRecord($event)"
+          />
+        </div>
+
+        <!-- 底部渐变遮罩，提示可滚动 -->
+        <div class="record-fade" :class="{ hidden: scrolledToBottom }" />
+      </div>
     </div>
 
-    <FabButton @click="showSheet = true" />
     <AddRecordSheet v-model:visible="showSheet" />
   </div>
 </template>
@@ -27,65 +70,232 @@
 <script setup>
 import { ref, computed } from 'vue'
 import CountdownCard from '../components/CountdownCard.vue'
-import LastRecordCard from '../components/LastRecordCard.vue'
-import FabButton from '../components/FabButton.vue'
+import RecordItem from '../components/RecordItem.vue'
 import AddRecordSheet from '../components/AddRecordSheet.vue'
+import { useRecordsStore } from '../stores/records.js'
 import { useSettingsStore } from '../stores/settings.js'
 
 const showSheet = ref(false)
+const recordsStore = useRecordsStore()
 const settings = useSettingsStore()
+
 const vehicleName = computed(() => settings.vehicleName)
+const sortedRecords = computed(() => recordsStore.sortedRecords)
+
+// 上次充电摘要
+const lastRecord = computed(() => sortedRecords.value[0] ?? null)
+const typeLabels = { slow: '慢充', fast: '快充', superfast: '超快充' }
+const lastTypeLabel = computed(() => typeLabels[lastRecord.value?.type] ?? '')
+const daysAgo = computed(() => {
+  if (!lastRecord.value?.date) return 0
+  const diff = Date.now() - new Date(lastRecord.value.date).getTime()
+  return Math.max(0, Math.floor(diff / 86400000))
+})
+
+// 本月花费
+const thisMonth = new Date().toISOString().slice(0, 7)
+const lastMonth = (() => {
+  const d = new Date()
+  d.setMonth(d.getMonth() - 1)
+  return d.toISOString().slice(0, 7)
+})()
+const currentMonthCost = computed(() => {
+  const item = recordsStore.monthlyCosts.find(m => m.label === thisMonth)
+  return item?.total ?? null
+})
+const costDiff = computed(() => {
+  if (currentMonthCost.value == null) return null
+  const prev = recordsStore.monthlyCosts.find(m => m.label === lastMonth)
+  if (!prev?.total) return null
+  return Math.round(((currentMonthCost.value - prev.total) / prev.total) * 100)
+})
+
+// 滚动遮罩
+const scrollEl = ref(null)
+const scrolledToBottom = ref(false)
+function onScroll() {
+  const el = scrollEl.value
+  if (!el) return
+  scrolledToBottom.value = el.scrollHeight - el.scrollTop - el.clientHeight < 16
+}
 </script>
 
 <style scoped>
 .view { min-height: 100%; }
 
 .page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 20px 12px;
-}
-
-.header-title-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+  padding: 16px 16px 10px;
 }
 
 .header-eyebrow {
   font-size: 10px;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  letter-spacing: 2px;
+  color: var(--color-text-secondary);
+  letter-spacing: 1px;
   text-transform: uppercase;
-  font-family: var(--font-body);
+  margin-bottom: 2px;
 }
 
 .page-title {
   font-size: 24px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-text);
   letter-spacing: -0.5px;
   font-family: var(--font-display);
 }
 
-.header-badge {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+.content {
+  padding: 0 14px calc(120px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Stagger 进场动画 */
+.card-anim {
+  animation: card-in 0.3s ease-out both;
+}
+.card-anim-1 { animation-delay: 0ms; }
+.card-anim-2 { animation-delay: 60ms; }
+.card-anim-3 { animation-delay: 120ms; }
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 摘要卡 */
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.summary-card {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 13px 12px;
+  box-shadow: var(--shadow-card-sm);
+}
+
+.summary-label {
+  font-size: 9px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.summary-number {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1;
+  letter-spacing: -0.5px;
+  font-family: var(--font-display);
+  margin-bottom: 6px;
+}
+
+.summary-unit {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  margin-left: 2px;
+  font-family: var(--font-body);
+}
+
+.summary-empty {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  font-weight: 400;
+  font-family: var(--font-body);
+}
+
+.summary-tags {
   display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--radius-chip);
+}
+.tag--type {
+  background: var(--color-surface-2);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+.tag--full {
+  background: var(--color-accent-light);
+  color: var(--color-accent-text);
+}
+
+.summary-diff {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-chip);
+  display: inline-block;
+}
+.diff--down { background: var(--color-success-bg); color: var(--color-success); }
+.diff--up   { background: var(--color-danger-bg); color: var(--color-danger); }
+
+/* 记录列表区 */
+.record-section {
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card-sm);
+  position: relative;
+}
+
+.record-section-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  color: var(--color-accent);
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.header-badge svg {
-  width: 22px;
-  height: 22px;
+.section-label {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
 }
 
-.content { padding: 4px 16px calc(80px + env(safe-area-inset-bottom, 0px)); }
+.section-hint {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.record-empty {
+  padding: 28px 14px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.record-scroll {
+  max-height: 220px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.record-scroll::-webkit-scrollbar { display: none; }
+
+/* 渐变遮罩 */
+.record-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: linear-gradient(to bottom, transparent, var(--color-surface));
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.record-fade.hidden { opacity: 0; }
 </style>
