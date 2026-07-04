@@ -1,44 +1,22 @@
 <template>
   <div class="hero-card" :class="{ 'hero-card--overdue': hasData && displayDays < 0 }">
-    <!-- 右上角光晕装饰 -->
     <div class="hero-glow" aria-hidden="true" />
 
-    <div class="hero-content">
-      <!-- 左侧：标签 + 大数字 + 底部信息 -->
-      <div class="hero-left">
-        <div class="hero-eyebrow">距满充还有</div>
-        <div class="hero-number-wrap">
-          <span v-if="hasData" class="hero-number" :key="displayDays">{{ Math.abs(displayDays) }}</span>
-          <span v-else class="hero-number hero-number--empty">--</span>
-        </div>
-        <div class="hero-unit-row">
-          <span class="hero-unit">天</span>
-          <span class="hero-unit-sub">{{ hasData && displayDays < 0 ? '已逾期' : '后满充' }}</span>
-        </div>
-        <div class="hero-meta">
-          <span class="hero-chip">{{ batteryLabel }}</span>
-          <span class="hero-chip">{{ intervalDays }}天周期</span>
-        </div>
-      </div>
-
-      <!-- 右侧：SVG 进度环 -->
+    <!-- 顶部：eyebrow + 进度环 同行 -->
+    <div class="hero-top">
+      <div class="hero-eyebrow">{{ hasData && displayDays < 0 ? '满充已逾期' : '距满充还有' }}</div>
       <div class="hero-ring" aria-hidden="true">
-        <svg width="64" height="64" viewBox="0 0 64 64">
+        <svg width="52" height="52" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="21" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
           <circle
-            cx="32" cy="32" r="26"
-            fill="none"
-            stroke="rgba(255,255,255,0.08)"
-            stroke-width="5"
-          />
-          <circle
-            cx="32" cy="32" r="26"
+            cx="26" cy="26" r="21"
             fill="none"
             stroke="url(#countdown-ring-gradient)"
-            stroke-width="5"
+            stroke-width="4"
             stroke-linecap="round"
             :stroke-dasharray="circumference"
             :stroke-dashoffset="dashOffset"
-            transform="rotate(-90 32 32)"
+            transform="rotate(-90 26 26)"
             class="ring-progress"
           />
           <defs>
@@ -50,6 +28,19 @@
         </svg>
         <div class="ring-label">{{ progress }}%</div>
       </div>
+    </div>
+
+    <!-- 中部：大数字 + 单位内联 -->
+    <div class="hero-number-wrap">
+      <span v-if="hasData" class="hero-number" :key="displayDays">{{ Math.abs(displayDays) }}</span>
+      <span v-else class="hero-number hero-number--empty">--</span>
+      <span class="hero-unit">天</span>
+    </div>
+
+    <!-- 底部：chip 标签 -->
+    <div class="hero-meta">
+      <span class="hero-chip">{{ batteryLabel }}</span>
+      <span class="hero-chip">{{ intervalDays }}天周期</span>
     </div>
   </div>
 </template>
@@ -70,7 +61,7 @@ const intervalDays = computed(() => settings.fullChargeIntervalDays)
 const batteryLabels = { lfp: '磷酸铁锂', nmc: '三元锂', custom: '自定义' }
 const batteryLabel = computed(() => batteryLabels[settings.batteryType] ?? '磷酸铁锂')
 
-const circumference = 2 * Math.PI * 26  // ≈ 163.4
+const circumference = 2 * Math.PI * 21  // r=21
 const dashOffset = computed(() =>
   circumference * (1 - Math.min(progress.value, 100) / 100)
 )
@@ -80,7 +71,7 @@ const dashOffset = computed(() =>
 .hero-card {
   background: var(--color-hero);
   border-radius: var(--radius-hero);
-  padding: 18px 16px;
+  padding: 16px 18px 18px;
   margin: 0 0 10px;
   position: relative;
   overflow: hidden;
@@ -89,104 +80,36 @@ const dashOffset = computed(() =>
 
 .hero-glow {
   position: absolute;
-  top: -30px;
-  right: -30px;
-  width: 130px;
-  height: 130px;
-  background: radial-gradient(circle, rgba(0,102,255,0.28), transparent 65%);
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(0,102,255,0.3), transparent 65%);
   pointer-events: none;
 }
 
-.hero-content {
+/* 顶部行：eyebrow 左，进度环 右 */
+.hero-top {
   display: flex;
-  align-items: flex-end;
   justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
   position: relative;
 }
-
-.hero-left { flex: 1; }
 
 .hero-eyebrow {
   font-size: 10px;
-  color: rgba(255,255,255,0.38);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  font-family: var(--font-body);
-}
-
-.hero-number-wrap {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 2px;
-  overflow: hidden;
-}
-
-.hero-number {
-  font-size: 80px;
-  font-weight: 400;
-  color: white;
-  line-height: 0.9;
+  color: rgba(255,255,255,0.4);
   letter-spacing: 2px;
-  font-family: var(--font-hero);
-  animation: slot-in 0.4s ease-in-out;
-}
-
-.hero-unit-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.hero-unit {
-  font-size: 15px;
-  color: rgba(255,255,255,0.6);
-  font-weight: 500;
+  text-transform: uppercase;
   font-family: var(--font-body);
-  letter-spacing: 0.5px;
+  margin-top: 4px;
 }
 
-.hero-unit-sub {
-  font-size: 11px;
-  color: rgba(255,255,255,0.35);
-  font-weight: 400;
-  font-family: var(--font-body);
-  letter-spacing: 0.5px;
-}
-
-.hero-meta {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.hero-chip {
-  background: rgba(0,102,255,0.18);
-  border: 1px solid rgba(0,102,255,0.28);
-  border-radius: var(--radius-chip);
-  padding: 3px 10px;
-  font-size: 10px;
-  color: rgba(180,220,255,0.9);
-  font-weight: 500;
-}
-
-.hero-number--empty {
-  font-size: 48px;
-  letter-spacing: 0;
-  color: rgba(255,255,255,0.35);
-}
-
-.hero-card--overdue .hero-chip {
-  background: rgba(239, 68, 68, 0.18);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: rgba(255,180,180,0.9);
-}
-
+/* 进度环 */
 .hero-ring {
   position: relative;
   flex-shrink: 0;
-  margin-bottom: 4px;
 }
 
 .ring-progress {
@@ -199,9 +122,70 @@ const dashOffset = computed(() =>
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  font-family: var(--font-body);
+}
+
+/* 中部：大数字 + 单位 baseline 对齐 */
+.hero-number-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  margin-bottom: 14px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-number {
+  font-size: 76px;
+  font-weight: 400;
+  color: white;
+  line-height: 1;
+  letter-spacing: 1px;
+  font-family: var(--font-hero);
+  animation: slot-in 0.4s ease-in-out;
+}
+
+.hero-unit {
+  font-size: 26px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  font-family: var(--font-body);
+  letter-spacing: 0;
+  margin-left: 6px;
+  margin-bottom: 6px;
+}
+
+.hero-number--empty {
+  font-size: 60px;
+  letter-spacing: 0;
+  color: rgba(255,255,255,0.35);
+}
+
+/* 底部 chip */
+.hero-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.hero-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-chip);
+  padding: 4px 10px;
+  font-size: 11px;
   color: rgba(255,255,255,0.55);
+  font-weight: 400;
+  font-family: var(--font-body);
+}
+
+.hero-card--overdue .hero-chip {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: rgba(255,180,180,0.85);
 }
 
 @keyframes slot-in {
