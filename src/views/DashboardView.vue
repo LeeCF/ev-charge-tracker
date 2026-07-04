@@ -203,12 +203,12 @@ function onScroll() {
 }
 
 .summary-number {
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 700;
   color: var(--color-text);
   line-height: 1;
-  letter-spacing: -0.5px;
-  font-family: var(--font-display);
+  letter-spacing: -0.3px;
+  font-family: var(--font-body);
   margin-bottom: 6px;
 }
 

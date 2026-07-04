@@ -271,11 +271,11 @@ function triggerDelete() {
 .record-date {
   display: block;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text);
   margin-bottom: 7px;
-  font-family: var(--font-display);
-  letter-spacing: -0.2px;
+  font-family: var(--font-body);
+  letter-spacing: 0;
 }
 
 .tags { display: flex; gap: 6px; flex-wrap: wrap; }
