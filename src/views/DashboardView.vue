@@ -63,7 +63,6 @@
       </div>
     </div>
 
-    <AddRecordSheet v-model:visible="showSheet" />
   </div>
 </template>
 
@@ -71,11 +70,9 @@
 import { ref, computed } from 'vue'
 import CountdownCard from '../components/CountdownCard.vue'
 import RecordItem from '../components/RecordItem.vue'
-import AddRecordSheet from '../components/AddRecordSheet.vue'
 import { useRecordsStore } from '../stores/records.js'
 import { useSettingsStore } from '../stores/settings.js'
 
-const showSheet = ref(false)
 const recordsStore = useRecordsStore()
 const settings = useSettingsStore()
 

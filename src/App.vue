@@ -1,9 +1,9 @@
 <template>
   <div class="app-shell">
     <main class="app-content">
-      <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" />
+      <router-view v-slot="{ Component, route }">
+        <transition name="slide-fade" mode="out-in">
+          <component :is="Component" :key="route.path" />
         </transition>
       </router-view>
     </main>
@@ -12,25 +12,10 @@
       <router-link to="/" class="tab-item" active-class="tab-item--active" exact>
         <div class="tab-icon-wrap">
           <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
-            <path d="M9 21V12h6v9"/>
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
           </svg>
         </div>
-        <span class="tab-label">首页</span>
-      </router-link>
-
-      <router-link to="/history" class="tab-item" active-class="tab-item--active">
-        <div class="tab-icon-wrap">
-          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2"/>
-            <line x1="16" y1="2" x2="16" y2="6"/>
-            <line x1="8" y1="2" x2="8" y2="6"/>
-            <line x1="3" y1="10" x2="21" y2="10"/>
-            <line x1="8" y1="14" x2="8" y2="14"/>
-            <line x1="12" y1="14" x2="12" y2="14"/>
-          </svg>
-        </div>
-        <span class="tab-label">历史</span>
+        <span class="tab-label">充电</span>
       </router-link>
 
       <router-link to="/settings" class="tab-item" active-class="tab-item--active">
@@ -43,8 +28,22 @@
         <span class="tab-label">设置</span>
       </router-link>
     </nav>
+
+    <!-- 扩展 FAB（只在充电页显示） -->
+    <FabButton v-if="route.path === '/'" @click="showSheet = true" />
+    <AddRecordSheet v-model:visible="showSheet" />
   </div>
 </template>
+
+<script setup>
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import FabButton from './components/FabButton.vue'
+import AddRecordSheet from './components/AddRecordSheet.vue'
+
+const showSheet = ref(false)
+const route = useRoute()
+</script>
 
 <style scoped>
 .app-shell {
@@ -60,9 +59,10 @@
 .app-content {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 72px;
+  overscroll-behavior: none;
 }
 
+/* Tab 栏 */
 .tab-bar {
   position: fixed;
   bottom: 0;
@@ -71,12 +71,9 @@
   width: 100%;
   max-width: 480px;
   display: flex;
-  background: rgba(244, 247, 252, 0.94);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-top: 1px solid var(--color-border);
+  background: white;
   box-shadow: var(--shadow-tab);
-  height: 72px;
+  height: 49px;
   padding-bottom: env(safe-area-inset-bottom, 0);
   z-index: 100;
 }
@@ -87,36 +84,33 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   text-decoration: none;
   color: var(--color-text-muted);
   font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.3px;
   transition: color 0.2s;
   position: relative;
   padding-top: 4px;
 }
 
-/* Active: cobalt blue */
 .tab-item--active {
   color: var(--color-accent);
 }
 
-/* Indicator line above icon */
 .tab-item--active::before {
   content: '';
   position: absolute;
   top: 0;
-  width: 24px;
-  height: 2px;
-  border-radius: 0 0 2px 2px;
+  width: 20px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
   background: var(--color-accent);
 }
 
 .tab-icon-wrap {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,18 +119,21 @@
 .tab-icon {
   width: 22px;
   height: 22px;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), stroke-width 0.15s;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
 }
 
 .tab-item--active .tab-icon {
-  transform: scale(1.08);
-  stroke-width: 2.5;
+  transform: scale(1.05);
   stroke: var(--color-accent);
+  stroke-width: 2.5;
 }
 
 .tab-label { letter-spacing: 0.2px; }
 .tab-item--active .tab-label { font-weight: 700; }
 
-.fade-enter-active, .fade-leave-active { transition: opacity 0.18s; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+/* slide-fade 过渡 */
+.slide-fade-enter-active { transition: opacity 0.22s ease-out, transform 0.22s ease-out; }
+.slide-fade-leave-active { transition: opacity 0.18s ease-in, transform 0.18s ease-in; }
+.slide-fade-enter-from { opacity: 0; transform: translateX(16px); }
+.slide-fade-leave-to   { opacity: 0; transform: translateX(-16px); }
 </style>
