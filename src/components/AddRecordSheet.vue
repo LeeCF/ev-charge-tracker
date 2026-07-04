@@ -4,129 +4,99 @@
       <div v-if="visible" class="sheet-overlay" @click.self="close">
         <Transition name="sheet-slide">
           <div v-if="visible" class="sheet">
-            <div class="sheet-scroll" ref="scrollEl" @scroll="onScroll">
+            <!-- 拖拽条 -->
             <div class="sheet-handle" />
-            <h2 class="sheet-title">添加充电记录</h2>
 
-            <!-- 充电日期 -->
-            <div class="field">
-              <label class="field-label">
-                <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                  <rect x="2" y="3" width="12" height="12" rx="1.5"/>
-                  <line x1="11" y1="1" x2="11" y2="5"/>
-                  <line x1="5" y1="1" x2="5" y2="5"/>
-                  <line x1="2" y1="7" x2="14" y2="7"/>
-                </svg>
-                充电日期
-              </label>
-              <input type="date" class="field-input" v-model="form.date" />
-            </div>
+            <!-- 标题 -->
+            <div class="sheet-title">添加充电记录</div>
 
-            <!-- 充电类型 -->
-            <div class="field">
-              <label class="field-label">
-                <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M9 2L5 9h5l-3 5 6-8H8l1-4z"/>
-                </svg>
-                充电类型
-              </label>
-              <div class="btn-group">
-                <button
-                  v-for="t in chargeTypes"
-                  :key="t.value"
-                  class="btn-option"
-                  :class="{ 'btn-option--active': form.type === t.value }"
-                  @click="form.type = t.value"
-                >{{ t.label }}</button>
+            <!-- 表单 -->
+            <div class="sheet-body">
+
+              <!-- 日期行 -->
+              <div class="form-row">
+                <span class="form-label">日期</span>
+                <input type="date" class="form-date" v-model="form.date" />
               </div>
-            </div>
 
-            <!-- 是否满充 -->
-            <div class="field field--row">
-              <label class="field-label field-label--inline">
-                <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                  <rect x="2" y="5" width="12" height="8" rx="1.5"/>
-                  <path d="M14 8h1.5a.5.5 0 0 1 0 2H14"/>
-                  <rect x="4" y="7" width="7" height="4" rx="1" fill="currentColor" stroke="none" class="battery-fill" />
-                </svg>
-                满充
-              </label>
-              <div class="toggle" :class="{ 'toggle--on': form.isFull }" @click="form.isFull = !form.isFull">
-                <div class="toggle-thumb" />
-              </div>
-            </div>
-
-            <!-- 结束电量 -->
-            <Transition name="field-fade">
-              <div class="field" v-if="!form.isFull">
-                <label class="field-label">结束电量 <span class="field-hint">（选填，默认 80%）</span></label>
-                <div class="soc-row">
-                  <input type="number" class="field-input field-input--sm" v-model.number="form.endSoc" min="1" max="99" />
-                  <span class="soc-unit">%</span>
-                  <div class="soc-bar-wrap">
-                    <div class="soc-bar" :style="{ width: (form.endSoc || 0) + '%' }" />
-                  </div>
+              <!-- 充电类型 -->
+              <div class="form-row form-row--col">
+                <span class="form-label">充电类型</span>
+                <div class="type-group">
+                  <button
+                    v-for="t in chargeTypes"
+                    :key="t.value"
+                    class="type-btn"
+                    :class="{ active: form.type === t.value }"
+                    @click="form.type = t.value"
+                  >{{ t.label }}</button>
                 </div>
               </div>
-            </Transition>
 
-            <!-- 充电地点 -->
-            <div class="field">
-              <label class="field-label">
-                <svg class="field-icon" viewBox="0 0 12 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                  <path d="M6 1C3.24 1 1 3.24 1 6c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5z"/>
-                  <circle cx="6" cy="6" r="1.5"/>
-                </svg>
-                充电地点 <span class="field-hint">（选填）</span>
-              </label>
-              <input type="text" class="field-input" v-model="form.location" placeholder="如：家、公司、商场" />
-              <div v-if="recentLocations.length" class="location-chips">
-                <button
-                  v-for="loc in recentLocations"
-                  :key="loc"
-                  class="chip"
-                  :class="{ 'chip--active': form.location === loc }"
-                  @click="form.location = form.location === loc ? '' : loc"
-                >{{ loc }}</button>
+              <!-- 满充行 -->
+              <div class="form-row">
+                <span class="form-label">满充</span>
+                <div class="toggle" :class="{ on: form.isFull }" @click="form.isFull = !form.isFull">
+                  <div class="toggle-thumb" />
+                </div>
               </div>
-            </div>
 
-            <!-- 充电电费 -->
-            <div class="field">
-              <label class="field-label">
-                <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="8" cy="8" r="6.5"/>
-                  <path d="M8 4.5v7M5.5 6.5c0-1.1.9-2 2.5-2s2.5.9 2.5 2c0 2-5 2-5 4 0 1.1.9 2 2.5 2s2.5-.9 2.5-2"/>
-                </svg>
-                充电电费 <span class="field-hint">（选填，元）</span>
-              </label>
-              <div class="cost-row">
-                <input type="number" class="field-input field-input--sm" v-model.number="form.cost" min="0" step="0.01" placeholder="0.00" />
-                <span class="cost-unit">元</span>
+              <!-- 结束电量（非满充时显示） -->
+              <Transition name="field-fade">
+                <div v-if="!form.isFull" class="form-row">
+                  <span class="form-label">电量 <span class="form-hint">选填</span></span>
+                  <div class="soc-row">
+                    <input type="number" class="form-input-sm" v-model.number="form.endSoc" min="1" max="99" />
+                    <span class="form-unit">%</span>
+                  </div>
+                </div>
+              </Transition>
+
+              <!-- 地点 -->
+              <div class="form-row form-row--col">
+                <span class="form-label">地点 <span class="form-hint">选填</span></span>
+                <div class="location-area">
+                  <div v-if="recentLocations.length" class="chips">
+                    <button
+                      v-for="loc in recentLocations"
+                      :key="loc"
+                      class="chip"
+                      :class="{ active: form.location === loc }"
+                      @click="form.location = form.location === loc ? '' : loc"
+                    >{{ loc }}</button>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-input"
+                    v-model="form.location"
+                    placeholder="输入其他地点…"
+                  />
+                </div>
               </div>
+
+              <!-- 费用行 -->
+              <div class="form-row">
+                <span class="form-label">电费 <span class="form-hint">选填</span></span>
+                <div class="cost-row">
+                  <span class="form-unit">¥</span>
+                  <input type="number" class="form-input-sm" v-model.number="form.cost" min="0" step="0.01" placeholder="0.00" />
+                </div>
+              </div>
+
+              <!-- 备注行 -->
+              <div class="form-row form-row--col">
+                <span class="form-label">备注 <span class="form-hint">选填</span></span>
+                <input type="text" class="form-input" v-model="form.note" placeholder="如：充电桩故障中途停充" />
+              </div>
+
             </div>
 
-            <!-- 备注 -->
-            <div class="field">
-              <label class="field-label">
-                <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                  <rect x="2" y="2" width="12" height="12" rx="2"/>
-                  <line x1="5" y1="6" x2="11" y2="6"/>
-                  <line x1="5" y1="9" x2="9" y2="9"/>
-                </svg>
-                备注 <span class="field-hint">（选填）</span>
-              </label>
-              <input type="text" class="field-input" v-model="form.note" placeholder="如：充电桩故障中途停充" />
+            <!-- 保存按钮 -->
+            <div class="sheet-footer">
+              <button class="btn-save" :disabled="!isValid" @click="submit">
+                保存记录
+              </button>
             </div>
-
-            <button class="btn-submit" :disabled="!isValid" @click="submit">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 10H4M10 4l6 6-6 6"/>
-              </svg>
-              保存记录
-            </button>
-            </div><!-- end sheet-scroll -->
-            <div class="sheet-fade-hint" :class="{ 'sheet-fade-hint--hidden': scrolledToBottom }" />
           </div>
         </Transition>
       </div>
@@ -144,18 +114,9 @@ const emit = defineEmits(['update:visible'])
 const recordsStore = useRecordsStore()
 const recentLocations = computed(() => recordsStore.recentLocations)
 
-const scrollEl = ref(null)
-const scrolledToBottom = ref(false)
-
-function onScroll() {
-  const el = scrollEl.value
-  if (!el) return
-  scrolledToBottom.value = el.scrollHeight - el.scrollTop - el.clientHeight < 24
-}
-
 const chargeTypes = [
-  { value: 'slow', label: '慢充' },
-  { value: 'fast', label: '快充' },
+  { value: 'slow',      label: '慢充' },
+  { value: 'fast',      label: '快充' },
   { value: 'superfast', label: '超快充' },
 ]
 
@@ -177,17 +138,10 @@ const isValid = computed(() => form.date && form.type)
 
 function close() {
   emit('update:visible', false)
-  resetForm()
-}
-
-function resetForm() {
-  form.date = todayStr()
-  form.type = ''
-  form.isFull = false
-  form.endSoc = 80
-  form.cost = null
-  form.location = ''
-  form.note = ''
+  Object.assign(form, {
+    date: todayStr(), type: '', isFull: false,
+    endSoc: 80, cost: null, location: '', note: '',
+  })
 }
 
 function submit() {
@@ -201,7 +155,7 @@ function submit() {
 .sheet-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0,0,0,0.45);
   z-index: 200;
   display: flex;
   align-items: flex-end;
@@ -209,34 +163,11 @@ function submit() {
 
 .sheet {
   background: var(--color-surface);
-  border-radius: 24px 24px 0 0;
+  border-radius: 22px 22px 0 0;
   width: 100%;
-  max-height: 92vh;
-  position: relative;
-  overflow: hidden;
-}
-
-.sheet-scroll {
-  padding: 12px 20px 48px;
-  max-height: 92vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-}
-
-.sheet-fade-hint {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: linear-gradient(to bottom, transparent, var(--color-surface));
-  pointer-events: none;
-  transition: opacity 0.25s;
-}
-
-.sheet-fade-hint--hidden {
-  opacity: 0;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .sheet-handle {
@@ -244,122 +175,148 @@ function submit() {
   height: 4px;
   background: var(--color-border);
   border-radius: 2px;
-  margin: 0 auto 18px;
-}
-
-.sheet-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: var(--color-text);
-  letter-spacing: -0.3px;
-}
-
-.field { margin-bottom: 18px; }
-
-.field--row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.field-label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 8px;
-}
-
-.field-label--inline {
-  margin-bottom: 0;
-}
-
-.field-icon {
-  width: 14px;
-  height: 14px;
-  color: var(--color-text-secondary);
+  margin: 10px auto 0;
   flex-shrink: 0;
 }
 
-.battery-fill {
-  color: var(--color-text-secondary);
-}
-
-.field-hint {
-  font-weight: 400;
-  color: var(--color-text-secondary);
-  font-size: 12px;
-}
-
-.field-input {
-  width: 100%;
-  border: 1.5px solid var(--color-border);
-  border-radius: 12px;
-  padding: 11px 14px;
-  font-size: 15px;
+.sheet-title {
+  font-size: 17px;
+  font-weight: 700;
   color: var(--color-text);
-  background: var(--color-bg);
+  padding: 14px 18px 10px;
+  flex-shrink: 0;
+}
+
+.sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 18px;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sheet-footer {
+  padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+  flex-shrink: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+/* 表单行 */
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border);
+  gap: 12px;
+  min-height: 44px;
+}
+
+.form-row--col {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.form-row:last-child { border-bottom: none; }
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  flex-shrink: 0;
+}
+
+.form-hint {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--color-text);
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.field-input:focus {
-  border-color: var(--color-border-strong);
-  box-shadow: none;
+.form-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(0,102,255,0.12);
 }
 
-.field-input--sm { width: 100px; }
+.form-input-sm {
+  width: 80px;
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: 9px;
+  padding: 8px 10px;
+  font-size: 14px;
+  color: var(--color-text);
+  outline: none;
+  text-align: right;
+}
 
-.soc-row { display: flex; align-items: center; gap: 10px; }
-.soc-unit { font-size: 15px; color: var(--color-text-secondary); }
+.form-input-sm:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(0,102,255,0.12);
+}
 
-.soc-bar-wrap {
+.form-date {
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: 9px;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-accent);
+  outline: none;
+}
+
+.form-unit {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* 充电类型按钮组 */
+.type-group {
+  display: flex;
+  gap: 7px;
+  width: 100%;
+}
+
+.type-btn {
   flex: 1;
-  height: 4px;
-  background: var(--color-border);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.soc-bar {
-  height: 100%;
-  background: var(--gradient-accent);
-  border-radius: 2px;
-  transition: width 0.3s;
-  max-width: 100%;
-}
-
-.cost-row { display: flex; align-items: center; gap: 10px; }
-.cost-unit { font-size: 15px; color: var(--color-text-secondary); }
-
-.btn-group { display: flex; gap: 8px; }
-
-.btn-option {
-  flex: 1;
-  padding: 11px 0;
+  padding: 10px 0;
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-btn);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--color-text-secondary);
-  background: var(--color-surface);
+  background: var(--color-surface-2);
   transition: all 0.15s;
+  min-height: 44px;
 }
 
-/* Selected type: blue border + tint */
-.btn-option--active {
-  border-color: var(--color-accent);
-  color: var(--color-accent-text);
-  background: var(--color-accent-light);
-  font-weight: 600;
+.type-btn.active {
+  background: var(--color-accent-gradient);
+  border-color: transparent;
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0,102,255,0.3);
 }
 
+/* Toggle */
 .toggle {
-  width: 50px;
-  height: 30px;
-  border-radius: 15px;
+  width: 48px;
+  height: 28px;
+  border-radius: 14px;
   background: var(--color-border);
   cursor: pointer;
   position: relative;
@@ -367,104 +324,78 @@ function submit() {
   flex-shrink: 0;
 }
 
-/* Toggle on: green IS correct here — it's binary state feedback */
-.toggle--on { background: var(--gradient-accent); }
+.toggle.on { background: var(--color-accent-gradient); }
 
 .toggle-thumb {
   position: absolute;
   top: 3px;
   left: 3px;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: white;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.2);
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
 }
 
-.toggle--on .toggle-thumb { transform: translateX(20px); }
+.toggle.on .toggle-thumb { transform: translateX(20px); }
 
-.location-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
+/* 地点 */
+.location-area { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .chip {
-  padding: 5px 14px;
+  padding: 5px 12px;
   border: 1.5px solid var(--color-border);
-  border-radius: 20px;
-  font-size: 13px;
+  border-radius: var(--radius-chip);
+  font-size: 12px;
   color: var(--color-text-secondary);
-  background: var(--color-surface);
+  background: var(--color-surface-2);
+  min-height: 32px;
   transition: all 0.15s;
 }
 
-/* Location chip active: blue */
-.chip--active {
+.chip.active {
   border-color: var(--color-accent);
-  color: var(--color-accent-text);
   background: var(--color-accent-light);
+  color: var(--color-accent-text);
   font-weight: 600;
 }
 
-.btn-submit {
+/* 费用/SOC 行 */
+.cost-row, .soc-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 6px;
+}
+
+/* 保存按钮 */
+.btn-save {
   width: 100%;
-  padding: 15px;
-  border-radius: var(--radius-btn);
-  background: var(--gradient-accent);   /* Green CTA — correct, this is the action */
+  height: 52px;
+  background: var(--color-accent-gradient);
+  border: none;
+  border-radius: 12px;
   color: white;
   font-size: 16px;
-  font-weight: 600;
-  margin-top: 8px;
+  font-weight: 700;
   box-shadow: var(--shadow-fab);
-  transition: opacity 0.15s, transform 0.15s;
+  transition: opacity 0.15s, transform 0.08s;
   letter-spacing: 0.3px;
 }
 
-.btn-submit svg {
-  width: 18px;
-  height: 18px;
-}
+.btn-save:not(:disabled):active { transform: scale(0.98); }
+.btn-save:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
 
-.btn-submit:not(:disabled):active {
-  transform: scale(0.98);
-}
+/* 过渡动画 */
+.overlay-fade-enter-active, .overlay-fade-leave-active { transition: opacity 0.25s; }
+.overlay-fade-enter-from, .overlay-fade-leave-to { opacity: 0; }
 
-.btn-submit:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  box-shadow: none;
-}
+.sheet-slide-enter-active { transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); }
+.sheet-slide-leave-active  { transition: transform 0.26s cubic-bezier(0.4,0,1,1); }
+.sheet-slide-enter-from, .sheet-slide-leave-to { transform: translateY(100%); }
 
-/* Transitions */
-.overlay-fade-enter-active, .overlay-fade-leave-active {
-  transition: opacity 0.25s;
-}
-.overlay-fade-enter-from, .overlay-fade-leave-to {
-  opacity: 0;
-}
-
-.sheet-slide-enter-active {
-  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-}
-.sheet-slide-leave-active {
-  transition: transform 0.25s cubic-bezier(0.4, 0, 1, 1);
-}
-.sheet-slide-enter-from, .sheet-slide-leave-to {
-  transform: translateY(100%);
-}
-
-.field-fade-enter-active, .field-fade-leave-active {
-  transition: opacity 0.2s, transform 0.2s;
-}
-.field-fade-enter-from, .field-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-6px);
-}
+.field-fade-enter-active, .field-fade-leave-active { transition: opacity 0.2s, transform 0.2s; }
+.field-fade-enter-from, .field-fade-leave-to { opacity: 0; transform: translateY(-6px); }
 </style>
