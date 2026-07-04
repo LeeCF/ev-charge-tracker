@@ -6,11 +6,14 @@
     <div class="hero-content">
       <!-- 左侧：标签 + 大数字 + 底部信息 -->
       <div class="hero-left">
-        <div class="hero-eyebrow">{{ hasData && displayDays < 0 ? '满充已逾期' : '距满充还有' }}</div>
+        <div class="hero-eyebrow">距满充还有</div>
         <div class="hero-number-wrap">
           <span v-if="hasData" class="hero-number" :key="displayDays">{{ Math.abs(displayDays) }}</span>
           <span v-else class="hero-number hero-number--empty">--</span>
+        </div>
+        <div class="hero-unit-row">
           <span class="hero-unit">天</span>
+          <span class="hero-unit-sub">{{ hasData && displayDays < 0 ? '已逾期' : '后满充' }}</span>
         </div>
         <div class="hero-meta">
           <span class="hero-chip">{{ batteryLabel }}</span>
@@ -114,14 +117,13 @@ const dashOffset = computed(() =>
 
 .hero-number-wrap {
   display: flex;
-  align-items: baseline;
-  gap: 4px;
-  margin-bottom: 12px;
+  align-items: flex-start;
+  margin-bottom: 2px;
   overflow: hidden;
 }
 
 .hero-number {
-  font-size: 56px;
+  font-size: 60px;
   font-weight: 800;
   color: white;
   line-height: 1;
@@ -130,13 +132,27 @@ const dashOffset = computed(() =>
   animation: slot-in 0.4s ease-in-out;
 }
 
+.hero-unit-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
 .hero-unit {
-  font-size: 20px;
-  color: rgba(255,255,255,0.5);
-  font-weight: 700;
-  margin-bottom: 6px;
-  font-family: var(--font-display);
-  letter-spacing: -1px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  font-weight: 500;
+  font-family: var(--font-body);
+  letter-spacing: 0.5px;
+}
+
+.hero-unit-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  font-weight: 400;
+  font-family: var(--font-body);
+  letter-spacing: 0.5px;
 }
 
 .hero-meta {
