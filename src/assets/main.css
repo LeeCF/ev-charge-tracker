@@ -5,47 +5,51 @@
 }
 
 :root {
-  /* === Accent — cobalt blue, precision instrument === */
-  --color-accent: #0052D4;
-  --color-accent-light: #EFF4FF;
-  --color-accent-text: #003399;
-  --color-accent-mid: rgba(0, 82, 212, 0.12);
+  /* 主色 — 电气蓝 */
+  --color-accent: #0066FF;
+  --color-accent-end: #00AAFF;
+  --color-accent-light: #E0EDFF;
+  --color-accent-text: #0055DD;
+  --color-accent-gradient: linear-gradient(135deg, #0055E0 0%, #0088FF 100%);
 
-  /* === Surface palette — cold daylight === */
-  --color-bg: #E8EEF8;
-  --color-surface: #F4F7FC;
-  --color-surface-2: #EAEEF6;
-  --color-border: #D0D9EC;
-  --color-border-strong: #A8B8D8;
+  /* 英雄卡 */
+  --color-hero: linear-gradient(145deg, #0A1E3D 0%, #0D2D5A 60%, #0A3070 100%);
 
-  /* === Text hierarchy === */
-  --color-text: #0D1A2E;
-  --color-text-secondary: #4A5978;
-  --color-text-muted: #8896AF;
+  /* 背景与表面 */
+  --color-bg: #F0F6FF;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #F5F9FF;
+  --color-border: #D9ECFF;
+  --color-border-strong: #A8CEFF;
 
-  /* === Status === */
-  --color-danger: #C0392B;
-  --color-danger-bg: #FEF0EE;
-  --color-danger-text: #922B21;
+  /* 文字层级 */
+  --color-text: #061525;
+  --color-text-secondary: #7AAAD4;
+  --color-text-muted: #B0C8E0;
 
-  /* === Radius — precise, not bubbly === */
-  --radius-card: 10px;
-  --radius-card-lg: 14px;
-  --radius-btn: 10px;
-  --radius-chip: 6px;
+  /* 功能色 */
+  --color-danger: #EF4444;
+  --color-danger-bg: #FEF2F2;
+  --color-danger-text: #B91C1C;
+  --color-success: #16A34A;
+  --color-success-bg: #EDFDF4;
 
-  /* === Shadow — cool-tinted === */
-  --shadow-card: 0 1px 3px rgba(0, 30, 80, 0.07), 0 4px 16px rgba(0, 30, 80, 0.07);
-  --shadow-card-hover: 0 2px 8px rgba(0, 30, 80, 0.1), 0 8px 28px rgba(0, 30, 80, 0.1);
-  --shadow-fab: 0 4px 20px rgba(0, 82, 212, 0.42);
-  --shadow-tab: 0 -1px 0 rgba(0, 30, 80, 0.08), 0 -4px 20px rgba(0, 30, 80, 0.06);
+  /* 圆角 */
+  --radius-hero: 18px;
+  --radius-card: 14px;
+  --radius-card-sm: 11px;
+  --radius-btn: 11px;
+  --radius-chip: 20px;
+  --radius-fab: 16px;
+  --radius-fab-extended: 28px;
 
-  /* === Gradients === */
-  --gradient-hero: linear-gradient(145deg, #0D1A2E 0%, #112244 50%, #0A2060 100%);
-  --gradient-accent: linear-gradient(135deg, #0041AA 0%, #0066FF 100%);
-  --gradient-danger: linear-gradient(135deg, #C0392B 0%, #E74C3C 100%);
+  /* 阴影 */
+  --shadow-card: 0 2px 14px rgba(0, 40, 120, 0.08);
+  --shadow-card-sm: 0 1px 6px rgba(0, 40, 120, 0.05);
+  --shadow-fab: 0 4px 20px rgba(0, 102, 255, 0.42);
+  --shadow-tab: 0 -1px 0 rgba(0, 40, 120, 0.06), 0 -4px 16px rgba(0, 40, 120, 0.04);
 
-  /* === Typography === */
+  /* 字体 */
   --font-display: 'Syne', 'PingFang SC', sans-serif;
   --font-body: 'DM Sans', 'PingFang SC', 'Helvetica Neue', sans-serif;
 }
