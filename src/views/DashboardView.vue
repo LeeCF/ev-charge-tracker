@@ -16,7 +16,14 @@
       <div class="summary-grid card-anim card-anim-2">
         <!-- 上次充电 -->
         <div class="summary-card">
-          <div class="summary-label">上次充电</div>
+          <div class="summary-label">
+            <svg class="summary-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 4h14l-1.5 9H2.5L1 4z"/>
+              <circle cx="5.5" cy="14" r="1"/>
+              <circle cx="10.5" cy="14" r="1"/>
+            </svg>
+            上次充电
+          </div>
           <div class="summary-number">
             {{ daysAgo }}<span class="summary-unit">天前</span>
           </div>
@@ -27,7 +34,13 @@
         </div>
         <!-- 本月花费 -->
         <div class="summary-card">
-          <div class="summary-label">本月花费</div>
+          <div class="summary-label">
+            <svg class="summary-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="8" r="6.5"/>
+              <path d="M8 4.5v7M5.5 6.5c0-1.1.9-2 2.5-2s2.5.9 2.5 2c0 2-5 2-5 4 0 1.1.9 2 2.5 2s2.5-.9 2.5-2"/>
+            </svg>
+            本月花费
+          </div>
           <div class="summary-number">
             <span v-if="currentMonthCost != null">¥{{ currentMonthCost.toFixed(0) }}</span>
             <span v-else class="summary-empty">暂无</span>
@@ -177,6 +190,16 @@ function onScroll() {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.summary-icon {
+  width: 11px;
+  height: 11px;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
 }
 
 .summary-number {
