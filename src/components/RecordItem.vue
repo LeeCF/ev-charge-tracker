@@ -233,13 +233,12 @@ function triggerDelete() {
 /* ── Card ────────────────────────────────────────────────────────── */
 .record-item {
   background: var(--color-surface);
-  border-radius: var(--radius-card);
-  padding: 14px 14px 14px 18px;
-  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-card-sm);
+  padding: 12px 14px 12px 16px;
+  box-shadow: var(--shadow-card-sm);
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  /* default transition for snapping back */
   transition: box-shadow 0.2s;
   touch-action: pan-y;
   user-select: none;
@@ -282,13 +281,13 @@ function triggerDelete() {
 .tags { display: flex; gap: 6px; flex-wrap: wrap; }
 
 .tag {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
-  padding: 3px 10px;
+  padding: 3px 9px;
   border-radius: var(--radius-chip);
 }
 .tag--type {
-  background: var(--color-bg);
+  background: var(--color-surface-2);
   color: var(--color-text-secondary);
   border: 1px solid var(--color-border);
 }
@@ -297,7 +296,7 @@ function triggerDelete() {
   color: var(--color-accent-text);
 }
 .tag--partial {
-  background: var(--color-bg);
+  background: var(--color-surface-2);
   color: var(--color-text-muted);
   border: 1px solid var(--color-border);
 }
