@@ -1,14 +1,15 @@
 <template>
-  <div class="hero-card">
+  <div class="hero-card" :class="{ 'hero-card--overdue': hasData && displayDays < 0 }">
     <!-- 右上角光晕装饰 -->
     <div class="hero-glow" aria-hidden="true" />
 
     <div class="hero-content">
       <!-- 左侧：标签 + 大数字 + 底部信息 -->
       <div class="hero-left">
-        <div class="hero-eyebrow">距满充还有</div>
+        <div class="hero-eyebrow">{{ hasData && displayDays < 0 ? '满充已逾期' : '距满充还有' }}</div>
         <div class="hero-number-wrap">
-          <span class="hero-number" :key="displayDays">{{ Math.abs(displayDays) }}</span>
+          <span v-if="hasData" class="hero-number" :key="displayDays">{{ Math.abs(displayDays) }}</span>
+          <span v-else class="hero-number hero-number--empty">--</span>
           <span class="hero-unit">天</span>
         </div>
         <div class="hero-meta">
@@ -29,7 +30,7 @@
           <circle
             cx="32" cy="32" r="26"
             fill="none"
-            stroke="url(#ring-gradient)"
+            stroke="url(#countdown-ring-gradient)"
             stroke-width="5"
             stroke-linecap="round"
             :stroke-dasharray="circumference"
@@ -38,7 +39,7 @@
             class="ring-progress"
           />
           <defs>
-            <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient id="countdown-ring-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#0066FF" />
               <stop offset="100%" stop-color="#00AAFF" />
             </linearGradient>
@@ -58,7 +59,8 @@ import { useSettingsStore } from '../stores/settings.js'
 const records = useRecordsStore()
 const settings = useSettingsStore()
 
-const displayDays = computed(() => records.daysUntilNextFullCharge ?? 0)
+const displayDays = computed(() => records.daysUntilNextFullCharge)
+const hasData = computed(() => displayDays.value !== null)
 const progress = computed(() => records.progressPercent)
 const intervalDays = computed(() => settings.fullChargeIntervalDays)
 
@@ -149,6 +151,18 @@ const dashOffset = computed(() =>
   font-size: 10px;
   color: rgba(180,220,255,0.9);
   font-weight: 500;
+}
+
+.hero-number--empty {
+  font-size: 48px;
+  letter-spacing: 0;
+  color: rgba(255,255,255,0.35);
+}
+
+.hero-card--overdue .hero-chip {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: rgba(255,180,180,0.9);
 }
 
 .hero-ring {
