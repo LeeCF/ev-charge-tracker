@@ -105,7 +105,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { reactive, computed } from 'vue'
 import { useRecordsStore } from '../stores/records.js'
 
 defineProps({ visible: Boolean })
