@@ -123,12 +123,12 @@ const dashOffset = computed(() =>
 }
 
 .hero-number {
-  font-size: 60px;
-  font-weight: 800;
+  font-size: 80px;
+  font-weight: 400;
   color: white;
-  line-height: 1;
-  letter-spacing: -3px;
-  font-family: var(--font-display);
+  line-height: 0.9;
+  letter-spacing: 2px;
+  font-family: var(--font-hero);
   animation: slot-in 0.4s ease-in-out;
 }
 
