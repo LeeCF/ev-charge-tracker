@@ -28,7 +28,8 @@
             :class="{ active: settings.batteryType === opt.value }"
             @click="selectBatteryType(opt.value)"
           >
-            <div class="battery-icon">{{ opt.icon }}</div>
+            <!-- SVG 图标 -->
+            <div class="battery-icon" v-html="opt.svg" />
             <div class="battery-name">{{ opt.label }}</div>
             <div class="battery-days">{{ opt.days ? `${opt.days}天` : '自设' }}</div>
             <div v-if="settings.batteryType === opt.value" class="battery-check">✓</div>
@@ -91,9 +92,100 @@ const settings = useSettingsStore()
 const recordsStore = useRecordsStore()
 
 const batteryOptions = [
-  { value: 'lfp',    label: '磷酸铁锂', days: 14,   icon: '🔋' },
-  { value: 'nmc',    label: '三元锂',   days: 30,   icon: '⚡' },
-  { value: 'custom', label: '自定义',   days: null, icon: '🔧' },
+  {
+    value: 'lfp',
+    label: '磷酸铁锂',
+    days: 14,
+    // 深海蓝 — 稳定晶格，满电感，3格全亮
+    svg: `<svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lfp-bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1A4FCC"/>
+          <stop offset="100%" stop-color="#0A2E8A"/>
+        </linearGradient>
+        <linearGradient id="lfp-cell" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5AAAFF"/>
+          <stop offset="100%" stop-color="#2266EE"/>
+        </linearGradient>
+      </defs>
+      <!-- 外壳 -->
+      <rect x="1" y="3" width="34" height="22" rx="4" fill="url(#lfp-bg)" stroke="#3366CC" stroke-width="1"/>
+      <!-- 正极端子 -->
+      <rect x="35" y="10" width="4" height="8" rx="1.5" fill="#3366CC"/>
+      <!-- 3格满电 -->
+      <rect x="4.5" y="6.5" width="8" height="15" rx="2" fill="url(#lfp-cell)" opacity="0.95"/>
+      <rect x="14.5" y="6.5" width="8" height="15" rx="2" fill="url(#lfp-cell)" opacity="0.95"/>
+      <rect x="24.5" y="6.5" width="8" height="15" rx="2" fill="url(#lfp-cell)" opacity="0.95"/>
+      <!-- 高光 -->
+      <rect x="4.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.18"/>
+      <rect x="14.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.18"/>
+      <rect x="24.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.18"/>
+    </svg>`,
+  },
+  {
+    value: 'nmc',
+    label: '三元锂',
+    days: 30,
+    // 琥珀橙紫 — 高密度，能量感，2格亮+1格暗
+    svg: `<svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="nmc-bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7C3A8A"/>
+          <stop offset="100%" stop-color="#4A1860"/>
+        </linearGradient>
+        <linearGradient id="nmc-cell-on" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FFB347"/>
+          <stop offset="100%" stop-color="#E06020"/>
+        </linearGradient>
+        <linearGradient id="nmc-cell-off" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#6A2878"/>
+          <stop offset="100%" stop-color="#3A1050"/>
+        </linearGradient>
+      </defs>
+      <!-- 外壳 -->
+      <rect x="1" y="3" width="34" height="22" rx="4" fill="url(#nmc-bg)" stroke="#9A4AAA" stroke-width="1"/>
+      <!-- 正极端子 -->
+      <rect x="35" y="10" width="4" height="8" rx="1.5" fill="#9A4AAA"/>
+      <!-- 2格亮 1格暗 -->
+      <rect x="4.5" y="6.5" width="8" height="15" rx="2" fill="url(#nmc-cell-on)" opacity="0.95"/>
+      <rect x="14.5" y="6.5" width="8" height="15" rx="2" fill="url(#nmc-cell-on)" opacity="0.95"/>
+      <rect x="24.5" y="6.5" width="8" height="15" rx="2" fill="url(#nmc-cell-off)" opacity="0.7"/>
+      <!-- 高光 -->
+      <rect x="4.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.2"/>
+      <rect x="14.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.2"/>
+      <!-- 闪光点 — 高能量标识 -->
+      <path d="M27 10.5L25.5 14.5H27.5L26 18.5" stroke="#FFD080" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+    </svg>`,
+  },
+  {
+    value: 'custom',
+    label: '自定义',
+    days: null,
+    // 青色 — 开放轮廓，虚线格，可变感
+    svg: `<svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cus-bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0E3A4A"/>
+          <stop offset="100%" stop-color="#061E2A"/>
+        </linearGradient>
+        <linearGradient id="cus-cell" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#40D0C0" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#20A090" stop-opacity="0.2"/>
+        </linearGradient>
+      </defs>
+      <!-- 外壳 虚线 -->
+      <rect x="1" y="3" width="34" height="22" rx="4" fill="url(#cus-bg)" stroke="#20A090" stroke-width="1" stroke-dasharray="3 2"/>
+      <!-- 正极端子 -->
+      <rect x="35" y="10" width="4" height="8" rx="1.5" fill="#20A090" opacity="0.6"/>
+      <!-- 3格淡色轮廓 -->
+      <rect x="4.5" y="6.5" width="8" height="15" rx="2" fill="url(#cus-cell)" stroke="#30C0B0" stroke-width="0.8" opacity="0.8"/>
+      <rect x="14.5" y="6.5" width="8" height="15" rx="2" fill="url(#cus-cell)" stroke="#30C0B0" stroke-width="0.8" opacity="0.8"/>
+      <rect x="24.5" y="6.5" width="8" height="15" rx="2" fill="url(#cus-cell)" stroke="#30C0B0" stroke-width="0.8" opacity="0.8"/>
+      <!-- 中心加号 — 可配置标识 -->
+      <line x1="28.5" y1="11.5" x2="28.5" y2="17.5" stroke="#40D0C0" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
+      <line x1="25.5" y1="14.5" x2="31.5" y2="14.5" stroke="#40D0C0" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
+    </svg>`,
+  },
 ]
 
 function selectBatteryType(value) {
@@ -184,7 +276,19 @@ function confirmClear() {
   box-shadow: 0 3px 12px rgba(0,102,255,0.3);
 }
 
-.battery-icon { font-size: 20px; }
+.battery-icon {
+  width: 40px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.battery-icon svg {
+  width: 40px;
+  height: 28px;
+}
 
 .battery-name {
   font-size: 11px;
