@@ -3,7 +3,7 @@
     <div class="hero-glow" aria-hidden="true" />
 
     <div class="hero-body">
-      <!-- 左侧：标签 + 大数字 + chip -->
+      <!-- 左侧：eyebrow + 大数字 + chip -->
       <div class="hero-left">
         <div class="hero-eyebrow">{{ hasData && displayDays < 0 ? '满充已逾期' : '距满充还有' }}</div>
         <div class="hero-number-wrap">
@@ -17,40 +17,17 @@
         </div>
       </div>
 
-      <!-- 右侧：大进度环 -->
-      <div class="hero-ring" aria-hidden="true">
-        <svg :width="ringSize" :height="ringSize" :viewBox="`0 0 ${ringSize} ${ringSize}`">
-          <!-- 背景轨道 -->
-          <circle
-            :cx="ringSize/2" :cy="ringSize/2" :r="ringR"
-            fill="none"
-            stroke="rgba(255,255,255,0.07)"
-            :stroke-width="ringStroke"
-          />
-          <!-- 进度弧 -->
-          <circle
-            :cx="ringSize/2" :cy="ringSize/2" :r="ringR"
-            fill="none"
-            stroke="url(#countdown-ring-gradient)"
-            :stroke-width="ringStroke"
-            stroke-linecap="round"
-            :stroke-dasharray="circumference"
-            :stroke-dashoffset="dashOffset"
-            :transform="`rotate(-90 ${ringSize/2} ${ringSize/2})`"
-            class="ring-progress"
-          />
-          <defs>
-            <linearGradient id="countdown-ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#4499FF" />
-              <stop offset="100%" stop-color="#00CCFF" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <!-- 环内信息 -->
-        <div class="ring-inner">
-          <div class="ring-percent">{{ progress }}</div>
-          <div class="ring-percent-label">%</div>
-          <div class="ring-caption">周期</div>
+      <!-- 右侧：撕页日历 -->
+      <div class="calendar" v-if="nextFullChargeDate">
+        <div class="cal-month">
+          <span class="cal-month-text">{{ monthLabel }}</span>
+        </div>
+        <div class="cal-body">
+          <div class="cal-tear" aria-hidden="true">
+            <span v-for="i in 10" :key="i" />
+          </div>
+          <div class="cal-day">{{ dayLabel }}</div>
+          <div class="cal-label">建议满充</div>
         </div>
       </div>
     </div>
@@ -67,94 +44,92 @@ const settings = useSettingsStore()
 
 const displayDays = computed(() => records.daysUntilNextFullCharge)
 const hasData = computed(() => displayDays.value !== null)
-const progress = computed(() => records.progressPercent)
 const intervalDays = computed(() => settings.fullChargeIntervalDays)
+const nextFullChargeDate = computed(() => records.nextFullChargeDate)
 
 const batteryLabels = { lfp: '磷酸铁锂', nmc: '三元锂', custom: '自定义' }
 const batteryLabel = computed(() => batteryLabels[settings.batteryType] ?? '磷酸铁锂')
 
-const ringSize = 96
-const ringR = 38
-const ringStroke = 6
-const circumference = 2 * Math.PI * ringR
-const dashOffset = computed(() =>
-  circumference * (1 - Math.min(progress.value, 100) / 100)
-)
+const MONTHS = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']
+const monthLabel = computed(() => {
+  if (!nextFullChargeDate.value) return ''
+  const m = parseInt(nextFullChargeDate.value.slice(5, 7)) - 1
+  return MONTHS[m]
+})
+const dayLabel = computed(() => {
+  if (!nextFullChargeDate.value) return ''
+  return nextFullChargeDate.value.slice(8, 10).replace(/^0/, '')
+})
 </script>
 
 <style scoped>
 .hero-card {
   background: var(--color-hero);
   border-radius: var(--radius-hero);
-  padding: 18px 16px 20px;
+  padding: 20px 18px 18px;
   margin: 0 0 10px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 10px 32px rgba(10, 30, 60, 0.22);
+  box-shadow: 0 12px 40px rgba(5, 15, 40, 0.45);
 }
 
 .hero-glow {
   position: absolute;
-  top: -40px;
-  right: -20px;
-  width: 180px;
-  height: 180px;
-  background: radial-gradient(circle, rgba(0,102,255,0.22), transparent 65%);
+  top: -50px;
+  right: -30px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(0,100,255,0.2), transparent 60%);
   pointer-events: none;
 }
 
-/* 主体：左右两栏，垂直居中 */
 .hero-body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   position: relative;
 }
 
-/* 左侧 */
-.hero-left {
-  flex: 1;
-  min-width: 0;
-}
+.hero-left { flex: 1; min-width: 0; }
 
 .hero-eyebrow {
   font-size: 10px;
-  color: rgba(255,255,255,0.4);
-  letter-spacing: 2px;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 2.5px;
   text-transform: uppercase;
   font-family: var(--font-body);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .hero-number-wrap {
   display: flex;
   align-items: baseline;
-  gap: 4px;
-  margin-bottom: 14px;
+  gap: 5px;
+  margin-bottom: 16px;
   overflow: hidden;
 }
 
 .hero-number {
-  font-size: 72px;
+  font-size: 80px;
   font-weight: 400;
   color: white;
-  line-height: 1;
-  letter-spacing: 1px;
+  line-height: 0.9;
+  letter-spacing: 2px;
   font-family: var(--font-hero);
   animation: slot-in 0.4s ease-in-out;
 }
 
 .hero-unit {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 300;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.4);
   font-family: var(--font-body);
   margin-bottom: 4px;
 }
 
 .hero-number--empty {
-  font-size: 56px;
+  font-size: 60px;
   letter-spacing: 0;
   color: rgba(255,255,255,0.3);
 }
@@ -166,12 +141,12 @@ const dashOffset = computed(() =>
 }
 
 .hero-chip {
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--radius-chip);
-  padding: 4px 10px;
+  padding: 4px 11px;
   font-size: 11px;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.45);
   font-weight: 400;
   font-family: var(--font-body);
 }
@@ -182,52 +157,66 @@ const dashOffset = computed(() =>
   color: rgba(255,180,180,0.85);
 }
 
-/* 右侧：进度环 */
-.hero-ring {
-  position: relative;
+/* ── 撕页日历 ── */
+.calendar {
   flex-shrink: 0;
-  width: 96px;
-  height: 96px;
+  width: 76px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
-.ring-progress {
-  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+.cal-month {
+  background: linear-gradient(135deg, #0055E0 0%, #0088FF 100%);
+  padding: 6px 0 5px;
+  text-align: center;
 }
 
-/* 环内文字 */
-.ring-inner {
-  position: absolute;
-  inset: 0;
+.cal-month-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 2px;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+}
+
+.cal-body {
+  padding: 6px 0 10px;
+  text-align: center;
+}
+
+/* 撕裂锯齿 */
+.cal-tear {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
+  justify-content: space-around;
+  padding: 0 4px;
+  margin-bottom: 6px;
+}
+.cal-tear span {
+  width: 1px;
+  height: 5px;
+  background: rgba(255,255,255,0.07);
 }
 
-.ring-percent {
-  font-size: 26px;
+.cal-day {
+  font-family: var(--font-hero);
+  font-size: 44px;
   font-weight: 400;
   color: white;
   line-height: 1;
-  font-family: var(--font-hero);
   letter-spacing: 1px;
 }
 
-.ring-percent-label {
-  font-size: 11px;
-  color: rgba(255,255,255,0.45);
-  font-family: var(--font-body);
-  line-height: 1.2;
-}
-
-.ring-caption {
+.cal-label {
   font-size: 9px;
-  color: rgba(255,255,255,0.3);
-  font-family: var(--font-body);
-  letter-spacing: 1px;
+  color: rgba(100,170,255,0.6);
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  margin-top: 2px;
+  margin-top: 5px;
+  font-family: var(--font-body);
 }
 
 @keyframes slot-in {
