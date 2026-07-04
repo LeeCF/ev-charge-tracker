@@ -185,7 +185,7 @@ function onScroll() {
 }
 
 .summary-label {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;

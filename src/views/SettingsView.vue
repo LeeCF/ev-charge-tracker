@@ -238,8 +238,8 @@ function confirmClear() {
   font-size: 22px;
   font-weight: 800;
   color: var(--color-accent);
-  font-family: var(--font-display);
-  letter-spacing: -0.5px;
+  font-family: var(--font-body);
+  letter-spacing: -0.3px;
 }
 
 .slider-unit {
