@@ -1,0 +1,221 @@
+<h2>版面结构重设计 · 6种截然不同的布局范式</h2>
+<p class="subtitle">不是换颜色——是重新思考信息怎么组织、空间怎么分配</p>
+
+<div class="cards">
+
+  <!-- 1. Hero Full-Bleed -->
+  <div class="card" data-choice="hero-bleed" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#F0F6FF;padding:0;border-radius:12px;overflow:hidden;font-family:-apple-system,sans-serif;">
+      <!-- Hero 全出血区 -->
+      <div style="background:linear-gradient(160deg,#0055E0 0%,#0088FF 60%,#00AAFF 100%);padding:24px 20px 32px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,0.06);border-radius:50%;"></div>
+        <div style="position:absolute;bottom:-20px;left:40px;width:80px;height:80px;background:rgba(255,255,255,0.04);border-radius:50%;"></div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">距下次满充</div>
+        <div style="font-size:64px;font-weight:800;color:white;line-height:1;letter-spacing:-3px;margin-bottom:4px;">12<span style="font-size:22px;font-weight:500;margin-left:4px;opacity:0.8;">天</span></div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.6);">磷酸铁锂 · 周期 65%</div>
+        <div style="display:flex;gap:3px;margin-top:12px;">${Array.from({length:20},(_,i)=>`<div style="flex:1;height:3px;border-radius:2px;background:${i<13?'rgba(255,255,255,0.85)':'rgba(255,255,255,0.2)'}"></div>`).join('')}</div>
+      </div>
+      <!-- 内容区浮在 hero 上 -->
+      <div style="padding:0 12px;margin-top:-16px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div style="background:white;border-radius:12px;padding:12px;box-shadow:0 4px 16px rgba(0,40,120,0.1);">
+            <div style="font-size:9px;color:#7AAAD4;text-transform:uppercase;letter-spacing:0.5px;">上次充电</div>
+            <div style="font-size:17px;font-weight:800;color:#061525;margin:3px 0;">3天前</div>
+            <div style="font-size:10px;color:#0066FF;font-weight:600;">快充 · 满充 ✓</div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:12px;box-shadow:0 4px 16px rgba(0,40,120,0.1);">
+            <div style="font-size:9px;color:#7AAAD4;text-transform:uppercase;letter-spacing:0.5px;">本月花费</div>
+            <div style="font-size:17px;font-weight:800;color:#061525;margin:3px 0;">¥128</div>
+            <div style="font-size:10px;color:#16A34A;font-weight:600;">↓ 比上月省12%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A · Hero 全出血</h3>
+      <p>蓝色渐变满铺顶部，白卡浮叠其上。Spotify、Instagram 故事卡片的经典手法，视觉冲击强，层次感最丰富。</p>
+    </div>
+  </div>
+
+  <!-- 2. 大数字 + 极简留白 -->
+  <div class="card" data-choice="big-number" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:white;padding:20px;border-radius:12px;font-family:-apple-system,sans-serif;border:1px solid #F0F0F0;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+        <div style="font-size:12px;color:#999;letter-spacing:0.5px;">比亚迪海豹</div>
+        <div style="font-size:11px;color:#0066FF;font-weight:600;background:#E0EDFF;padding:3px 10px;border-radius:20px;">充电中 ●</div>
+      </div>
+      <!-- 超大数字占满宽度 -->
+      <div style="margin:16px 0 8px;">
+        <div style="font-size:96px;font-weight:800;color:#061525;line-height:0.9;letter-spacing:-6px;">12</div>
+        <div style="font-size:16px;color:#999;font-weight:400;margin-top:8px;letter-spacing:0.3px;">天后需要满充</div>
+      </div>
+      <div style="height:1px;background:#F5F5F5;margin:16px 0;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;">
+        <div style="padding-right:12px;border-right:1px solid #F5F5F5;">
+          <div style="font-size:9px;color:#BBB;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">上次</div>
+          <div style="font-size:15px;font-weight:700;color:#061525;">3天</div>
+        </div>
+        <div style="padding:0 12px;border-right:1px solid #F5F5F5;">
+          <div style="font-size:9px;color:#BBB;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">类型</div>
+          <div style="font-size:15px;font-weight:700;color:#061525;">快充</div>
+        </div>
+        <div style="padding-left:12px;">
+          <div style="font-size:9px;color:#BBB;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">花费</div>
+          <div style="font-size:15px;font-weight:700;color:#061525;">¥128</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B · 超大数字 · 极简</h3>
+      <p>数字放到 96px 占满屏宽，一切装饰归零。像 Calm、Headspace 的呼吸练习页，震撼但克制。</p>
+    </div>
+  </div>
+
+  <!-- 3. 仪表盘网格 -->
+  <div class="card" data-choice="dashboard-grid" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#F8F9FC;padding:16px;border-radius:12px;font-family:-apple-system,sans-serif;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="font-size:17px;font-weight:700;color:#0F172A;">今天</div>
+        <div style="font-size:12px;color:#94A3B8;">7月3日 周四</div>
+      </div>
+      <!-- 不规则网格 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:8px;">
+        <!-- 大卡占两列 -->
+        <div style="grid-column:1/3;background:linear-gradient(135deg,#0055E0,#0088FF);border-radius:14px;padding:16px;color:white;">
+          <div style="font-size:10px;opacity:0.65;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">距满充</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:8px;">
+            <span style="font-size:52px;font-weight:800;line-height:1;letter-spacing:-2px;">12</span>
+            <span style="font-size:16px;opacity:0.75;">天</span>
+          </div>
+          <div style="display:flex;gap:2px;">${Array.from({length:14},(_,i)=>`<div style="flex:1;height:4px;border-radius:2px;background:${i<9?'rgba(255,255,255,0.9)':'rgba(255,255,255,0.2)'}"></div>`).join('')}</div>
+        </div>
+        <!-- 小卡 -->
+        <div style="background:white;border-radius:12px;padding:12px;box-shadow:0 1px 6px rgba(15,23,42,0.06);">
+          <div style="font-size:9px;color:#94A3B8;margin-bottom:4px;letter-spacing:0.5px;">上次充电</div>
+          <div style="font-size:20px;font-weight:800;color:#0F172A;line-height:1;">3<span style="font-size:11px;color:#94A3B8;font-weight:400;margin-left:1px;">天前</span></div>
+          <div style="font-size:10px;color:#0066FF;font-weight:600;margin-top:4px;">快充 ⚡</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:12px;box-shadow:0 1px 6px rgba(15,23,42,0.06);">
+          <div style="font-size:9px;color:#94A3B8;margin-bottom:4px;letter-spacing:0.5px;">本月花费</div>
+          <div style="font-size:20px;font-weight:800;color:#0F172A;line-height:1;">¥<span style="font-size:18px;">128</span></div>
+          <div style="font-size:10px;color:#16A34A;font-weight:600;margin-top:4px;">↓ 省12%</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C · 不规则网格仪表盘</h3>
+      <p>主卡横跨全宽，次卡填充下方网格。像 iOS 主屏小组件、Notion 仪表盘，空间利用率最高。</p>
+    </div>
+  </div>
+
+  <!-- 4. 时间线 / 动态流 -->
+  <div class="card" data-choice="timeline" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:white;padding:18px;border-radius:12px;font-family:-apple-system,sans-serif;border:1px solid #F0F0F0;">
+      <div style="margin-bottom:16px;">
+        <div style="font-size:11px;color:#94A3B8;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">充电动态</div>
+        <div style="font-size:20px;font-weight:700;color:#0F172A;">距满充 <span style="color:#0066FF;">12天</span></div>
+      </div>
+      <!-- 时间线 -->
+      <div style="position:relative;padding-left:20px;">
+        <div style="position:absolute;left:7px;top:0;bottom:0;width:1px;background:#E5E7EB;"></div>
+        <div style="margin-bottom:14px;position:relative;">
+          <div style="position:absolute;left:-16px;top:3px;width:10px;height:10px;background:#0066FF;border-radius:50%;border:2px solid white;box-shadow:0 0 0 2px #0066FF;"></div>
+          <div style="font-size:12px;color:#94A3B8;margin-bottom:2px;">3天前 · 2025-06-30</div>
+          <div style="font-size:14px;font-weight:600;color:#0F172A;">快充 · 满充 100%</div>
+          <div style="font-size:12px;color:#16A34A;">¥45 · 家</div>
+        </div>
+        <div style="margin-bottom:14px;position:relative;">
+          <div style="position:absolute;left:-16px;top:3px;width:10px;height:10px;background:#E5E7EB;border-radius:50%;border:2px solid white;"></div>
+          <div style="font-size:12px;color:#94A3B8;margin-bottom:2px;">15天前 · 2025-06-18</div>
+          <div style="font-size:14px;font-weight:600;color:#0F172A;">慢充 · 非满充 80%</div>
+          <div style="font-size:12px;color:#94A3B8;">¥83 · 公司</div>
+        </div>
+        <div style="position:relative;opacity:0.4;">
+          <div style="position:absolute;left:-16px;top:3px;width:10px;height:10px;background:#E5E7EB;border-radius:50%;border:2px solid white;"></div>
+          <div style="font-size:12px;color:#94A3B8;margin-bottom:2px;">30天前 · 2025-06-03</div>
+          <div style="font-size:14px;font-weight:600;color:#0F172A;">快充 · 满充 100%</div>
+          <div style="font-size:12px;color:#94A3B8;">¥52</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D · 时间线动态流</h3>
+      <p>首页即是充电历史流，状态数字悬浮在顶部。像 Twitter/X 的 feed 感，或支付宝账单页，信息密度高且连贯。</p>
+    </div>
+  </div>
+
+  <!-- 5. 卡片堆叠 / Swipeable -->
+  <div class="card" data-choice="swipe-stack" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#F0F6FF;padding:20px 20px 12px;border-radius:12px;font-family:-apple-system,sans-serif;position:relative;">
+      <!-- 堆叠效果 -->
+      <div style="position:relative;height:140px;margin-bottom:10px;">
+        <div style="position:absolute;top:8px;left:8px;right:8px;height:120px;background:rgba(0,102,255,0.15);border-radius:16px;"></div>
+        <div style="position:absolute;top:4px;left:4px;right:4px;height:120px;background:rgba(0,102,255,0.3);border-radius:16px;"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(135deg,#0055E0,#0088FF);border-radius:16px;padding:16px;color:white;">
+          <div style="font-size:10px;opacity:0.65;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">距满充</div>
+          <div style="font-size:52px;font-weight:800;line-height:1;letter-spacing:-2.5px;">12<span style="font-size:18px;font-weight:400;margin-left:4px;opacity:0.75;">天</span></div>
+          <div style="font-size:11px;opacity:0.6;margin-top:6px;">← 滑动查看上次充电</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:5px;margin-bottom:8px;">
+        <div style="width:18px;height:4px;background:#0066FF;border-radius:2px;"></div>
+        <div style="width:4px;height:4px;background:#D0E4FF;border-radius:50%;"></div>
+        <div style="width:4px;height:4px;background:#D0E4FF;border-radius:50%;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+        <div style="background:white;border-radius:10px;padding:10px;box-shadow:0 1px 6px rgba(0,40,120,0.05);">
+          <div style="font-size:9px;color:#7AAAD4;margin-bottom:2px;">上次充电</div>
+          <div style="font-size:15px;font-weight:700;color:#061525;">3天前</div>
+        </div>
+        <div style="background:white;border-radius:10px;padding:10px;box-shadow:0 1px 6px rgba(0,40,120,0.05);">
+          <div style="font-size:9px;color:#7AAAD4;margin-bottom:2px;">本月花费</div>
+          <div style="font-size:15px;font-weight:700;color:#061525;">¥128</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>E · 卡片堆叠可滑动</h3>
+      <p>主卡以堆叠形式呈现，左右滑动切换不同统计维度。像 Apple Wallet 卡片、Google Pay，空间优雅且有探索感。</p>
+    </div>
+  </div>
+
+  <!-- 6. 沉浸全屏 -->
+  <div class="card" data-choice="immersive" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#020B18;padding:20px;border-radius:12px;font-family:-apple-system,sans-serif;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,102,255,0.25) 0%,transparent 65%);pointer-events:none;"></div>
+      <div style="position:relative;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+          <div style="font-size:13px;color:rgba(255,255,255,0.4);letter-spacing:1px;">比亚迪海豹</div>
+          <div style="width:8px;height:8px;background:#00FF88;border-radius:50%;box-shadow:0 0 8px #00FF88;"></div>
+        </div>
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">距满充</div>
+          <div style="font-size:80px;font-weight:800;color:white;line-height:1;letter-spacing:-5px;">12</div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.4);margin-top:4px;">天</div>
+        </div>
+        <!-- 圆形进度 -->
+        <div style="display:flex;justify-content:center;margin-bottom:16px;">
+          <svg width="80" height="80" viewBox="0 0 80 80" style="transform:rotate(-90deg);">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+            <circle cx="40" cy="40" r="34" fill="none" stroke="#0066FF" stroke-width="6" stroke-dasharray="213.6" stroke-dashoffset="74.76" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px;">
+            <div style="font-size:9px;color:rgba(255,255,255,0.35);margin-bottom:3px;letter-spacing:0.5px;">上次充电</div>
+            <div style="font-size:15px;font-weight:700;color:white;">3天前</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px;">
+            <div style="font-size:9px;color:rgba(255,255,255,0.35);margin-bottom:3px;letter-spacing:0.5px;">本月花费</div>
+            <div style="font-size:15px;font-weight:700;color:white;">¥128</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>F · 沉浸暗色全屏</h3>
+      <p>深黑沉浸 + 圆形进度环 + 顶部蓝光晕。像 Tesla App、Nothing OS，高科技仪式感，适合深色系偏好。</p>
+    </div>
+  </div>
+
+</div>

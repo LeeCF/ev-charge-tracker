@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移动端尺寸规范</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'PingFang SC', sans-serif; background: #0F172A; color: #E2E8F0; min-height: 100vh; padding: 24px 16px 60px; }
+h2 { font-size: 20px; font-weight: 700; color: white; margin-bottom: 6px; }
+.subtitle { font-size: 13px; color: #64748B; margin-bottom: 24px; line-height: 1.5; }
+.section { margin-bottom: 24px; }
+.section-title { font-size: 10px; color: #4A8FFF; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+.block { background: #1E293B; border-radius: 12px; overflow: hidden; }
+.row { display: flex; align-items: flex-start; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #0F172A; }
+.row:last-child { border-bottom: none; }
+.row-label { font-size: 12px; color: #64748B; min-width: 100px; flex-shrink: 0; padding-top: 1px; }
+.row-value { font-size: 13px; color: #E2E8F0; font-weight: 500; line-height: 1.6; }
+.tag { display: inline-block; border-radius: 4px; padding: 1px 7px; font-size: 11px; font-weight: 600; margin-left: 5px; }
+.tag-ok { background: rgba(22,163,74,0.2); color: #4ADE80; }
+.tag-warn { background: rgba(234,179,8,0.2); color: #FDE047; }
+
+/* 手机实物比例示意 */
+.phone-wrap { display: flex; gap: 16px; justify-content: center; margin-top: 12px; }
+.phone { width: 160px; background: #1E293B; border-radius: 28px; border: 2px solid #334155; overflow: hidden; position: relative; }
+.phone-screen { background: #F0F6FF; font-family: -apple-system, sans-serif; }
+.annotation { font-size: 9px; color: #4A8FFF; font-weight: 600; position: absolute; right: -2px; white-space: nowrap; }
+.dim-line { position: absolute; right: 0; width: 1px; background: rgba(74,143,255,0.3); }
+</style>
+</head>
+<body>
+
+<h2>移动端尺寸规范</h2>
+<p class="subtitle">以下标准将应用到本次 UI 重设计，确保在 iPhone / Android / 微信小程序 上都达标</p>
+
+<!-- 触控目标 -->
+<div class="section">
+  <div class="section-title">触控目标 Touch Target</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">最小点击区</div>
+      <div class="row-value"><strong>44×44pt</strong>（iOS 标准）/ <strong>48×48dp</strong>（Android）<span class="tag tag-warn">关键</span><br><span style="font-size:11px;color:#64748B;">现有 FAB 52px ✓，Tab 图标区需确保足够点击面积</span></div>
+    </div>
+    <div class="row">
+      <div class="row-label">按钮高度</div>
+      <div class="row-value">主按钮 <strong>50–54px</strong>，次按钮 / chip <strong>32–36px</strong><br><span style="font-size:11px;color:#64748B;">保存记录按钮、充电类型选择按钮均适用</span></div>
+    </div>
+    <div class="row">
+      <div class="row-label">列表行高</div>
+      <div class="row-value">最小 <strong>44px</strong>，推荐 <strong>52–56px</strong>（含上下 padding）<br><span style="font-size:11px;color:#64748B;">充电记录每行需达到此高度</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 间距 -->
+<div class="section">
+  <div class="section-title">间距 Spacing</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">页面水平边距</div>
+      <div class="row-value"><strong>16px</strong>（小程序标准）/ iPhone 推荐 <strong>16–20px</strong></div>
+    </div>
+    <div class="row">
+      <div class="row-label">卡片内边距</div>
+      <div class="row-value"><strong>14–16px</strong> 水平，<strong>12–14px</strong> 垂直</div>
+    </div>
+    <div class="row">
+      <div class="row-label">卡片间距</div>
+      <div class="row-value"><strong>8–10px</strong>（紧凑布局）/ <strong>12px</strong>（宽松布局）</div>
+    </div>
+    <div class="row">
+      <div class="row-label">表单字段间距</div>
+      <div class="row-value"><strong>14–16px</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- 字体 -->
+<div class="section">
+  <div class="section-title">字体尺寸 Typography Scale</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">大数字显示</div>
+      <div class="row-value"><strong>48–64px</strong> Syne 800 — 倒计时天数</div>
+    </div>
+    <div class="row">
+      <div class="row-label">页面标题</div>
+      <div class="row-value"><strong>22–26px</strong> Syne 700</div>
+    </div>
+    <div class="row">
+      <div class="row-label">卡片主数字</div>
+      <div class="row-value"><strong>18–22px</strong> 粗体 — 次级统计数字</div>
+    </div>
+    <div class="row">
+      <div class="row-label">正文 / 列表</div>
+      <div class="row-value"><strong>14–15px</strong> — 记录日期、类型等</div>
+    </div>
+    <div class="row">
+      <div class="row-label">辅助文字</div>
+      <div class="row-value"><strong>11–13px</strong> — 标签、说明文字</div>
+    </div>
+    <div class="row">
+      <div class="row-label">最小字号</div>
+      <div class="row-value"><strong>10px</strong> — UPPERCASE 标签可用，正文不低于 12px <span class="tag tag-warn">下限</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 圆角 -->
+<div class="section">
+  <div class="section-title">圆角 Border Radius</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">主卡片</div>
+      <div class="row-value"><strong>16–20px</strong> — 英雄卡、主内容卡</div>
+    </div>
+    <div class="row">
+      <div class="row-label">次级卡片</div>
+      <div class="row-value"><strong>12–14px</strong> — 摘要卡、列表卡</div>
+    </div>
+    <div class="row">
+      <div class="row-label">按钮</div>
+      <div class="row-value"><strong>10–12px</strong> — 充电类型按钮、保存按钮</div>
+    </div>
+    <div class="row">
+      <div class="row-label">胶囊标签</div>
+      <div class="row-value"><strong>20px</strong>（全圆）— chip、状态标签</div>
+    </div>
+    <div class="row">
+      <div class="row-label">底部弹窗</div>
+      <div class="row-value">顶部 <strong>20–24px</strong>，底部 0</div>
+    </div>
+    <div class="row">
+      <div class="row-label">输入框</div>
+      <div class="row-value"><strong>10px</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- 安全区 -->
+<div class="section">
+  <div class="section-title">安全区 Safe Area</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">顶部状态栏</div>
+      <div class="row-value"><code style="background:#0A1628;padding:2px 6px;border-radius:4px;font-size:11px;">env(safe-area-inset-top)</code> — 刘海屏适配</div>
+    </div>
+    <div class="row">
+      <div class="row-label">底部 Home 条</div>
+      <div class="row-value"><code style="background:#0A1628;padding:2px 6px;border-radius:4px;font-size:11px;">env(safe-area-inset-bottom)</code> — iPhone X+ 需留 34px<br><span style="font-size:11px;color:#64748B;">Tab 栏底部 padding 已用此变量 ✓</span></div>
+    </div>
+    <div class="row">
+      <div class="row-label">内容底部间距</div>
+      <div class="row-value">滚动内容底部 = <strong>Tab 栏高度(49px) + safe-area-inset-bottom + 16px</strong></div>
+    </div>
+    <div class="row">
+      <div class="row-label">小程序适配</div>
+      <div class="row-value">页面 padding-bottom 需额外加 <strong>tabbar 高度</strong>，避免内容被遮挡</div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 栏 -->
+<div class="section">
+  <div class="section-title">Tab 栏规范</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">高度</div>
+      <div class="row-value"><strong>49px</strong>（iOS）/ <strong>56px</strong>（Android / 小程序）</div>
+    </div>
+    <div class="row">
+      <div class="row-label">图标尺寸</div>
+      <div class="row-value"><strong>22–24px</strong></div>
+    </div>
+    <div class="row">
+      <div class="row-label">图标+文字</div>
+      <div class="row-value">图标居中，文字 <strong>10px</strong>，图标下方 <strong>2–3px</strong> 间距</div>
+    </div>
+  </div>
+</div>
+
+<!-- 底部弹窗 -->
+<div class="section">
+  <div class="section-title">底部弹窗 Bottom Sheet</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">最大高度</div>
+      <div class="row-value"><strong>90vh</strong> — 留出顶部状态栏视觉空间</div>
+    </div>
+    <div class="row">
+      <div class="row-label">拖拽条</div>
+      <div class="row-value">宽 <strong>36px</strong>，高 <strong>4px</strong>，圆角 2px，距顶 <strong>10–12px</strong></div>
+    </div>
+    <div class="row">
+      <div class="row-label">内容水平边距</div>
+      <div class="row-value"><strong>18–20px</strong></div>
+    </div>
+    <div class="row">
+      <div class="row-label">背景遮罩</div>
+      <div class="row-value"><code style="background:#0A1628;padding:2px 6px;border-radius:4px;font-size:11px;">rgba(0,0,0,0.45)</code></div>
+    </div>
+  </div>
+</div>
+
+<!-- 实际比例示意 -->
+<div class="section">
+  <div class="section-title">实际比例示意（等比缩放）</div>
+  <div style="background:#1E293B;border-radius:12px;padding:16px;">
+    <div class="phone-wrap">
+
+      <!-- iPhone 14 Pro: 393×852 logical px -->
+      <div>
+        <div class="phone" style="width:156px;">
+          <div class="phone-screen">
+            <!-- Status bar -->
+            <div style="height:20px;background:#F0F6FF;display:flex;align-items:center;justify-content:flex-end;padding:0 8px;">
+              <div style="font-size:8px;color:#7AAAD4;">9:41</div>
+            </div>
+            <!-- Header -->
+            <div style="padding:6px 10px 4px;display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-size:13px;font-weight:700;color:#061525;letter-spacing:-0.3px;">充电</div>
+              <div style="background:#E0EDFF;border-radius:20px;padding:3px 8px;font-size:8px;color:#0066FF;font-weight:600;">+ 添加</div>
+            </div>
+            <!-- 英雄卡 -->
+            <div style="margin:0 8px 6px;background:linear-gradient(145deg,#0A1E3D,#0D2D5A);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
+              <div style="position:absolute;top:-10px;right:-10px;width:60px;height:60px;background:radial-gradient(circle,rgba(0,102,255,0.25),transparent 65%);pointer-events:none;"></div>
+              <div style="font-size:7px;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">距满充还有</div>
+              <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+                <div style="font-size:34px;font-weight:800;color:white;line-height:1;letter-spacing:-2px;">12<span style="font-size:10px;opacity:0.5;margin-left:2px;">天</span></div>
+                <svg width="30" height="30" viewBox="0 0 52 52" style="transform:rotate(-90deg);flex-shrink:0;">
+                  <circle cx="26" cy="26" r="21" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/>
+                  <circle cx="26" cy="26" r="21" fill="none" stroke="#0066FF" stroke-width="4" stroke-dasharray="131.9" stroke-dashoffset="46.2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div style="font-size:7px;color:rgba(255,255,255,0.3);margin-top:4px;">磷酸铁锂 · 65%</div>
+            </div>
+            <!-- 2列次卡 -->
+            <div style="margin:0 8px 6px;display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+              <div style="background:white;border-radius:8px;padding:7px;box-shadow:0 1px 4px rgba(0,40,120,0.07);">
+                <div style="font-size:7px;color:#7AAAD4;margin-bottom:2px;">上次充电</div>
+                <div style="font-size:12px;font-weight:800;color:#061525;">3<span style="font-size:7px;color:#7AAAD4;font-weight:400;margin-left:1px;">天前</span></div>
+                <div style="background:#E0EDFF;display:inline-block;border-radius:20px;padding:1px 5px;font-size:7px;color:#0066FF;font-weight:600;margin-top:3px;">快充⚡</div>
+              </div>
+              <div style="background:white;border-radius:8px;padding:7px;box-shadow:0 1px 4px rgba(0,40,120,0.07);">
+                <div style="font-size:7px;color:#7AAAD4;margin-bottom:2px;">本月花费</div>
+                <div style="font-size:12px;font-weight:800;color:#061525;">¥128</div>
+                <div style="background:#EDFDF4;display:inline-block;border-radius:20px;padding:1px 5px;font-size:7px;color:#16A34A;font-weight:600;margin-top:3px;">↓省12%</div>
+              </div>
+            </div>
+            <!-- 记录列表 -->
+            <div style="margin:0 8px 6px;background:white;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,40,120,0.06);">
+              <div style="padding:6px 8px 4px;display:flex;justify-content:space-between;border-bottom:1px solid #F0F6FF;">
+                <div style="font-size:7px;color:#7AAAD4;letter-spacing:0.5px;text-transform:uppercase;font-weight:600;">充电记录</div>
+                <div style="font-size:7px;color:#B0C8E0;">↕ 可滚动</div>
+              </div>
+              <div style="max-height:56px;overflow:hidden;">
+                <div style="display:flex;justify-content:space-between;padding:5px 8px;border-bottom:1px solid #F8FBFF;">
+                  <div><div style="font-size:8px;font-weight:600;color:#061525;">06-30</div><div style="font-size:7px;color:#7AAAD4;">快充·满充·家</div></div>
+                  <div style="font-size:8px;font-weight:700;color:#061525;">¥45</div>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:5px 8px;">
+                  <div><div style="font-size:8px;font-weight:600;color:#061525;">06-18</div><div style="font-size:7px;color:#7AAAD4;">慢充·非满充</div></div>
+                  <div style="font-size:8px;font-weight:700;color:#061525;">¥83</div>
+                </div>
+              </div>
+              <div style="padding:4px 8px;border-top:1px solid #F0F6FF;text-align:center;font-size:7px;color:#0066FF;font-weight:600;">查看全部 →</div>
+            </div>
+            <!-- Tab Bar -->
+            <div style="background:white;padding:5px 0 8px;display:flex;justify-content:space-around;box-shadow:0 -1px 0 rgba(0,40,120,0.06);">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:1px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0066FF" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <div style="font-size:7px;color:#0066FF;font-weight:600;">充电</div>
+                <div style="width:12px;height:2px;background:#0066FF;border-radius:1px;"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:1px;opacity:0.3;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7AAAD4" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                <div style="font-size:7px;color:#7AAAD4;">设置</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:10px;color:#64748B;margin-top:6px;">iPhone 14<br>390×844</div>
+      </div>
+
+      <!-- 规范标注 -->
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:8px;flex:1;">
+        <div style="background:#0A1628;border-radius:8px;padding:8px 10px;">
+          <div style="font-size:10px;color:#4A8FFF;font-weight:700;margin-bottom:4px;">英雄卡</div>
+          <div style="font-size:11px;color:#94A3B8;line-height:1.6;">圆角 16–20px<br>内边距 16px<br>阴影 冷蓝调</div>
+        </div>
+        <div style="background:#0A1628;border-radius:8px;padding:8px 10px;">
+          <div style="font-size:10px;color:#4A8FFF;font-weight:700;margin-bottom:4px;">摘要卡</div>
+          <div style="font-size:11px;color:#94A3B8;line-height:1.6;">圆角 12–14px<br>内边距 12–14px<br>数字 20–22px</div>
+        </div>
+        <div style="background:#0A1628;border-radius:8px;padding:8px 10px;">
+          <div style="font-size:10px;color:#4A8FFF;font-weight:700;margin-bottom:4px;">记录行</div>
+          <div style="font-size:11px;color:#94A3B8;line-height:1.6;">行高 ≥ 44px<br>字号 13–14px<br>上下 padding 10px</div>
+        </div>
+        <div style="background:#0A1628;border-radius:8px;padding:8px 10px;">
+          <div style="font-size:10px;color:#4A8FFF;font-weight:700;margin-bottom:4px;">Tab 栏</div>
+          <div style="font-size:11px;color:#94A3B8;line-height:1.6;">高度 49px<br>图标 22–24px<br>+ safe-area</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div style="background:#1E293B;border-radius:12px;padding:14px;margin-top:4px;">
+  <div style="font-size:11px;color:#4A8FFF;font-weight:700;margin-bottom:8px;">⚠️ 当前设计需要调整的地方</div>
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <div style="display:flex;gap:8px;align-items:flex-start;">
+      <div style="width:6px;height:6px;background:#FDE047;border-radius:50%;flex-shrink:0;margin-top:4px;"></div>
+      <div style="font-size:12px;color:#94A3B8;line-height:1.5;">AddRecordSheet 表单字段行高需确保 ≥44px 触控面积，现有 padding 11px 需验证总高度</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;">
+      <div style="width:6px;height:6px;background:#FDE047;border-radius:50%;flex-shrink:0;margin-top:4px;"></div>
+      <div style="font-size:12px;color:#94A3B8;line-height:1.5;">记录列表行高统一为 padding-top + padding-bottom + 内容 ≥44px，现有 8px×2 需加内容高度验证</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;">
+      <div style="width:6px;height:6px;background:#4ADE80;border-radius:50%;flex-shrink:0;margin-top:4px;"></div>
+      <div style="font-size:12px;color:#94A3B8;line-height:1.5;">Tab 栏已使用 env(safe-area-inset-bottom) ✓</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;">
+      <div style="width:6px;height:6px;background:#4ADE80;border-radius:50%;flex-shrink:0;margin-top:4px;"></div>
+      <div style="font-size:12px;color:#94A3B8;line-height:1.5;">FAB 按钮 52px ≥ 44px 触控标准 ✓</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;">
+      <div style="width:6px;height:6px;background:#FDE047;border-radius:50%;flex-shrink:0;margin-top:4px;"></div>
+      <div style="font-size:12px;color:#94A3B8;line-height:1.5;">设置页新增可视化卡片，电池类型卡片需 ≥80px 高度保证易点击</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

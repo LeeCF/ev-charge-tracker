@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>完整设计方案 · 最终确认</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'PingFang SC', sans-serif; background: #0F172A; color: #E2E8F0; min-height: 100vh; padding: 24px 16px 60px; }
+h2 { font-size: 20px; font-weight: 700; color: white; margin-bottom: 6px; }
+.subtitle { font-size: 13px; color: #64748B; margin-bottom: 24px; line-height: 1.5; }
+.section { margin-bottom: 20px; }
+.section-title { font-size: 10px; color: #4A8FFF; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+.block { background: #1E293B; border-radius: 12px; padding: 14px; margin-bottom: 8px; }
+.row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #1E3A5A; }
+.row:last-child { border-bottom: none; padding-bottom: 0; }
+.row-label { font-size: 12px; color: #64748B; min-width: 80px; flex-shrink: 0; }
+.row-value { font-size: 13px; color: #E2E8F0; font-weight: 500; text-align: right; line-height: 1.5; }
+.color-chip { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: middle; margin-right: 5px; }
+.badge { display: inline-block; background: rgba(0,102,255,0.2); border: 1px solid rgba(0,102,255,0.35); border-radius: 20px; padding: 2px 9px; font-size: 11px; color: #4A8FFF; font-weight: 600; }
+.confirm-btn { width: 100%; margin-top: 20px; padding: 15px; background: linear-gradient(135deg,#0055E0,#0088FF); border: none; border-radius: 14px; color: white; font-size: 16px; font-weight: 700; box-shadow: 0 4px 20px rgba(0,102,255,0.4); cursor: pointer; }
+.revise-btn { width: 100%; margin-top: 10px; padding: 12px; background: transparent; border: 1.5px solid #334155; border-radius: 14px; color: #64748B; font-size: 14px; font-weight: 600; cursor: pointer; }
+.notice { position: fixed; bottom: 0; left: 0; right: 0; background: #0066FF; color: white; padding: 14px 16px 28px; text-align: center; font-size: 14px; font-weight: 600; display: none; }
+.notice.show { display: block; }
+</style>
+</head>
+<body>
+
+<h2>完整设计方案 · 最终确认</h2>
+<p class="subtitle">所有决策汇总，确认后进入实现规划阶段</p>
+
+<div class="section">
+  <div class="section-title">信息架构</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">导航结构</div>
+      <div class="row-value">2 Tab：⚡ 充电 · ⚙️ 设置</div>
+    </div>
+    <div class="row">
+      <div class="row-label">充电页布局</div>
+      <div class="row-value">状态优先 + 固定高度内嵌滚动记录</div>
+    </div>
+    <div class="row">
+      <div class="row-label">设置页</div>
+      <div class="row-value">可视化卡片选择 + 滑块</div>
+    </div>
+    <div class="row">
+      <div class="row-label">添加记录</div>
+      <div class="row-value">底部弹窗 · 一屏智能表单</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">色彩系统</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">英雄卡</div>
+      <div class="row-value"><span class="color-chip" style="background:#0A1E3D;"></span>深海蓝 #0A1E3D</div>
+    </div>
+    <div class="row">
+      <div class="row-label">主色调</div>
+      <div class="row-value"><span class="color-chip" style="background:#0066FF;"></span>电气蓝 #0066FF → #00AAFF</div>
+    </div>
+    <div class="row">
+      <div class="row-label">页面背景</div>
+      <div class="row-value"><span class="color-chip" style="background:#F0F6FF;border:1px solid #D9ECFF;"></span>浅天蓝 #F0F6FF</div>
+    </div>
+    <div class="row">
+      <div class="row-label">卡片</div>
+      <div class="row-value"><span class="color-chip" style="background:white;border:1px solid #E5E5E5;"></span>纯白 #FFFFFF</div>
+    </div>
+    <div class="row">
+      <div class="row-label">主文字</div>
+      <div class="row-value"><span class="color-chip" style="background:#061525;"></span>#061525</div>
+    </div>
+    <div class="row">
+      <div class="row-label">次要文字</div>
+      <div class="row-value"><span class="color-chip" style="background:#7AAAD4;"></span>#7AAAD4</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">排版</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">显示数字</div>
+      <div class="row-value">Syne 800 · 48–64px</div>
+    </div>
+    <div class="row">
+      <div class="row-label">页面标题</div>
+      <div class="row-value">Syne 700 · 20–26px</div>
+    </div>
+    <div class="row">
+      <div class="row-label">正文</div>
+      <div class="row-value">DM Sans + PingFang SC</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">交互动效</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">页面过渡</div>
+      <div class="row-value">slide-fade · 卡片进场 stagger 60ms</div>
+    </div>
+    <div class="row">
+      <div class="row-label">数字翻牌</div>
+      <div class="row-value">倒计时天数 CSS slot-in 动画</div>
+    </div>
+    <div class="row">
+      <div class="row-label">弹窗手势</div>
+      <div class="row-value">spring cubic-bezier(0.32,0.72,0,1)</div>
+    </div>
+    <div class="row">
+      <div class="row-label">滑删回弹</div>
+      <div class="row-value">cubic-bezier(0.34,1.56,0.64,1)</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">各页面改动</div>
+  <div class="block">
+    <div class="row">
+      <div class="row-label">main.css</div>
+      <div class="row-value">全面替换 token，深海蓝+电气蓝体系</div>
+    </div>
+    <div class="row">
+      <div class="row-label">App.vue</div>
+      <div class="row-value">简化为 2 Tab，白底 Tab 栏</div>
+    </div>
+    <div class="row">
+      <div class="row-label">CountdownCard</div>
+      <div class="row-value">深海蓝卡 + 圆形进度环 + 数字翻牌</div>
+    </div>
+    <div class="row">
+      <div class="row-label">DashboardView</div>
+      <div class="row-value">2列摘要卡 + 内嵌滚动记录列表</div>
+    </div>
+    <div class="row">
+      <div class="row-label">SettingsView</div>
+      <div class="row-value">可视化电池卡片 + 满充间隔滑块</div>
+    </div>
+    <div class="row">
+      <div class="row-label">AddRecordSheet</div>
+      <div class="row-value">行内布局 + 地点 chip + spring 动画</div>
+    </div>
+    <div class="row">
+      <div class="row-label">RecordItem</div>
+      <div class="row-value">胶囊标签统一 + 滑删回弹优化</div>
+    </div>
+    <div class="row">
+      <div class="row-label">HistoryView</div>
+      <div class="row-value">合并入 DashboardView 内嵌列表</div>
+    </div>
+  </div>
+</div>
+
+<button class="confirm-btn" onclick="confirm()">✓ 确认方案，开始写实现计划</button>
+<button class="revise-btn" onclick="revise()">还需要调整某些部分</button>
+
+<div class="notice" id="notice" id="notice"></div>
+
+<script>
+function confirm() {
+  document.getElementById('notice').textContent = '✓ 已确认 — 请在对话框告诉我';
+  document.getElementById('notice').classList.add('show');
+}
+function revise() {
+  document.getElementById('notice').textContent = '请在对话框告诉我需要调整哪里';
+  document.getElementById('notice').classList.add('show');
+}
+</script>
+</body>
+</html>

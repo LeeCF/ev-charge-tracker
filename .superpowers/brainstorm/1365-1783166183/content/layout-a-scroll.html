@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方案 A 变体 · 记录可滚动</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'PingFang SC', sans-serif; background: #0F172A; color: #E2E8F0; min-height: 100vh; padding: 24px 16px 60px; }
+h2 { font-size: 20px; font-weight: 700; color: white; margin-bottom: 6px; }
+.subtitle { font-size: 13px; color: #64748B; margin-bottom: 24px; line-height: 1.5; }
+.cards { display: flex; flex-direction: column; gap: 24px; }
+.card { background: #1E293B; border-radius: 16px; overflow: hidden; border: 2px solid #334155; cursor: pointer; transition: border-color 0.2s; }
+.card.selected { border-color: #0066FF; box-shadow: 0 0 0 4px rgba(0,102,255,0.15); }
+.card-body { padding: 14px 16px; }
+.card-body h3 { font-size: 15px; font-weight: 700; color: white; margin-bottom: 5px; }
+.card-body p { font-size: 12px; color: #64748B; line-height: 1.6; }
+.notice { position: fixed; bottom: 0; left: 0; right: 0; background: #0066FF; color: white; padding: 14px 16px 28px; text-align: center; font-size: 14px; font-weight: 600; display: none; }
+.notice.show { display: block; }
+
+/* 模拟手机滚动区 */
+.phone-frame { background: #F0F6FF; font-family: -apple-system, 'PingFang SC', sans-serif; }
+
+.record-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.record-scroll::-webkit-scrollbar { display: none; }
+
+.record-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid #F0F6FF;
+  transition: background 0.1s;
+}
+.record-row:last-child { border-bottom: none; }
+.record-row:active { background: #F8FBFF; }
+</style>
+</head>
+<body>
+
+<h2>方案 A · 记录滚动区变体</h2>
+<p class="subtitle">同一布局，3种「充电记录可滚动」的实现方式——哪个交互感最好？</p>
+
+<div class="cards">
+
+  <!-- 变体 1: 固定高度滚动列表 -->
+  <div class="card" onclick="selectCard(this, '变体1 · 固定高度内嵌滚动')">
+    <div class="phone-frame">
+      <!-- header -->
+      <div style="padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:10px;color:#7AAAD4;letter-spacing:1px;text-transform:uppercase;">比亚迪海豹</div>
+          <div style="font-size:19px;font-weight:700;color:#061525;letter-spacing:-0.5px;">充电</div>
+        </div>
+        <div style="background:#E0EDFF;border-radius:20px;padding:5px 12px;font-size:11px;color:#0066FF;font-weight:600;">+ 添加记录</div>
+      </div>
+      <!-- 英雄卡 -->
+      <div style="margin:0 12px 10px;background:linear-gradient(145deg,#0A1E3D,#0D2D5A,#0A3070);border-radius:18px;padding:16px;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(10,30,60,0.2);">
+        <div style="position:absolute;top:-20px;right:-20px;width:110px;height:110px;background:radial-gradient(circle,rgba(0,102,255,0.25),transparent 65%);pointer-events:none;"></div>
+        <div style="position:relative;">
+          <div style="font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">距满充还有</div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+            <div style="font-size:56px;font-weight:800;color:white;line-height:1;letter-spacing:-3px;">12<span style="font-size:16px;font-weight:400;opacity:0.5;margin-left:4px;">天</span></div>
+            <svg width="52" height="52" viewBox="0 0 52 52" style="transform:rotate(-90deg);flex-shrink:0;margin-bottom:4px;">
+              <circle cx="26" cy="26" r="21" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/>
+              <circle cx="26" cy="26" r="21" fill="none" stroke="#0066FF" stroke-width="4" stroke-dasharray="131.9" stroke-dashoffset="46.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:6px;">磷酸铁锂 · 14天周期 · 进度65%</div>
+        </div>
+      </div>
+      <!-- 2列次卡 -->
+      <div style="margin:0 12px 10px;display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+        <div style="background:white;border-radius:13px;padding:12px;box-shadow:0 1px 8px rgba(0,40,120,0.07);">
+          <div style="font-size:9px;color:#7AAAD4;margin-bottom:4px;">上次充电</div>
+          <div style="font-size:20px;font-weight:800;color:#061525;line-height:1;">3<span style="font-size:11px;color:#7AAAD4;font-weight:400;margin-left:2px;">天前</span></div>
+          <div style="background:#E0EDFF;display:inline-block;border-radius:20px;padding:2px 8px;font-size:10px;color:#0066FF;font-weight:600;margin-top:5px;">快充 ⚡ 满充</div>
+        </div>
+        <div style="background:white;border-radius:13px;padding:12px;box-shadow:0 1px 8px rgba(0,40,120,0.07);">
+          <div style="font-size:9px;color:#7AAAD4;margin-bottom:4px;">本月花费</div>
+          <div style="font-size:20px;font-weight:800;color:#061525;line-height:1;">¥128</div>
+          <div style="background:#EDFDF4;display:inline-block;border-radius:20px;padding:2px 8px;font-size:10px;color:#16A34A;font-weight:600;margin-top:5px;">↓ 省12%</div>
+        </div>
+      </div>
+      <!-- 固定高度滚动记录 -->
+      <div style="margin:0 12px 12px;background:white;border-radius:13px;box-shadow:0 1px 8px rgba(0,40,120,0.07);overflow:hidden;">
+        <div style="padding:12px 12px 8px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F0F6FF;">
+          <div style="font-size:10px;color:#7AAAD4;letter-spacing:1px;text-transform:uppercase;font-weight:600;">充电记录</div>
+          <div style="font-size:10px;color:#B0C8E0;">↕ 可滚动</div>
+        </div>
+        <div class="record-scroll" style="max-height:160px;padding:0 12px;">
+          <div class="record-row">
+            <div><div style="font-size:13px;font-weight:700;color:#061525;">06-30</div><div style="font-size:10px;color:#7AAAD4;margin-top:1px;">快充 · 满充 · 家</div></div>
+            <div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:#061525;">¥45</div><div style="background:#E0EDFF;border-radius:20px;padding:1px 7px;font-size:9px;color:#0066FF;margin-top:2px;display:inline-block;">100%</div></div>
+          </div>
+          <div class="record-row">
+            <div><div style="font-size:13px;font-weight:700;color:#061525;">06-18</div><div style="font-size:10px;color:#7AAAD4;margin-top:1px;">慢充 · 非满充 · 公司</div></div>
+            <div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:#061525;">¥83</div><div style="background:#F0F6FF;border-radius:20px;padding:1px 7px;font-size:9px;color:#7AAAD4;margin-top:2px;display:inline-block;">80%</div></div>
+          </div>
+          <div class="record-row">
+            <div><div style="font-size:13px;font-weight:700;color:#061525;">06-03</div><div style="font-size:10px;color:#7AAAD4;margin-top:1px;">快充 · 满充 · 商场</div></div>
+            <div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:#061525;">¥52</div><div style="background:#E0EDFF;border-radius:20px;padding:1px 7px;font-size:9px;color:#0066FF;margin-top:2px;display:inline-block;">100%</div></div>
+          </div>
+          <div class="record-row">
+            <div><div style="font-size:13px;font-weight:700;color:#061525;">05-20</div><div style="font-size:10px;color:#7AAAD4;margin-top:1px;">慢充 · 非满充 · 家</div></div>
+            <div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:#061525;">¥67</div><div style="background:#F0F6FF;border-radius:20px;padding:1px 7px;font-size:9px;color:#7AAAD4;margin-top:2px;display:inline-block;">80%</div></div>
+          </div>
+          <div class="record-row">
+            <div><div style="font-size:13px;font-weight:700;color:#061525;">05-06</div><div style="font-size:10px;color:#7AAAD4;margin-top:1px;">快充 · 满充 · 高速</div></div>
+            <div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:#061525;">¥39</div><div style="background:#E0EDFF;border-radius:20px;padding:1px 7px;font-size:9px;color:#0066FF;margin-top:2px;display:inline-block;">100%</div></div>
+          </div>
+        </div>
+        <div style="padding:8px 12px;border-top:1px solid #F0F6FF;text-align:center;font-size:11px;color:#0066FF;font-weight:600;">查看全部记录 →</div>
+      </div>
+      <!-- tab bar -->
+      <div style="background:white;padding:8px 0 12px;display:flex;justify-content:space-around;box-shadow:0 -1px 0 rgba(0,40,120,0.06);">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div style="font-size:9px;color:#0066FF;font-weight:600;">充电</div>
+          <div style="width:16px;height:2px;background:#0066FF;border-radius:2px;"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;opacity:0.3;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7AAAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          <div style="font-size:9px;color:#7AAAD4;">设置</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>变体 1 · 固定高度内嵌滚动</h3>
+      <p>记录区固定高度约3条，内部独立滚动。状态卡片始终可见，底部有「查看全部」入口。像 Monzo 账单预览。</p>
+    </div>
+  </div>
+
+  <!-- 变体 2: 整页滚动 + 吸顶状态条 -->
+  <div class="card" onclick="selectCard(this, '变体2 · 整页滚动+状态吸顶')">
+    <div class="phone-frame">
+      <div style="padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:10px;color:#7AAAD4;letter-spacing:1px;text-transform:uppercase;">比亚迪海豹</div>
+          <div style="font-size:19px;font-weight:700;color:#061525;letter-spacing:-0.5px;">充电</div>
+        </div>
+        <div style="background:#E0EDFF;border-radius:20px;padding:5px 12px;font-size:11px;color:#0066FF;font-weight:600;">+ 添加记录</div>
+      </div>
+      <!-- 英雄卡 -->
+      <div style="margin:0 12px 10px;background:linear-gradient(145deg,#0A1E3D,#0D2D5A,#0A3070);border-radius:18px;padding:16px;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(10,30,60,0.2);">
+        <div style="position:absolute;top:-20px;right:-20px;width:110px;height:110px;background:radial-gradient(circle,rgba(0,102,255,0.25),transparent 65%);pointer-events:none;"></div>
+        <div style="position:relative;">
+          <div style="font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">距满充还有</div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+            <div style="font-size:56px;font-weight:800;color:white;line-height:1;letter-spacing:-3px;">12<span style="font-size:16px;font-weight:400;opacity:0.5;margin-left:4px;">天</span></div>
+            <svg width="52" height="52" viewBox="0 0 52 52" style="transform:rotate(-90deg);flex-shrink:0;margin-bottom:4px;">
+              <circle cx="26" cy="26" r="21" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/>
+              <circle cx="26" cy="26" r="21" fill="none" stroke="#0066FF" stroke-width="4" stroke-dasharray="131.9" stroke-dashoffset="46.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:6px;">磷酸铁锂 · 进度65%</div>
+        </div>
+      </div>
+      <!-- 吸顶区域示意 -->
+      <div style="margin:0 12px 10px;display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+        <div style="background:white;border-radius:13px;padding:12px;box-shadow:0 1px 8px rgba(0,40,120,0.07);">
+          <div style="font-size:9px;color:#7AAAD4;margin-bottom:4px;">上次充电</div>
+          <div style="font-size:20px;font-weight:800;color:#061525;line-height:1;">3<span style="font-size:11px;color:#7AAAD4;font-weight:400;margin-left:2px;">天前</span></div>
+          <div style="background:#E0EDFF;display:inline-block;border-radius:20px;padding:2px 8px;font-size:10px;color:#0066FF;font-weight:600;margin-top:5px;">快充 ⚡</div>
+        </div>
+        <div style="background:white;border-radius:13px;padding:12px;box-shadow:0 1px 8px rgba(0,40,120,0.07);">
+          <div style="font-size:9px;color:#7AAAD4;margin-bottom:4px;">本月花费</div>
+          <div style="font-size:20px;font-weight:800;color:#061525;line-height:1;">¥128</div>
+          <div style="background:#EDFDF4;display:inline-block;border-radius:20px;padding:2px 8px;font-size:10px;color:#16A34A;font-weight:600;margin-top:5px;">↓ 省12%</div>
+        </div>
+      </div>
+      <!-- 吸顶标题示意 -->
+      <div style="margin:0 12px 0;background:#F0F6FF;padding:8px 0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;">
+        <div style="font-size:11px;color:#7AAAD4;letter-spacing:1px;text-transform:uppercase;font-weight:600;">充电记录</div>
+        <div style="font-size:11px;color:#0066FF;font-weight:600;">按月分组 ∨</div>
+      </div>
+      <!-- 月份分组记录（整页滚动） -->
+      <div style="margin:0 12px 0;padding-bottom:4px;">
+        <div style="font-size:10px;color:#B0C8E0;font-weight:600;padding:6px 0 4px;letter-spacing:0.5px;">2025年6月</div>
+        <div style="background:white;border-radius:13px;overflow:hidden;box-shadow:0 1px 8px rgba(0,40,120,0.07);margin-bottom:8px;">
+          <div class="record-row" style="padding:10px 12px;">
+            <div><div style="font-size:13px;font-weight:700;color:#061525;">06-30</div><div style="font-size:10px;color:#7AAAD4;margin-top:1px;">快充 · 满充 · 家</div></div>
+            <div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:#061525;">¥45</div><div style="background:#E0EDFF;border-radius:20px;padding:1px 7px;font-size:9px;color:#0066FF;margin-top:2px;display:inline-block;">100%</div></div>
+          </div>
+          <div style="height:1px;background:#F0F6FF;margin:0 12px;"></div>
+          <div class="record-row" style="padding:10px 12px;">
+            <div><div style="font-size:13px;font-weight:700;color:#061525;">06-18</div><div style="font-size:10px;color:#7AAAD4;margin-top:1px;">慢充 · 非满充 · 公司</div></div>
+            <div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:#061525;">¥83</div><div style="background:#F0F6FF;border-radius:20px;padding:1px 7px;font-size:9px;color:#7AAAD4;margin-top:2px;display:inline-block;">80%</div></div>
+          </div>
+          <div style="height:1px;background:#F0F6FF;margin:0 12px;"></div>
+          <div class="record-row" style="padding:10px 12px;">
+            <div><div style="font-size:13px;font-weight:700;color:#061525;">06-03</div><div style="font-size:10px;color:#7AAAD4;margin-top:1px;">快充 · 满充 · 商场</div></div>
+            <div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:#061525;">¥52</div><div style="background:#E0EDFF;border-radius:20px;padding:1px 7px;font-size:9px;color:#0066FF;margin-top:2px;display:inline-block;">100%</div></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:#B0C8E0;font-weight:600;padding:2px 0 4px;letter-spacing:0.5px;">2025年5月</div>
+        <div style="background:white;border-radius:13px;overflow:hidden;box-shadow:0 1px 8px rgba(0,40,120,0.07);opacity:0.6;">
+          <div class="record-row" style="padding:10px 12px;">
+            <div><div style="font-size:13px;font-weight:700;color:#061525;">05-20</div><div style="font-size:10px;color:#7AAAD4;margin-top:1px;">慢充 · 非满充 · 家</div></div>
+            <div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:#061525;">¥67</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background:white;padding:8px 0 12px;margin-top:10px;display:flex;justify-content:space-around;box-shadow:0 -1px 0 rgba(0,40,120,0.06);">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div style="font-size:9px;color:#0066FF;font-weight:600;">充电</div>
+          <div style="width:16px;height:2px;background:#0066FF;border-radius:2px;"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;opacity:0.3;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7AAAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          <div style="font-size:9px;color:#7AAAD4;">设置</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>变体 2 · 整页滚动 + 月份分组吸顶</h3>
+      <p>整个页面上下滚动，记录按月分组，月份标题吸顶。向上滚动时英雄卡逐渐离开视野，记录填满屏幕。像 Apple Health 的活动历史。</p>
+    </div>
+  </div>
+
+  <!-- 变体 3: 横向滑动卡片 + 展开列表 -->
+  <div class="card" onclick="selectCard(this, '变体3 · 横向快速浏览+展开')">
+    <div class="phone-frame">
+      <div style="padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:10px;color:#7AAAD4;letter-spacing:1px;text-transform:uppercase;">比亚迪海豹</div>
+          <div style="font-size:19px;font-weight:700;color:#061525;letter-spacing:-0.5px;">充电</div>
+        </div>
+        <div style="background:#0066FF;border-radius:10px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,102,255,0.4);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+      </div>
+      <!-- 英雄卡 -->
+      <div style="margin:0 12px 10px;background:linear-gradient(145deg,#0A1E3D,#0D2D5A,#0A3070);border-radius:18px;padding:16px;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(10,30,60,0.2);">
+        <div style="position:absolute;top:-20px;right:-20px;width:110px;height:110px;background:radial-gradient(circle,rgba(0,102,255,0.25),transparent 65%);pointer-events:none;"></div>
+        <div style="position:relative;">
+          <div style="font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">距满充还有</div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+            <div style="font-size:56px;font-weight:800;color:white;line-height:1;letter-spacing:-3px;">12<span style="font-size:16px;font-weight:400;opacity:0.5;margin-left:4px;">天</span></div>
+            <svg width="52" height="52" viewBox="0 0 52 52" style="transform:rotate(-90deg);flex-shrink:0;margin-bottom:4px;">
+              <circle cx="26" cy="26" r="21" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/>
+              <circle cx="26" cy="26" r="21" fill="none" stroke="#0066FF" stroke-width="4" stroke-dasharray="131.9" stroke-dashoffset="46.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:6px;">磷酸铁锂 · 进度65%</div>
+        </div>
+      </div>
+      <!-- 横向滑动最近记录 -->
+      <div style="margin-bottom:10px;">
+        <div style="padding:0 12px 6px;font-size:10px;color:#7AAAD4;letter-spacing:1px;text-transform:uppercase;font-weight:600;">最近充电</div>
+        <div style="display:flex;gap:8px;padding:0 12px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;">
+          <div style="background:white;border-radius:12px;padding:11px;min-width:90px;flex-shrink:0;box-shadow:0 1px 8px rgba(0,40,120,0.07);border:2px solid #E0EDFF;">
+            <div style="font-size:9px;color:#7AAAD4;margin-bottom:4px;">06-30</div>
+            <div style="font-size:15px;font-weight:800;color:#061525;">¥45</div>
+            <div style="background:#E0EDFF;border-radius:20px;padding:2px 6px;font-size:9px;color:#0066FF;font-weight:600;margin-top:4px;display:inline-block;">快充⚡</div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:11px;min-width:90px;flex-shrink:0;box-shadow:0 1px 8px rgba(0,40,120,0.07);">
+            <div style="font-size:9px;color:#7AAAD4;margin-bottom:4px;">06-18</div>
+            <div style="font-size:15px;font-weight:800;color:#061525;">¥83</div>
+            <div style="background:#F0F6FF;border-radius:20px;padding:2px 6px;font-size:9px;color:#7AAAD4;font-weight:600;margin-top:4px;display:inline-block;">慢充</div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:11px;min-width:90px;flex-shrink:0;box-shadow:0 1px 8px rgba(0,40,120,0.07);">
+            <div style="font-size:9px;color:#7AAAD4;margin-bottom:4px;">06-03</div>
+            <div style="font-size:15px;font-weight:800;color:#061525;">¥52</div>
+            <div style="background:#E0EDFF;border-radius:20px;padding:2px 6px;font-size:9px;color:#0066FF;font-weight:600;margin-top:4px;display:inline-block;">快充⚡</div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:11px;min-width:90px;flex-shrink:0;box-shadow:0 1px 8px rgba(0,40,120,0.07);opacity:0.6;">
+            <div style="font-size:9px;color:#7AAAD4;margin-bottom:4px;">05-20</div>
+            <div style="font-size:15px;font-weight:800;color:#061525;">¥67</div>
+            <div style="background:#F0F6FF;border-radius:20px;padding:2px 6px;font-size:9px;color:#7AAAD4;font-weight:600;margin-top:4px;display:inline-block;">慢充</div>
+          </div>
+        </div>
+      </div>
+      <!-- 统计摘要 -->
+      <div style="margin:0 12px 12px;background:white;border-radius:13px;padding:12px;box-shadow:0 1px 8px rgba(0,40,120,0.07);">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="text-align:center;flex:1;">
+            <div style="font-size:9px;color:#7AAAD4;margin-bottom:3px;">本月次数</div>
+            <div style="font-size:18px;font-weight:800;color:#061525;">4次</div>
+          </div>
+          <div style="width:1px;height:30px;background:#F0F6FF;"></div>
+          <div style="text-align:center;flex:1;">
+            <div style="font-size:9px;color:#7AAAD4;margin-bottom:3px;">本月花费</div>
+            <div style="font-size:18px;font-weight:800;color:#061525;">¥128</div>
+          </div>
+          <div style="width:1px;height:30px;background:#F0F6FF;"></div>
+          <div style="text-align:center;flex:1;">
+            <div style="font-size:9px;color:#7AAAD4;margin-bottom:3px;">均次费用</div>
+            <div style="font-size:18px;font-weight:800;color:#061525;">¥56</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:white;padding:8px 0 12px;display:flex;justify-content:space-around;box-shadow:0 -1px 0 rgba(0,40,120,0.06);">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div style="font-size:9px;color:#0066FF;font-weight:600;">充电</div>
+          <div style="width:16px;height:2px;background:#0066FF;border-radius:2px;"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;opacity:0.3;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7AAAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          <div style="font-size:9px;color:#7AAAD4;">设置</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>变体 3 · 横向卡片快速浏览 + 统计摘要</h3>
+      <p>最近记录做成横向滑动卡片（左右滑），下方放三格统计摘要。像 Spotify 最近播放，快速扫视不需要滚动。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="notice" id="notice">已选择 <span id="chosen"></span> — 在对话框告诉我</div>
+
+<script>
+function selectCard(el, label) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('chosen').textContent = label;
+  document.getElementById('notice').classList.add('show');
+}
+</script>
+</body>
+</html>
