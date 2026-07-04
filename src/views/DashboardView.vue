@@ -59,7 +59,7 @@
         </div>
 
         <!-- 底部渐变遮罩，提示可滚动 -->
-        <div class="record-fade" :class="{ hidden: scrolledToBottom }" />
+        <div class="record-fade" :class="{ hidden: scrolledToBottom || sortedRecords.length === 0 }" />
       </div>
     </div>
 
@@ -93,19 +93,19 @@ const daysAgo = computed(() => {
 })
 
 // 本月花费
-const thisMonth = new Date().toISOString().slice(0, 7)
-const lastMonth = (() => {
+const thisMonth = computed(() => new Date().toISOString().slice(0, 7))
+const lastMonth = computed(() => {
   const d = new Date()
   d.setMonth(d.getMonth() - 1)
   return d.toISOString().slice(0, 7)
-})()
+})
 const currentMonthCost = computed(() => {
-  const item = recordsStore.monthlyCosts.find(m => m.label === thisMonth)
+  const item = recordsStore.monthlyCosts.find(m => m.label === thisMonth.value)
   return item?.total ?? null
 })
 const costDiff = computed(() => {
   if (currentMonthCost.value == null) return null
-  const prev = recordsStore.monthlyCosts.find(m => m.label === lastMonth)
+  const prev = recordsStore.monthlyCosts.find(m => m.label === lastMonth.value)
   if (!prev?.total) return null
   return Math.round(((currentMonthCost.value - prev.total) / prev.total) * 100)
 })
