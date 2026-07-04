@@ -126,35 +126,32 @@ const batteryOptions = [
     value: 'nmc',
     label: '三元锂',
     days: 30,
-    // 琥珀橙紫 — 高密度，能量感，2格亮+1格暗
+    // 琥珀橙紫 — 高密度，3格全亮，闪光符号标识高能量
     svg: `<svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="nmc-bg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#7C3A8A"/>
           <stop offset="100%" stop-color="#4A1860"/>
         </linearGradient>
-        <linearGradient id="nmc-cell-on" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="nmc-cell" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#FFB347"/>
           <stop offset="100%" stop-color="#E06020"/>
-        </linearGradient>
-        <linearGradient id="nmc-cell-off" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#6A2878"/>
-          <stop offset="100%" stop-color="#3A1050"/>
         </linearGradient>
       </defs>
       <!-- 外壳 -->
       <rect x="1" y="3" width="34" height="22" rx="4" fill="url(#nmc-bg)" stroke="#9A4AAA" stroke-width="1"/>
       <!-- 正极端子 -->
       <rect x="35" y="10" width="4" height="8" rx="1.5" fill="#9A4AAA"/>
-      <!-- 2格亮 1格暗 -->
-      <rect x="4.5" y="6.5" width="8" height="15" rx="2" fill="url(#nmc-cell-on)" opacity="0.95"/>
-      <rect x="14.5" y="6.5" width="8" height="15" rx="2" fill="url(#nmc-cell-on)" opacity="0.95"/>
-      <rect x="24.5" y="6.5" width="8" height="15" rx="2" fill="url(#nmc-cell-off)" opacity="0.7"/>
+      <!-- 3格全亮 -->
+      <rect x="4.5" y="6.5" width="8" height="15" rx="2" fill="url(#nmc-cell)" opacity="0.95"/>
+      <rect x="14.5" y="6.5" width="8" height="15" rx="2" fill="url(#nmc-cell)" opacity="0.95"/>
+      <rect x="24.5" y="6.5" width="8" height="15" rx="2" fill="url(#nmc-cell)" opacity="0.95"/>
       <!-- 高光 -->
       <rect x="4.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.2"/>
       <rect x="14.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.2"/>
-      <!-- 闪光点 — 高能量标识 -->
-      <path d="M27 10.5L25.5 14.5H27.5L26 18.5" stroke="#FFD080" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+      <rect x="24.5" y="6.5" width="8" height="4" rx="2" fill="white" opacity="0.2"/>
+      <!-- 闪光 — 高能量标识，叠在第3格上 -->
+      <path d="M28.5 9L26.5 14h2.5l-2 5.5" stroke="#FFE080" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
     </svg>`,
   },
   {
