@@ -133,7 +133,8 @@ let pullStartY = 0
 let isPulling = false
 
 function onTouchStart(e) {
-  const scrollable = document.querySelector('.app-content')
+  // 找真正的滚动容器：App.vue 的 .app-content
+  const scrollable = viewEl.value?.closest('.app-content') ?? document.querySelector('.app-content')
   if (scrollable?.scrollTop > 0) return
   pullStartY = e.touches[0].clientY
   isPulling = true
