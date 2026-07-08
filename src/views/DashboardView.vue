@@ -1,5 +1,12 @@
 <template>
-  <div class="view">
+  <div class="view" ref="viewEl">
+    <!-- 下拉刷新指示器 -->
+    <div class="pull-indicator" :style="{ transform: `translateY(${Math.min(pullDistance, 64) - 44}px)`, opacity: Math.min(pullDistance / 60, 1) }">
+      <svg class="pull-spinner" :class="{ spinning: isRefreshing }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M21 12a9 9 0 1 1-6.22-8.56"/>
+      </svg>
+    </div>
+
     <!-- Header -->
     <header class="page-header">
       <div>
@@ -8,7 +15,7 @@
       </div>
     </header>
 
-    <div class="content">
+    <div class="content" :style="{ transform: isRefreshing ? 'translateY(48px)' : pullDistance > 0 ? `translateY(${Math.min(pullDistance * 0.4, 24)}px)` : '' , transition: isRefreshing || pullDistance === 0 ? 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)' : 'none' }">
       <!-- 英雄卡 -->
       <CountdownCard class="card-anim card-anim-1" />
 
@@ -93,6 +100,7 @@
             <RecordItem
               v-else
               :record="item"
+              :isNew="item.id === newRecordId"
               @delete="recordsStore.deleteRecord($event)"
             />
           </template>
@@ -107,7 +115,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import CountdownCard from '../components/CountdownCard.vue'
 import RecordItem from '../components/RecordItem.vue'
 import { useRecordsStore } from '../stores/records.js'
@@ -115,6 +123,67 @@ import { useSettingsStore } from '../stores/settings.js'
 
 const recordsStore = useRecordsStore()
 const settings = useSettingsStore()
+
+// ── 下拉刷新 ──────────────────────────────────────────────────────
+const viewEl = ref(null)
+const pullDistance = ref(0)
+const isRefreshing = ref(false)
+const PULL_THRESHOLD = 60
+let pullStartY = 0
+let isPulling = false
+
+function onTouchStart(e) {
+  const scrollable = document.querySelector('.app-content')
+  if (scrollable?.scrollTop > 0) return
+  pullStartY = e.touches[0].clientY
+  isPulling = true
+}
+
+function onTouchMove(e) {
+  if (!isPulling || isRefreshing.value) return
+  const dy = e.touches[0].clientY - pullStartY
+  if (dy > 0) pullDistance.value = dy
+}
+
+function onTouchEnd() {
+  if (!isPulling) return
+  isPulling = false
+  if (pullDistance.value >= PULL_THRESHOLD) {
+    isRefreshing.value = true
+    pullDistance.value = 0
+    // 触发 stagger 重新进场
+    refreshKey.value++
+    setTimeout(() => { isRefreshing.value = false }, 600)
+  } else {
+    pullDistance.value = 0
+  }
+}
+
+const refreshKey = ref(0)
+
+onMounted(() => {
+  const el = viewEl.value
+  if (!el) return
+  el.addEventListener('touchstart', onTouchStart, { passive: true })
+  el.addEventListener('touchmove', onTouchMove, { passive: true })
+  el.addEventListener('touchend', onTouchEnd)
+})
+
+onUnmounted(() => {
+  const el = viewEl.value
+  if (!el) return
+  el.removeEventListener('touchstart', onTouchStart)
+  el.removeEventListener('touchmove', onTouchMove)
+  el.removeEventListener('touchend', onTouchEnd)
+})
+
+// 飞入动画：保存后高亮最新记录
+const newRecordId = ref(null)
+watch(() => recordsStore.lastAddedId, (id) => {
+  if (!id) return
+  newRecordId.value = id
+  setTimeout(() => { newRecordId.value = null }, 800)
+})
 
 const vehicleName = computed(() => settings.vehicleName)
 const sortedRecords = computed(() => recordsStore.sortedRecords)
@@ -176,7 +245,36 @@ function onScroll() {
 </script>
 
 <style scoped>
-.view { min-height: 100%; }
+.view { min-height: 100%; position: relative; overflow: hidden; }
+
+/* 下拉刷新指示器 */
+.pull-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.pull-spinner {
+  width: 22px;
+  height: 22px;
+  color: var(--color-accent);
+}
+
+.pull-spinner.spinning {
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 
 .page-header {
   padding: 16px 16px 10px;

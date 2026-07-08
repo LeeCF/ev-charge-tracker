@@ -16,7 +16,7 @@
     <!-- Card content -->
     <div
       class="record-item"
-      :class="{ 'record-item--full': record.isFull }"
+      :class="{ 'record-item--full': record.isFull, 'record-item--new': isNew }"
       :style="cardStyle"
       @click="onCardClick"
       @touchstart.passive="onTouchStart"
@@ -46,7 +46,6 @@
             {{ record.location }}
           </span>
           <svg
-            v-if="record.note"
             class="expand-chevron"
             :class="{ 'expand-chevron--open': expanded }"
             viewBox="0 0 12 8" fill="none"
@@ -59,13 +58,21 @@
       </div>
 
       <transition name="expand">
-        <div v-if="expanded && record.note" class="record-note">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-            <rect x="2" y="2" width="12" height="12" rx="2"/>
-            <line x1="5" y1="6" x2="11" y2="6"/>
-            <line x1="5" y1="9" x2="9" y2="9"/>
-          </svg>
-          {{ record.note }}
+        <div v-if="expanded" class="record-expand">
+          <div v-if="record.note" class="record-note">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <rect x="2" y="2" width="12" height="12" rx="2"/>
+              <line x1="5" y1="6" x2="11" y2="6"/>
+              <line x1="5" y1="9" x2="9" y2="9"/>
+            </svg>
+            {{ record.note }}
+          </div>
+          <button class="btn-edit" @click.stop="$emit('edit', record)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 2l3 3-8 8H3v-3L11 2z"/>
+            </svg>
+            编辑记录
+          </button>
         </div>
       </transition>
     </div>
@@ -75,8 +82,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-const props = defineProps({ record: Object })
-const emit = defineEmits(['delete'])
+const props = defineProps({ record: Object, isNew: Boolean })
+const emit = defineEmits(['delete', 'edit'])
 
 // ── Expand / collapse ─────────────────────────────────────────────
 const expanded = ref(false)
@@ -184,7 +191,7 @@ function onCardClick() {
     isSwiping = false
     return
   }
-  if (props.record.note) expanded.value = !expanded.value
+  expanded.value = !expanded.value
 }
 
 function triggerDelete() {
@@ -259,6 +266,16 @@ function triggerDelete() {
 }
 .record-item--full .accent-bar { background: var(--color-accent); }
 
+/* 保存后飞入动画 */
+.record-item--new {
+  animation: record-fly-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes record-fly-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* Layout */
 .record-main {
   display: flex;
@@ -332,13 +349,19 @@ function triggerDelete() {
 }
 .expand-chevron--open { transform: rotate(180deg); }
 
+.record-expand {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .record-note {
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--color-border);
   font-size: 13px;
   color: var(--color-text-secondary);
   line-height: 1.5;
@@ -346,6 +369,23 @@ function triggerDelete() {
 .record-note svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; opacity: 0.4; }
 
 /* Note expand animation */
+.btn-edit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1.5px solid var(--color-accent-light);
+  border-radius: var(--radius-chip);
+  background: var(--color-accent-light);
+  color: var(--color-accent-text);
+  font-size: 12px;
+  font-weight: 600;
+  align-self: flex-start;
+  transition: background 0.15s;
+}
+.btn-edit svg { width: 12px; height: 12px; flex-shrink: 0; }
+.btn-edit:active { background: var(--color-border); }
+
 .expand-enter-active, .expand-leave-active {
   transition: opacity 0.2s, transform 0.2s;
   transform-origin: top;

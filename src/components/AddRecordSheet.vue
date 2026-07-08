@@ -155,7 +155,7 @@ import { reactive, computed } from 'vue'
 import { useRecordsStore } from '../stores/records.js'
 
 defineProps({ visible: Boolean })
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'saved'])
 
 const recordsStore = useRecordsStore()
 const recentLocations = computed(() => recordsStore.recentLocations)
@@ -192,7 +192,8 @@ function close() {
 
 function submit() {
   if (!isValid.value) return
-  recordsStore.addRecord({ ...form })
+  const newId = recordsStore.addRecord({ ...form })
+  emit('saved', newId)
   close()
 }
 </script>

@@ -12,6 +12,7 @@ import { useSettingsStore } from './settings.js'
 
 export const useRecordsStore = defineStore('records', () => {
   const records = ref([])
+  const lastAddedId = ref(null)  // 最新添加的记录 id，用于触发飞入动画
 
   function load() {
     records.value = loadRecords()
@@ -31,6 +32,8 @@ export const useRecordsStore = defineStore('records', () => {
     }
     records.value.unshift(record)
     saveRecords(records.value)
+    lastAddedId.value = record.id
+    return record.id
   }
 
   function deleteRecord(id) {
@@ -105,6 +108,7 @@ export const useRecordsStore = defineStore('records', () => {
 
   return {
     records,
+    lastAddedId,
     sortedRecords,
     lastFullRecord,
     nextFullChargeDate,
