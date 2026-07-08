@@ -37,3 +37,23 @@ export function getRecentLocations(records) {
   }
   return result
 }
+
+// 相对时间：30天内显示"N天前"，今天显示"今天"，超过30天显示原始日期
+export function getRelativeDate(dateStr) {
+  if (!dateStr) return ''
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const target = new Date(dateStr)
+  target.setHours(0, 0, 0, 0)
+  const diff = Math.round((today - target) / 86400000)
+  if (diff === 0) return '今天'
+  if (diff === 1) return '昨天'
+  if (diff <= 30) return `${diff}天前`
+  // 超过30天：显示 MM-DD 或跨年显示 YYYY-MM-DD
+  const thisYear = today.getFullYear()
+  const targetYear = target.getFullYear()
+  if (thisYear === targetYear) {
+    return `${String(target.getMonth() + 1).padStart(2, '0')}-${String(target.getDate()).padStart(2, '0')}`
+  }
+  return dateStr
+}

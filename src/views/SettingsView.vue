@@ -69,15 +69,43 @@
       <!-- 数据管理 -->
       <section class="section section--danger">
         <div class="section-title">数据管理</div>
-        <button class="btn-danger" @click="confirmClear">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2 4 4 4 14 4"/>
-            <path d="M13 4l-.7 9a1.5 1.5 0 0 1-1.5 1.4H5.2a1.5 1.5 0 0 1-1.5-1.4L3 4"/>
-            <path d="M6.5 4V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 9.5 3v1"/>
-          </svg>
-          清空所有充电记录
-        </button>
-        <p class="danger-hint">此操作不可撤销</p>
+
+        <!-- 第一步：显示警告按钮 -->
+        <div v-if="clearStep === 0">
+          <button class="btn-danger" @click="clearStep = 1">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="2 4 4 4 14 4"/>
+              <path d="M13 4l-.7 9a1.5 1.5 0 0 1-1.5 1.4H5.2a1.5 1.5 0 0 1-1.5-1.4L3 4"/>
+              <path d="M6.5 4V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 9.5 3v1"/>
+            </svg>
+            清空所有充电记录
+          </button>
+          <p class="danger-hint">此操作不可撤销</p>
+        </div>
+
+        <!-- 第二步：滑动确认 -->
+        <div v-else class="clear-confirm">
+          <p class="clear-confirm-text">⚠️ 确认清空所有记录？</p>
+          <div class="slider-confirm-wrap">
+            <div
+              class="slider-confirm-track"
+              ref="sliderTrack"
+            >
+              <div
+                class="slider-confirm-thumb"
+                :style="{ transform: `translateX(${slideX}px)` }"
+                @touchstart.prevent="onSlideStart"
+                @touchmove.prevent="onSlideMove"
+                @touchend="onSlideEnd"
+                @mousedown="onSlideMouseDown"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+              <span class="slider-confirm-label" :style="{ opacity: 1 - slideX / slideMax }">向右滑动确认删除</span>
+            </div>
+          </div>
+          <button class="btn-cancel" @click="clearStep = 0">取消</button>
+        </div>
       </section>
 
     </div>
@@ -85,11 +113,64 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useSettingsStore } from '../stores/settings.js'
 import { useRecordsStore } from '../stores/records.js'
 
 const settings = useSettingsStore()
 const recordsStore = useRecordsStore()
+
+// 清空二次确认滑动逻辑
+const clearStep = ref(0)
+const sliderTrack = ref(null)
+const slideX = ref(0)
+const slideMax = 200 // 滑动到底触发，实际由轨道宽度决定
+
+let slideStartX = 0
+
+function onSlideStart(e) {
+  slideStartX = e.touches[0].clientX
+}
+
+function onSlideMove(e) {
+  const dx = e.touches[0].clientX - slideStartX
+  const trackW = sliderTrack.value?.offsetWidth ?? 280
+  const max = trackW - 52 // thumb宽度48 + 2
+  slideX.value = Math.max(0, Math.min(dx, max))
+  if (slideX.value >= max - 4) executeClear()
+}
+
+function onSlideEnd() {
+  const trackW = sliderTrack.value?.offsetWidth ?? 280
+  const max = trackW - 52
+  if (slideX.value < max - 4) slideX.value = 0
+}
+
+function onSlideMouseDown(e) {
+  slideStartX = e.clientX
+  const onMove = (e) => {
+    const dx = e.clientX - slideStartX
+    const trackW = sliderTrack.value?.offsetWidth ?? 280
+    const max = trackW - 52
+    slideX.value = Math.max(0, Math.min(dx, max))
+    if (slideX.value >= max - 4) executeClear()
+  }
+  const onUp = () => {
+    const trackW = sliderTrack.value?.offsetWidth ?? 280
+    const max = trackW - 52
+    if (slideX.value < max - 4) slideX.value = 0
+    window.removeEventListener('mousemove', onMove)
+    window.removeEventListener('mouseup', onUp)
+  }
+  window.addEventListener('mousemove', onMove)
+  window.addEventListener('mouseup', onUp)
+}
+
+function executeClear() {
+  recordsStore.clearAll()
+  clearStep.value = 0
+  slideX.value = 0
+}
 
 const batteryOptions = [
   {
@@ -187,12 +268,6 @@ function selectBatteryType(value) {
   settings.batteryType = value
   const opt = batteryOptions.find(o => o.value === value)
   if (opt.days) settings.fullChargeIntervalDays = opt.days
-}
-
-function confirmClear() {
-  if (window.confirm('确定要清空所有充电记录吗？此操作不可撤销。')) {
-    recordsStore.clearAll()
-  }
 }
 </script>
 
@@ -414,5 +489,73 @@ function confirmClear() {
   color: var(--color-text-muted);
   margin-top: 6px;
   padding-left: 2px;
+}
+
+/* 滑动确认 */
+.clear-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.clear-confirm-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.slider-confirm-wrap {
+  width: 100%;
+}
+
+.slider-confirm-track {
+  position: relative;
+  background: var(--color-danger-bg);
+  border: 1.5px solid var(--color-danger);
+  border-radius: 12px;
+  height: 48px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.slider-confirm-thumb {
+  position: absolute;
+  left: 2px;
+  width: 44px;
+  height: 40px;
+  background: var(--color-danger);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: grab;
+  z-index: 1;
+  touch-action: none;
+  transition: none;
+}
+
+.slider-confirm-label {
+  position: absolute;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-danger);
+  pointer-events: none;
+  user-select: none;
+}
+
+.btn-cancel {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card-sm);
+  padding: 8px 0;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
 }
 </style>

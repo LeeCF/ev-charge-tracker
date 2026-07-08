@@ -59,16 +59,43 @@
         </div>
 
         <div v-if="sortedRecords.length === 0" class="record-empty">
-          暂无记录，点击右下角添加
+          <!-- 插画：电动车充电桩 -->
+          <svg class="empty-illustration" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- 地面 -->
+            <rect x="10" y="82" width="100" height="3" rx="1.5" fill="#D9ECFF" opacity="0.6"/>
+            <!-- 充电桩主体 -->
+            <rect x="42" y="28" width="36" height="54" rx="6" fill="#E0EDFF"/>
+            <rect x="42" y="28" width="36" height="54" rx="6" stroke="#A8CEFF" stroke-width="1.5"/>
+            <!-- 充电桩屏幕 -->
+            <rect x="49" y="36" width="22" height="14" rx="3" fill="#0066FF" opacity="0.15"/>
+            <rect x="49" y="36" width="22" height="14" rx="3" stroke="#0066FF" stroke-width="1" opacity="0.4"/>
+            <!-- 屏幕闪电图标 -->
+            <path d="M61 39.5L59 44h3l-2 4" stroke="#0066FF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+            <!-- 充电枪插口 -->
+            <rect x="51" y="56" width="18" height="10" rx="3" fill="white" stroke="#A8CEFF" stroke-width="1"/>
+            <circle cx="60" cy="61" r="2.5" fill="#D9ECFF" stroke="#A8CEFF" stroke-width="0.8"/>
+            <!-- 充电线 -->
+            <path d="M60 66 Q60 75 45 78 Q32 80 30 82" stroke="#A8CEFF" stroke-width="2" stroke-linecap="round" fill="none" stroke-dasharray="3 2"/>
+            <!-- 充电枪头 -->
+            <rect x="22" y="76" width="12" height="7" rx="2" fill="#E0EDFF" stroke="#A8CEFF" stroke-width="1"/>
+            <!-- 小星星/能量点 -->
+            <circle cx="88" cy="38" r="2" fill="#0066FF" opacity="0.25"/>
+            <circle cx="92" cy="46" r="1.2" fill="#0066FF" opacity="0.18"/>
+            <circle cx="85" cy="50" r="1.5" fill="#0066FF" opacity="0.2"/>
+          </svg>
+          <div class="empty-title">还没有充电记录</div>
+          <div class="empty-desc">点击右下角「记录充电」<br>开始追踪你的充电习惯</div>
         </div>
 
         <div v-else class="record-scroll" ref="scrollEl" @scroll="onScroll">
-          <RecordItem
-            v-for="record in sortedRecords"
-            :key="record.id"
-            :record="record"
-            @delete="recordsStore.deleteRecord($event)"
-          />
+          <template v-for="item in groupedRecords" :key="item.type === 'header' ? item.label : item.id">
+            <div v-if="item.type === 'header'" class="month-header">{{ item.label }}</div>
+            <RecordItem
+              v-else
+              :record="item"
+              @delete="recordsStore.deleteRecord($event)"
+            />
+          </template>
         </div>
 
         <!-- 底部渐变遮罩，提示可滚动 -->
@@ -91,6 +118,24 @@ const settings = useSettingsStore()
 
 const vehicleName = computed(() => settings.vehicleName)
 const sortedRecords = computed(() => recordsStore.sortedRecords)
+
+// 月份分组：在记录流中插入月份标题
+const groupedRecords = computed(() => {
+  const result = []
+  let lastMonth = null
+  for (const record of sortedRecords.value) {
+    const month = record.date?.slice(0, 7) // 'YYYY-MM'
+    if (month && month !== lastMonth) {
+      const [year, mon] = month.split('-')
+      const thisYear = new Date().getFullYear().toString()
+      const label = year === thisYear ? `${parseInt(mon)}月` : `${year}年${parseInt(mon)}月`
+      result.push({ type: 'header', label, id: `header-${month}` })
+      lastMonth = month
+    }
+    result.push(record)
+  }
+  return result
+})
 
 // 上次充电摘要
 const lastRecord = computed(() => sortedRecords.value[0] ?? null)
@@ -290,10 +335,44 @@ function onScroll() {
 }
 
 .record-empty {
-  padding: 28px 14px;
+  padding: 28px 14px 32px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.empty-illustration {
+  width: 120px;
+  height: 100px;
+  opacity: 0.85;
+}
+
+.empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.empty-desc {
   font-size: 13px;
   color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.month-header {
+  padding: 8px 14px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: var(--color-surface-2);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .record-scroll {
