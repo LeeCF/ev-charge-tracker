@@ -28,8 +28,7 @@
 
       <div class="record-main">
         <div class="record-left">
-          <span class="record-date">{{ relativeDate }}</span>
-          <span v-if="showOriginalDate" class="record-date-sub">{{ record.date }}</span>
+          <span class="record-date">{{ record.date }}</span>
           <div class="tags">
             <span class="tag tag--type">{{ typeLabel }}</span>
             <span class="tag" :class="record.isFull ? 'tag--full' : 'tag--partial'">
@@ -75,7 +74,6 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { getRelativeDate } from '../utils/charging.js'
 
 const props = defineProps({ record: Object })
 const emit = defineEmits(['delete'])
@@ -84,14 +82,6 @@ const emit = defineEmits(['delete'])
 const expanded = ref(false)
 const typeLabels = { slow: '慢充', fast: '快充', superfast: '超快充' }
 const typeLabel = computed(() => typeLabels[props.record.type] ?? '')
-const relativeDate = computed(() => getRelativeDate(props.record.date))
-const showOriginalDate = computed(() => {
-  // 超过30天才显示原始日期作为副标签
-  if (!props.record.date) return false
-  const today = new Date(); today.setHours(0,0,0,0)
-  const target = new Date(props.record.date); target.setHours(0,0,0,0)
-  return Math.round((today - target) / 86400000) > 30
-})
 
 // ── Swipe-to-delete ───────────────────────────────────────────────
 const THRESHOLD = 130  // raw finger px needed to trigger delete
@@ -285,15 +275,6 @@ function triggerDelete() {
   color: var(--color-text);
   margin-bottom: 3px;
   font-family: var(--font-body);
-  letter-spacing: 0;
-}
-
-.record-date-sub {
-  display: block;
-  font-size: 11px;
-  color: var(--color-text-muted);
-  font-family: var(--font-body);
-  margin-bottom: 6px;
   letter-spacing: 0;
 }
 
