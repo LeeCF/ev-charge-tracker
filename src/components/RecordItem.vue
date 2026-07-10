@@ -93,7 +93,7 @@
 import { ref, computed } from 'vue'
 
 const props = defineProps({ record: Object, isNew: Boolean })
-const emit = defineEmits(['delete', 'edit', 'pending-delete', 'undo-delete'])
+const emit = defineEmits(['edit', 'pending-delete', 'undo-delete'])
 
 // ── Expand / collapse ─────────────────────────────────────────────
 const expanded = ref(false)
@@ -206,8 +206,12 @@ function onCardClick() {
 
 function triggerDelete() {
   deleting.value = true
-  // Wait for fly-out animation, then emit
-  setTimeout(() => emit('pending-delete', props.record.id), 280)
+  setTimeout(() => {
+    emit('pending-delete', props.record.id)
+    // Reset visual state so the wrapper re-expands to show the pending-delete card
+    deleting.value = false
+    rawX.value = 0
+  }, 280)
 }
 </script>
 
@@ -433,5 +437,8 @@ function triggerDelete() {
   padding: 4px 0 4px 16px;
   cursor: pointer;
   flex-shrink: 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
 }
 </style>
