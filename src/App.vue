@@ -30,7 +30,7 @@
     </nav>
 
     <!-- 扩展 FAB（只在充电页显示） -->
-    <FabButton v-if="route.path === '/'" @click="() => { editingRecord.value = null; showSheet.value = true }" />
+    <FabButton v-if="route.path === '/'" @click="openAddSheet" />
     <AddRecordSheet
       v-model:visible="showSheet"
       :editRecord="editingRecord"
@@ -50,6 +50,11 @@ const showSheet = ref(false)
 const editingRecord = ref(null)
 const recordsStore = useRecordsStore()
 const route = useRoute()
+
+function openAddSheet() {
+  editingRecord.value = null
+  showSheet.value = true
+}
 
 watch(() => recordsStore.editingRecordId, (id) => {
   if (!id) return
