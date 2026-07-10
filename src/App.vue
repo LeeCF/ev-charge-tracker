@@ -55,10 +55,10 @@ watch(() => recordsStore.editingRecordId, (id) => {
   if (!id) return
   const record = recordsStore.records.find(r => r.id === id)
   if (record) {
-    editingRecord.value = record
+    editingRecord.value = { ...record }
     showSheet.value = true
-    recordsStore.editingRecordId = null  // consume and reset
   }
+  recordsStore.editingRecordId = null  // always reset, even if record not found
 })
 
 function onSheetSaved() {
