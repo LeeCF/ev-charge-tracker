@@ -8,7 +8,7 @@
             <div class="sheet-handle" />
 
             <!-- 标题 -->
-            <div class="sheet-title">添加充电记录</div>
+            <div class="sheet-title">{{ props.editRecord ? '编辑充电记录' : '添加充电记录' }}</div>
 
             <!-- 表单 -->
             <div class="sheet-body">
@@ -140,7 +140,7 @@
             <!-- 保存按钮 -->
             <div class="sheet-footer">
               <button class="btn-save" :disabled="!isValid" @click="submit">
-                保存记录
+                {{ props.editRecord ? '保存修改' : '保存记录' }}
               </button>
             </div>
           </div>
@@ -151,10 +151,13 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useRecordsStore } from '../stores/records.js'
 
-defineProps({ visible: Boolean })
+const props = defineProps({
+  visible: Boolean,
+  editRecord: { type: Object, default: null },
+})
 const emit = defineEmits(['update:visible', 'saved'])
 
 const recordsStore = useRecordsStore()
@@ -180,6 +183,24 @@ const form = reactive({
   note: '',
 })
 
+// 当 editRecord 变化时，预填表单
+watch(() => props.editRecord, (record) => {
+  if (record) {
+    form.date = record.date
+    form.type = record.type
+    form.isFull = record.isFull
+    form.endSoc = record.endSoc ?? 80
+    form.cost = record.cost ?? null
+    form.location = record.location ?? ''
+    form.note = record.note ?? ''
+  } else {
+    Object.assign(form, {
+      date: todayStr(), type: '', isFull: false,
+      endSoc: 80, cost: null, location: '', note: '',
+    })
+  }
+}, { immediate: true })
+
 const isValid = computed(() => form.date && form.type)
 
 function close() {
@@ -192,8 +213,13 @@ function close() {
 
 function submit() {
   if (!isValid.value) return
-  const newId = recordsStore.addRecord({ ...form })
-  emit('saved', newId)
+  if (props.editRecord) {
+    recordsStore.updateRecord(props.editRecord.id, { ...form })
+    emit('saved', { id: props.editRecord.id, mode: 'edit' })
+  } else {
+    const newId = recordsStore.addRecord({ ...form })
+    emit('saved', { id: newId, mode: 'add' })
+  }
   close()
 }
 </script>
