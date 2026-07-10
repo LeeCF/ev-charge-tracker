@@ -36,6 +36,32 @@ export const useRecordsStore = defineStore('records', () => {
     return record.id
   }
 
+  function updateRecord(id, data) {
+    const idx = records.value.findIndex(r => r.id === id)
+    if (idx === -1) return
+    records.value[idx] = {
+      ...records.value[idx],
+      date: data.date,
+      type: data.type,
+      isFull: data.isFull,
+      endSoc: data.isFull ? 100 : (data.endSoc ?? 80),
+      cost: data.cost != null && data.cost !== '' ? Number(data.cost) : null,
+      location: data.location ?? '',
+      note: data.note ?? '',
+    }
+    saveRecords(records.value)
+  }
+
+  function markPendingDelete(id) {
+    const record = records.value.find(r => r.id === id)
+    if (record) record.pendingDelete = true
+  }
+
+  function restoreRecord(id) {
+    const record = records.value.find(r => r.id === id)
+    if (record) delete record.pendingDelete
+  }
+
   function deleteRecord(id) {
     records.value = records.value.filter(r => r.id !== id)
     saveRecords(records.value)
@@ -106,9 +132,16 @@ export const useRecordsStore = defineStore('records', () => {
 
   load()
 
+  const editingRecordId = ref(null)  // App.vue watch 此值来打开编辑弹窗
+
+  function requestEdit(id) {
+    editingRecordId.value = id
+  }
+
   return {
     records,
     lastAddedId,
+    editingRecordId,
     sortedRecords,
     lastFullRecord,
     nextFullChargeDate,
@@ -118,7 +151,11 @@ export const useRecordsStore = defineStore('records', () => {
     monthlyCosts,
     yearlyCosts,
     addRecord,
+    updateRecord,
     deleteRecord,
+    markPendingDelete,
+    restoreRecord,
+    requestEdit,
     clearAll,
   }
 })
