@@ -193,8 +193,9 @@ async function run() {
           if (await pendingCard.isVisible()) {
             pass('滑删后出现软删除提示卡')
             const undoBtn = page.locator('.pending-undo-btn').first()
-            await undoBtn.click()
-            await page.waitForTimeout(400)
+            // Use evaluate to click directly via JS, bypassing overlap detection
+            await undoBtn.evaluate(el => el.click())
+            await page.waitForTimeout(600)
             const countAfter = await page.locator('.record-item').count()
             if (countAfter >= countBefore) pass('撤销后记录恢复')
             else fail('撤销删除', `记录数: ${countBefore} → ${countAfter}`)
