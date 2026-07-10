@@ -30,19 +30,40 @@
     </nav>
 
     <!-- 扩展 FAB（只在充电页显示） -->
-    <FabButton v-if="route.path === '/'" @click="showSheet = true" />
-    <AddRecordSheet v-model:visible="showSheet" />
+    <FabButton v-if="route.path === '/'" @click="() => { editingRecord.value = null; showSheet.value = true }" />
+    <AddRecordSheet
+      v-model:visible="showSheet"
+      :editRecord="editingRecord"
+      @saved="onSheetSaved"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useRecordsStore } from './stores/records.js'
 import FabButton from './components/FabButton.vue'
 import AddRecordSheet from './components/AddRecordSheet.vue'
 
 const showSheet = ref(false)
+const editingRecord = ref(null)
+const recordsStore = useRecordsStore()
 const route = useRoute()
+
+watch(() => recordsStore.editingRecordId, (id) => {
+  if (!id) return
+  const record = recordsStore.records.find(r => r.id === id)
+  if (record) {
+    editingRecord.value = record
+    showSheet.value = true
+    recordsStore.editingRecordId = null  // consume and reset
+  }
+})
+
+function onSheetSaved() {
+  editingRecord.value = null
+}
 </script>
 
 <style scoped>
