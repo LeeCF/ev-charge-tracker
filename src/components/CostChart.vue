@@ -71,6 +71,7 @@ const bars = computed(() => {
 
   const maxTotal = Math.max(...recent.map(m => m.total), 1)
   const bw = svgWidth / recent.length
+  // bw mirrors the barWidth computed (svgWidth / length) — kept local to avoid circular dependency
 
   return recent.map((m, i) => {
     const height = Math.max(4, (m.total / maxTotal) * barAreaHeight)
@@ -138,6 +139,7 @@ const barWidth = computed(() => svgWidth / Math.max(bars.value.length, 1))
 
 .bar-rect {
   animation: bar-rise 0.4s ease-out both;
+  transform-box: fill-box;
   transform-origin: bottom;
 }
 
