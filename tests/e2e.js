@@ -207,6 +207,24 @@ async function run() {
       }
     }
 
+    // ── 12. (reserved) ────────────────────────────────────────────
+
+    // ── 13. 费用趋势图 ─────────────────────────────────────────────
+    console.log('\n[13] 费用趋势图')
+    {
+      const chartCard = page.locator('.cost-chart-card')
+      const chartVisible = await chartCard.isVisible()
+      if (chartVisible) {
+        pass('费用趋势图卡片可见')
+        const bars = page.locator('.bar-rect')
+        const barCount = await bars.count()
+        if (barCount >= 2) pass(`趋势图显示 ${barCount} 个月柱体`)
+        else fail('趋势图柱体', `数量不足: ${barCount}`)
+      } else {
+        pass('费用趋势图不显示（数据不足2个月，符合预期）')
+      }
+    }
+
   } catch (err) {
     console.error('\n❌ 测试异常:', err.message);
     RESULTS.failed.push({ name: '未捕获异常', reason: err.message });

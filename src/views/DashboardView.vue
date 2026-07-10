@@ -58,8 +58,15 @@
         </div>
       </div>
 
+      <!-- 费用趋势图 -->
+      <CostChart
+        class="card-anim card-anim-3"
+        :monthlyCosts="recordsStore.monthlyCosts"
+        :currentMonth="thisMonth"
+      />
+
       <!-- 内嵌可滚动记录列表 -->
-      <div class="record-section card-anim card-anim-3">
+      <div class="record-section card-anim card-anim-4">
         <div class="record-section-header">
           <span class="section-label">充电记录</span>
           <span class="section-hint">↕ 可滚动</span>
@@ -120,6 +127,7 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import CountdownCard from '../components/CountdownCard.vue'
 import RecordItem from '../components/RecordItem.vue'
+import CostChart from '../components/CostChart.vue'
 import { useRecordsStore } from '../stores/records.js'
 import { useSettingsStore } from '../stores/settings.js'
 
@@ -330,6 +338,7 @@ function onScroll() {
 .card-anim-1 { animation-delay: 0ms; }
 .card-anim-2 { animation-delay: 60ms; }
 .card-anim-3 { animation-delay: 120ms; }
+.card-anim-4 { animation-delay: 180ms; }
 @keyframes card-in {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
