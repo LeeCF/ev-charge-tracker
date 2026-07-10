@@ -13,7 +13,43 @@
         <div class="header-eyebrow">{{ vehicleName || '我的爱车' }}</div>
         <div class="page-title">充电</div>
       </div>
+      <button class="filter-btn" :class="{ active: hasFilter }" @click="showFilter = !showFilter">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="6" x2="20" y2="6"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+          <line x1="11" y1="18" x2="13" y2="18"/>
+        </svg>
+        筛选
+        <span v-if="hasFilter" class="filter-badge">{{ [filterType, filterMonth].filter(Boolean).length }}</span>
+      </button>
     </header>
+
+    <!-- 筛选面板 -->
+    <Transition name="filter-slide">
+      <div v-if="showFilter" class="filter-panel">
+        <div class="filter-row">
+          <div class="filter-label">充电类型</div>
+          <div class="filter-chips">
+            <button v-for="t in typeOptions" :key="t.value"
+              class="filter-chip" :class="{ active: filterType === t.value }"
+              @click="filterType = filterType === t.value ? '' : t.value">
+              {{ t.label }}
+            </button>
+          </div>
+        </div>
+        <div v-if="filterMonthOptions.length" class="filter-row">
+          <div class="filter-label">月份</div>
+          <div class="filter-chips">
+            <button v-for="m in filterMonthOptions" :key="m.value"
+              class="filter-chip" :class="{ active: filterMonth === m.value }"
+              @click="filterMonth = filterMonth === m.value ? '' : m.value">
+              {{ m.label }}
+            </button>
+          </div>
+        </div>
+        <button v-if="hasFilter" class="filter-clear" @click="clearFilter">清除全部筛选</button>
+      </div>
+    </Transition>
 
     <div class="content" :style="{ transform: isRefreshing ? 'translateY(48px)' : pullDistance > 0 ? `translateY(${Math.min(pullDistance * 0.4, 24)}px)` : '' , transition: isRefreshing || pullDistance === 0 ? 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)' : 'none' }">
       <!-- 英雄卡 -->
@@ -68,7 +104,10 @@
       <!-- 内嵌可滚动记录列表 -->
       <div class="record-section card-anim card-anim-4">
         <div class="record-section-header">
-          <span class="section-label">充电记录</span>
+          <span class="section-label">
+            充电记录
+            <span v-if="hasFilter" class="filter-result-count">· {{ filteredRecords.length }}条结果</span>
+          </span>
           <span class="section-hint">↕ 可滚动</span>
         </div>
 
@@ -223,7 +262,7 @@ const sortedRecords = computed(() => recordsStore.sortedRecords)
 const groupedRecords = computed(() => {
   const result = []
   let lastMonth = null
-  for (const record of sortedRecords.value) {
+  for (const record of filteredRecords.value) {
     const month = record.date?.slice(0, 7) // 'YYYY-MM'
     if (month && month !== lastMonth) {
       const [year, mon] = month.split('-')
@@ -273,6 +312,45 @@ function onScroll() {
   if (!el) return
   scrolledToBottom.value = el.scrollHeight - el.scrollTop - el.clientHeight < 16
 }
+
+// ── 筛选 ──────────────────────────────────────────────────────
+const showFilter = ref(false)
+const filterType = ref('')
+const filterMonth = ref('')
+
+const typeOptions = [
+  { value: 'slow', label: '慢充' },
+  { value: 'fast', label: '快充' },
+  { value: 'superfast', label: '超快充' },
+]
+
+const filterMonthOptions = computed(() => {
+  return recordsStore.monthlyCosts.slice(0, 6).map(m => {
+    const [year, mon] = m.label.split('-')
+    const thisYear = new Date().getFullYear().toString()
+    return {
+      value: m.label,
+      label: year === thisYear ? `${parseInt(mon)}月` : `${year}/${parseInt(mon)}月`,
+    }
+  })
+})
+
+const hasFilter = computed(() => filterType.value !== '' || filterMonth.value !== '')
+
+const filteredRecords = computed(() => {
+  if (!hasFilter.value) return sortedRecords.value
+  return sortedRecords.value.filter(r => {
+    const typeOk = !filterType.value || r.type === filterType.value
+    const monthOk = !filterMonth.value || r.date?.startsWith(filterMonth.value)
+    return typeOk && monthOk
+  })
+})
+
+function clearFilter() {
+  filterType.value = ''
+  filterMonth.value = ''
+  showFilter.value = false
+}
 </script>
 
 <style scoped>
@@ -305,10 +383,6 @@ function onScroll() {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
-}
-
-.page-header {
-  padding: 16px 16px 10px;
 }
 
 .header-eyebrow {
@@ -527,4 +601,122 @@ function onScroll() {
   transition: opacity 0.2s;
 }
 .record-fade.hidden { opacity: 0; }
+
+/* ── Header + Filter ──────────────────────────────────────────── */
+.page-header {
+  padding: 16px 16px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: var(--radius-chip);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.filter-btn.active {
+  background: var(--color-accent-light);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+.filter-badge {
+  background: var(--color-accent);
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px;
+}
+
+.filter-panel {
+  background: var(--color-surface);
+  margin: 0 14px 10px;
+  border-radius: var(--radius-card);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-card-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-label {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.filter-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  padding: 5px 12px;
+  border-radius: var(--radius-chip);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface-2);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  min-height: 32px;
+}
+
+.filter-chip.active {
+  background: var(--color-accent-light);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+  font-weight: 600;
+}
+
+.filter-clear {
+  font-size: 12px;
+  color: var(--color-accent);
+  font-weight: 600;
+  background: none;
+  border: none;
+  padding: 2px 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.filter-result-count {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.filter-slide-enter-active, .filter-slide-leave-active {
+  transition: opacity 0.2s, transform 0.2s;
+}
+.filter-slide-enter-from, .filter-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
 </style>

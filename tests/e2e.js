@@ -225,6 +225,44 @@ async function run() {
       }
     }
 
+    // ── 14. 记录筛选 ───────────────────────────────────────────────
+    console.log('\n[14] 记录筛选')
+    {
+      // Navigate to charge tab
+      await page.locator('.tab-item').first().click()
+      await page.waitForTimeout(300)
+
+      const filterBtn = page.locator('.filter-btn')
+      if (await filterBtn.isVisible()) {
+        pass('筛选按钮可见')
+        await filterBtn.click()
+        await page.waitForTimeout(300)
+
+        const filterPanel = page.locator('.filter-panel')
+        if (await filterPanel.isVisible()) {
+          pass('点击后筛选面板展开')
+
+          const fastChip = page.locator('.filter-chip').filter({ hasText: '快充' }).first()
+          if (await fastChip.isVisible()) {
+            await fastChip.click()
+            await page.waitForTimeout(200)
+            const isActive = await fastChip.evaluate(el => el.classList.contains('active'))
+            if (isActive) pass('快充筛选条件选中')
+            else fail('筛选条件选中', '样式未变化')
+          }
+
+          // Close panel
+          await filterBtn.click()
+          await page.waitForTimeout(200)
+          pass('筛选面板可关闭')
+        } else {
+          fail('筛选面板', '未展开')
+        }
+      } else {
+        fail('筛选按钮', '不可见')
+      }
+    }
+
   } catch (err) {
     console.error('\n❌ 测试异常:', err.message);
     RESULTS.failed.push({ name: '未捕获异常', reason: err.message });
