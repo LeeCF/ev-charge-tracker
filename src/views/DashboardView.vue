@@ -325,11 +325,15 @@ const typeOptions = [
 ]
 
 const filterMonthOptions = computed(() => {
-  return recordsStore.monthlyCosts.slice(0, 6).map(m => {
-    const [year, mon] = m.label.split('-')
+  const months = [...new Set(
+    sortedRecords.value.map(r => r.date?.slice(0, 7)).filter(Boolean)
+  )].sort((a, b) => b.localeCompare(a)).slice(0, 6)
+
+  return months.map(label => {
+    const [year, mon] = label.split('-')
     const thisYear = new Date().getFullYear().toString()
     return {
-      value: m.label,
+      value: label,
       label: year === thisYear ? `${parseInt(mon)}月` : `${year}/${parseInt(mon)}月`,
     }
   })
