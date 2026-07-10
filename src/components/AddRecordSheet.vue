@@ -151,7 +151,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { reactive, computed, watch } from 'vue'
 import { useRecordsStore } from '../stores/records.js'
 
 const props = defineProps({
@@ -188,17 +188,13 @@ watch(() => props.editRecord, (record) => {
   if (record) {
     form.date = record.date
     form.type = record.type
-    form.isFull = record.isFull
+    form.isFull = record.isFull ?? false
     form.endSoc = record.endSoc ?? 80
     form.cost = record.cost ?? null
     form.location = record.location ?? ''
     form.note = record.note ?? ''
-  } else {
-    Object.assign(form, {
-      date: todayStr(), type: '', isFull: false,
-      endSoc: 80, cost: null, location: '', note: '',
-    })
   }
+  // No else: close() handles form reset via Object.assign
 }, { immediate: true })
 
 const isValid = computed(() => form.date && form.type)
