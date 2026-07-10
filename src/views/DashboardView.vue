@@ -165,20 +165,20 @@ function onTouchEnd() {
 const refreshKey = ref(0)
 
 // 撤销删除：软删除定时器
-const pendingTimers = ref({})
+let pendingTimers = {}
 
 function onPendingDelete(id) {
   recordsStore.markPendingDelete(id)
   const timer = setTimeout(() => {
     recordsStore.deleteRecord(id)
-    delete pendingTimers.value[id]
+    delete pendingTimers[id]
   }, 3000)
-  pendingTimers.value[id] = timer
+  pendingTimers[id] = timer
 }
 
 function onUndoDelete(id) {
-  clearTimeout(pendingTimers.value[id])
-  delete pendingTimers.value[id]
+  clearTimeout(pendingTimers[id])
+  delete pendingTimers[id]
   recordsStore.restoreRecord(id)
 }
 
@@ -196,6 +196,8 @@ onUnmounted(() => {
   el.removeEventListener('touchstart', onTouchStart)
   el.removeEventListener('touchmove', onTouchMove)
   el.removeEventListener('touchend', onTouchEnd)
+  // Clear any pending delete timers to prevent data loss on unmount
+  Object.values(pendingTimers).forEach(clearTimeout)
 })
 
 // 飞入动画：保存后高亮最新记录

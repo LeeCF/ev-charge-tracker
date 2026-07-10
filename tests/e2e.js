@@ -168,6 +168,9 @@ async function run() {
 
     // ── 11. 撤销删除 ───────────────────────────────────────────────
     console.log('\n[11] 撤销删除')
+    // Navigate back to charge tab (previous tests may have left us on Settings)
+    await page.locator('.tab-item').first().click()
+    await page.waitForTimeout(300)
     {
       const countBefore = await page.locator('.record-item').count()
       if (countBefore >= 1) {
@@ -178,9 +181,15 @@ async function run() {
           await page.mouse.down()
           await page.mouse.move(box.x + box.width - 20 - 160, box.y + box.height / 2, { steps: 10 })
           await page.mouse.up()
-          await page.waitForTimeout(500)
-
-          const pendingCard = page.locator('.pending-delete-card')
+          await page.waitForTimeout(400)
+          // Replace the flat timeout with waitForSelector for reliability
+          let pendingCard
+          try {
+            await page.waitForSelector('.pending-delete-card', { timeout: 1500 })
+            pendingCard = page.locator('.pending-delete-card')
+          } catch {
+            pendingCard = page.locator('.pending-delete-card')
+          }
           if (await pendingCard.isVisible()) {
             pass('滑删后出现软删除提示卡')
             const undoBtn = page.locator('.pending-undo-btn').first()
