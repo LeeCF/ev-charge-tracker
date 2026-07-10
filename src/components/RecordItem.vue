@@ -13,8 +13,18 @@
       <span>删除</span>
     </div>
 
-    <!-- Card content -->
+    <!-- Soft-delete state: shown when pendingDelete is true -->
+    <div v-if="record.pendingDelete" class="pending-delete-card">
+      <div class="pending-delete-info">
+        <div class="pending-delete-title">已删除</div>
+        <div class="pending-delete-sub">{{ record.date }} · {{ typeLabel }}</div>
+      </div>
+      <button class="pending-undo-btn" @click.stop="$emit('undo-delete', record.id)">撤销</button>
+    </div>
+
+    <!-- Normal card: shown when NOT pendingDelete -->
     <div
+      v-else
       class="record-item"
       :class="{ 'record-item--full': record.isFull, 'record-item--new': isNew }"
       :style="cardStyle"
@@ -83,7 +93,7 @@
 import { ref, computed } from 'vue'
 
 const props = defineProps({ record: Object, isNew: Boolean })
-const emit = defineEmits(['delete', 'edit'])
+const emit = defineEmits(['delete', 'edit', 'pending-delete', 'undo-delete'])
 
 // ── Expand / collapse ─────────────────────────────────────────────
 const expanded = ref(false)
@@ -197,7 +207,7 @@ function onCardClick() {
 function triggerDelete() {
   deleting.value = true
   // Wait for fly-out animation, then emit
-  setTimeout(() => emit('delete', props.record.id), 280)
+  setTimeout(() => emit('pending-delete', props.record.id), 280)
 }
 </script>
 
@@ -391,4 +401,37 @@ function triggerDelete() {
   transform-origin: top;
 }
 .expand-enter-from, .expand-leave-to { opacity: 0; transform: scaleY(0.85); }
+
+.pending-delete-card {
+  background: linear-gradient(145deg, #0A1E3D, #0D2D5A);
+  border-radius: var(--radius-card-sm);
+  padding: 12px 14px 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+}
+
+.pending-delete-title {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 2px;
+}
+
+.pending-delete-sub {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+}
+
+.pending-undo-btn {
+  font-size: 13px;
+  font-weight: 700;
+  color: #60B4FF;
+  background: none;
+  border: none;
+  padding: 4px 0 4px 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
 </style>
