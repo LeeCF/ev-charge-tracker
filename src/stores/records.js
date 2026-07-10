@@ -48,10 +48,13 @@ export const useRecordsStore = defineStore('records', () => {
       cost: data.cost != null && data.cost !== '' ? Number(data.cost) : null,
       location: data.location ?? '',
       note: data.note ?? '',
+      pendingDelete: undefined,  // never persist transient UI state
     }
     saveRecords(records.value)
   }
 
+  // Transient UI state — intentionally not persisted. If page reloads during
+  // the undo window the deletion is cancelled (record survives), which is safe.
   function markPendingDelete(id) {
     const record = records.value.find(r => r.id === id)
     if (record) record.pendingDelete = true
