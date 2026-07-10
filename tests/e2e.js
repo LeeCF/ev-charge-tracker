@@ -166,6 +166,38 @@ async function run() {
       fail('清空按钮', '不可见');
     }
 
+    // ── 11. 撤销删除 ───────────────────────────────────────────────
+    console.log('\n[11] 撤销删除')
+    {
+      const countBefore = await page.locator('.record-item').count()
+      if (countBefore >= 1) {
+        const firstItem = page.locator('.record-item').first()
+        const box = await firstItem.boundingBox()
+        if (box) {
+          await page.mouse.move(box.x + box.width - 20, box.y + box.height / 2)
+          await page.mouse.down()
+          await page.mouse.move(box.x + box.width - 20 - 160, box.y + box.height / 2, { steps: 10 })
+          await page.mouse.up()
+          await page.waitForTimeout(500)
+
+          const pendingCard = page.locator('.pending-delete-card')
+          if (await pendingCard.isVisible()) {
+            pass('滑删后出现软删除提示卡')
+            const undoBtn = page.locator('.pending-undo-btn').first()
+            await undoBtn.click()
+            await page.waitForTimeout(400)
+            const countAfter = await page.locator('.record-item').count()
+            if (countAfter >= countBefore) pass('撤销后记录恢复')
+            else fail('撤销删除', `记录数: ${countBefore} → ${countAfter}`)
+          } else {
+            fail('软删除提示卡', '未出现（可能滑动距离不足）')
+          }
+        }
+      } else {
+        pass('撤销删除测试跳过（无记录）')
+      }
+    }
+
   } catch (err) {
     console.error('\n❌ 测试异常:', err.message);
     RESULTS.failed.push({ name: '未捕获异常', reason: err.message });

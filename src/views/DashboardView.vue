@@ -101,7 +101,9 @@
               v-else
               :record="item"
               :isNew="item.id === newRecordId"
-              @delete="recordsStore.deleteRecord($event)"
+              @pending-delete="onPendingDelete"
+              @undo-delete="onUndoDelete"
+              @edit="recordsStore.requestEdit($event.id)"
             />
           </template>
         </div>
@@ -161,6 +163,24 @@ function onTouchEnd() {
 }
 
 const refreshKey = ref(0)
+
+// 撤销删除：软删除定时器
+const pendingTimers = ref({})
+
+function onPendingDelete(id) {
+  recordsStore.markPendingDelete(id)
+  const timer = setTimeout(() => {
+    recordsStore.deleteRecord(id)
+    delete pendingTimers.value[id]
+  }, 3000)
+  pendingTimers.value[id] = timer
+}
+
+function onUndoDelete(id) {
+  clearTimeout(pendingTimers.value[id])
+  delete pendingTimers.value[id]
+  recordsStore.restoreRecord(id)
+}
 
 onMounted(() => {
   const el = viewEl.value
