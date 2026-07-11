@@ -1,7 +1,7 @@
 // EV 充电助手 — 核心交互测试套件
 const { chromium } = require('playwright');
 
-const TARGET_URL = 'http://localhost:5173';
+const TARGET_URL = 'http://localhost:5173/';
 const RESULTS = { passed: [], failed: [] };
 
 function pass(name) {
