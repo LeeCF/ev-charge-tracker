@@ -256,6 +256,7 @@ function triggerDelete() {
   gap: 6px;
   color: var(--color-on-dark);
   border-radius: var(--radius-card);
+}
 
 .delete-bg svg { width: 20px; height: 20px; }
 .delete-bg span { font-size: 13px; font-weight: 600; letter-spacing: 0.3px; }
