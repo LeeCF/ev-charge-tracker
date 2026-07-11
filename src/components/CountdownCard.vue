@@ -9,7 +9,7 @@
         <div class="hero-number-wrap">
           <span v-if="hasData" class="hero-number" :key="displayDays">{{ Math.abs(displayDays) }}</span>
           <span v-else class="hero-number hero-number--empty">--</span>
-          <span class="hero-unit">天</span>
+          <span v-if="hasData" class="hero-unit">天</span>
         </div>
         <div class="hero-meta">
           <span class="hero-chip">{{ batteryLabel }}</span>
@@ -53,7 +53,7 @@ const batteryLabel = computed(() => batteryLabels[settings.batteryType] ?? '磷�
 const MONTHS = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']
 const monthLabel = computed(() => {
   if (!nextFullChargeDate.value) return ''
-  const m = parseInt(nextFullChargeDate.value.slice(5, 7)) - 1
+  const m = parseInt(nextFullChargeDate.value.slice(5, 7), 10) - 1
   return MONTHS[m]
 })
 const dayLabel = computed(() => {

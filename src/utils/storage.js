@@ -11,7 +11,11 @@ export function loadRecords() {
 }
 
 export function saveRecords(records) {
-  localStorage.setItem(RECORDS_KEY, JSON.stringify(records))
+  try {
+    localStorage.setItem(RECORDS_KEY, JSON.stringify(records))
+  } catch {
+    console.warn('[storage] Failed to save records — storage may be full or restricted.')
+  }
 }
 
 export function loadSettings() {
@@ -24,7 +28,11 @@ export function loadSettings() {
 }
 
 export function saveSettings(settings) {
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+  } catch {
+    console.warn('[storage] Failed to save settings — storage may be full or restricted.')
+  }
 }
 
 function defaultSettings() {

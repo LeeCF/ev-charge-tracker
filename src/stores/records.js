@@ -123,7 +123,7 @@ export const useRecordsStore = defineStore('records', () => {
   const yearlyCosts = computed(() => {
     const map = {}
     for (const r of records.value) {
-      if (r.cost == null) continue
+      if (r.cost == null || !r.date) continue
       const year = r.date.slice(0, 4)
       map[year] = (map[year] ?? 0) + r.cost
     }

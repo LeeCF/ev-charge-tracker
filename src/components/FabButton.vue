@@ -1,6 +1,6 @@
 <template>
   <button class="fab" :class="{ collapsed: isCollapsed }" @click="$emit('click')">
-    <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <svg class="fab-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
       <line x1="12" y1="5" x2="12" y2="19"/>
       <line x1="5" y1="12" x2="19" y2="12"/>
     </svg>
@@ -21,8 +21,8 @@ function onScroll() {
 }
 
 onMounted(() => {
-  scrollTarget = document.querySelector('.app-content')
-  scrollTarget?.addEventListener('scroll', onScroll, { passive: true })
+  scrollTarget = document.querySelector('.app-content') ?? document.documentElement
+  scrollTarget.addEventListener('scroll', onScroll, { passive: true })
 })
 
 onUnmounted(() => {
@@ -58,7 +58,9 @@ onUnmounted(() => {
 
 .fab:active {
   transform: scale(0.96);
-  transition: transform 0.08s ease;
+  transition: transform 0.08s ease,
+              border-radius 0.3s cubic-bezier(0.4,0,0.2,1),
+              padding 0.3s cubic-bezier(0.4,0,0.2,1);
   box-shadow: 0 2px 10px rgba(0, 82, 212, 0.3);
 }
 

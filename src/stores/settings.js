@@ -9,8 +9,8 @@ export const useSettingsStore = defineStore('settings', () => {
 
   function load() {
     const s = loadSettings()
-    batteryType.value = s.batteryType
-    fullChargeIntervalDays.value = s.fullChargeIntervalDays
+    batteryType.value = s.batteryType ?? 'lfp'
+    fullChargeIntervalDays.value = s.fullChargeIntervalDays ?? 14
     vehicleName.value = s.vehicleName ?? ''
   }
 
