@@ -5,15 +5,42 @@
     <div class="hero-body">
       <!-- 左侧：eyebrow + 大数字 + chip -->
       <div class="hero-left">
-        <div class="hero-eyebrow">{{ hasData && displayDays < 0 ? '满充已逾期' : '距满充还有' }}</div>
+        <div class="hero-eyebrow">
+          <!-- 正常态：小闪电；逾期态：警告三角 -->
+          <svg v-if="hasData && displayDays < 0" aria-hidden="true" class="eyebrow-icon eyebrow-icon--warn" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 1.5L1 12.5h12L7 1.5z"/>
+            <line x1="7" y1="6" x2="7" y2="9"/>
+            <circle cx="7" cy="11" r="0.6" fill="currentColor" stroke="none"/>
+          </svg>
+          <svg v-else aria-hidden="true" class="eyebrow-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 1.5L4.5 7.5H8L5 12.5 11.5 5.5H8L9.5 1.5z"/>
+          </svg>
+          {{ hasData && displayDays < 0 ? '满充已逾期' : '距满充还有' }}
+        </div>
         <div class="hero-number-wrap">
           <span v-if="hasData" class="hero-number" :key="displayDays">{{ Math.abs(displayDays) }}</span>
           <span v-else class="hero-number hero-number--empty">--</span>
           <span v-if="hasData" class="hero-unit">天</span>
         </div>
         <div class="hero-meta">
-          <span class="hero-chip">{{ batteryLabel }}</span>
-          <span class="hero-chip">{{ intervalDays }}天周期</span>
+          <!-- 电池化学类型 chip -->
+          <span class="hero-chip">
+            <svg aria-hidden="true" class="chip-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1.5" y="3" width="9" height="6" rx="1.2"/>
+              <path d="M10.5 5.5h1v1h-1"/>
+              <line x1="4" y1="3" x2="4" y2="9"/>
+              <line x1="7" y1="3" x2="7" y2="9"/>
+            </svg>
+            {{ batteryLabel }}
+          </span>
+          <!-- 周期 chip -->
+          <span class="hero-chip">
+            <svg aria-hidden="true" class="chip-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 6a4 4 0 1 1 .8 2.4"/>
+              <polyline points="2 9.5 2 6.8 4.5 6.8"/>
+            </svg>
+            {{ intervalDays }}天周期
+          </span>
         </div>
       </div>
 
@@ -27,7 +54,12 @@
             <span v-for="i in 10" :key="i" />
           </div>
           <div class="cal-day">{{ dayLabel }}</div>
-          <div class="cal-label">建议满充</div>
+          <div class="cal-label">
+            <svg aria-hidden="true" class="cal-label-icon" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="2 5.5 4 7.5 8 3"/>
+            </svg>
+            建议满充
+          </div>
         </div>
       </div>
     </div>
@@ -113,6 +145,20 @@ const dayLabel = computed(() => {
   text-transform: uppercase;
   font-family: var(--font-body);
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.eyebrow-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  color: rgba(255,255,255,0.35);
+}
+
+.eyebrow-icon--warn {
+  color: rgba(255, 180, 80, 0.75);
 }
 
 .hero-number-wrap {
@@ -157,11 +203,21 @@ const dayLabel = computed(() => {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--radius-chip);
-  padding: 4px 11px;
+  padding: 4px 9px 4px 7px;
   font-size: 11px;
   color: rgba(255,255,255,0.45);
   font-weight: 400;
   font-family: var(--font-body);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chip-icon {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  opacity: 0.55;
 }
 
 .hero-card--overdue .hero-chip {
@@ -230,6 +286,17 @@ const dayLabel = computed(() => {
   text-transform: uppercase;
   margin-top: 5px;
   font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.cal-label-icon {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  color: rgba(100,170,255,0.7);
 }
 
 @keyframes slot-in {

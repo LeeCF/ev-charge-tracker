@@ -10,7 +10,16 @@
     <!-- Header -->
     <header class="page-header">
       <div>
-        <div class="header-eyebrow">{{ vehicleName || '我的爱车' }}</div>
+        <div class="header-eyebrow">
+          <svg aria-hidden="true" class="eyebrow-car-icon" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 6.5h14M2.5 6.5L4 3h8l1.5 3.5"/>
+            <rect x="1" y="6.5" width="14" height="2.5" rx="1.2"/>
+            <circle cx="4.5" cy="9" r="1"/>
+            <circle cx="11.5" cy="9" r="1"/>
+            <path d="M7 3.5l-.8 2h3l-.8-2"/>
+          </svg>
+          {{ vehicleName || '我的爱车' }}
+        </div>
         <div class="page-title">充电</div>
       </div>
       <button class="filter-btn" :class="{ active: hasFilter }" @click="showFilter = !showFilter">
@@ -28,7 +37,12 @@
     <Transition name="filter-slide">
       <div v-if="showFilter" class="filter-panel">
         <div class="filter-row">
-          <div class="filter-label">充电类型</div>
+          <div class="filter-label">
+            <svg aria-hidden="true" class="filter-label-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 1.5L4 6.5h3L4.5 10.5l6-6H7l1-3z"/>
+            </svg>
+            充电类型
+          </div>
           <div class="filter-chips">
             <button v-for="t in typeOptions" :key="t.value"
               class="filter-chip" :class="{ active: filterType === t.value }"
@@ -38,7 +52,15 @@
           </div>
         </div>
         <div v-if="filterMonthOptions.length" class="filter-row">
-          <div class="filter-label">月份</div>
+          <div class="filter-label">
+            <svg aria-hidden="true" class="filter-label-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+              <rect x="1" y="2" width="10" height="9" rx="1.2"/>
+              <line x1="1" y1="5" x2="11" y2="5"/>
+              <line x1="4" y1="0.8" x2="4" y2="3.2"/>
+              <line x1="8" y1="0.8" x2="8" y2="3.2"/>
+            </svg>
+            月份
+          </div>
           <div class="filter-chips">
             <button v-for="m in filterMonthOptions" :key="m.value"
               class="filter-chip" :class="{ active: filterMonth === m.value }"
@@ -47,7 +69,14 @@
             </button>
           </div>
         </div>
-        <button v-if="hasFilter" class="filter-clear" @click="clearFilter">清除全部筛选</button>
+        <button v-if="hasFilter" class="filter-clear" @click="clearFilter">
+          <svg aria-hidden="true" class="filter-clear-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <circle cx="6" cy="6" r="5"/>
+            <line x1="4" y1="4" x2="8" y2="8"/>
+            <line x1="8" y1="4" x2="4" y2="8"/>
+          </svg>
+          清除全部筛选
+        </button>
       </div>
     </Transition>
 
@@ -89,7 +118,11 @@
             <span v-else class="summary-empty">暂无</span>
           </div>
           <div v-if="costDiff != null" class="summary-diff" :class="costDiff <= 0 ? 'diff--down' : 'diff--up'">
-            {{ costDiff <= 0 ? '↓' : '↑' }} {{ Math.abs(costDiff) }}%
+            <svg aria-hidden="true" class="diff-icon" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <polyline v-if="costDiff <= 0" points="2 7 5 3 8 7"/>
+              <polyline v-else points="2 3 5 7 8 3"/>
+            </svg>
+            {{ Math.abs(costDiff) }}%
           </div>
         </div>
       </div>
@@ -105,10 +138,22 @@
       <div class="record-section card-anim card-anim-4">
         <div class="record-section-header">
           <span class="section-label">
+            <svg aria-hidden="true" class="section-label-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="2" y1="4" x2="12" y2="4"/>
+              <line x1="2" y1="7" x2="9" y2="7"/>
+              <line x1="2" y1="10" x2="11" y2="10"/>
+            </svg>
             充电记录
             <span v-if="hasFilter" class="filter-result-count">· {{ filteredRecords.length }}条结果</span>
           </span>
-          <span class="section-hint">↕ 可滚动</span>
+          <span class="section-hint">
+            <svg aria-hidden="true" class="scroll-hint-icon" viewBox="0 0 10 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="1" x2="5" y2="13"/>
+              <polyline points="2 4 5 1 8 4"/>
+              <polyline points="2 10 5 13 8 10"/>
+            </svg>
+            可滚动
+          </span>
         </div>
 
         <div v-if="filteredRecords.length === 0" class="record-empty">
@@ -142,7 +187,15 @@
 
         <div v-else class="record-scroll" ref="scrollEl" @scroll="onScroll">
           <template v-for="item in groupedRecords" :key="item.type === 'header' ? item.label : item.id">
-            <div v-if="item.type === 'header'" class="month-header">{{ item.label }}</div>
+            <div v-if="item.type === 'header'" class="month-header">
+              <svg aria-hidden="true" class="month-header-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+                <rect x="1" y="2" width="10" height="9" rx="1.2"/>
+                <line x1="1" y1="5" x2="11" y2="5"/>
+                <line x1="4" y1="0.8" x2="4" y2="3.2"/>
+                <line x1="8" y1="0.8" x2="8" y2="3.2"/>
+              </svg>
+              {{ item.label }}
+            </div>
             <RecordItem
               v-else
               :record="item"
@@ -403,6 +456,15 @@ function clearFilter() {
   text-transform: uppercase;
   margin-bottom: 2px;
   opacity: 0.7;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.eyebrow-car-icon {
+  width: 16px;
+  height: 10px;
+  flex-shrink: 0;
 }
 
 .page-title {
@@ -519,9 +581,17 @@ function clearFilter() {
 .summary-diff {
   font-size: 10px;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 2px 7px 2px 5px;
   border-radius: var(--radius-chip);
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.diff-icon {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
 }
 .diff--down { background: var(--color-success-bg); color: var(--color-success); }
 .diff--up   { background: var(--color-danger-bg); color: var(--color-danger); }
@@ -549,11 +619,29 @@ function clearFilter() {
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.section-label-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
 }
 
 .section-hint {
   font-size: 10px;
   color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.scroll-hint-icon {
+  width: 9px;
+  height: 12px;
+  flex-shrink: 0;
 }
 
 .record-empty {
@@ -595,6 +683,16 @@ function clearFilter() {
   position: sticky;
   top: 0;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.month-header-icon {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  opacity: 0.6;
 }
 
 .record-scroll {
@@ -687,6 +785,15 @@ function clearFilter() {
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.filter-label-icon {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
 }
 
 .filter-chips {
@@ -724,6 +831,15 @@ function clearFilter() {
   padding: 2px 0;
   cursor: pointer;
   text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.filter-clear-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
 }
 
 .filter-result-count {

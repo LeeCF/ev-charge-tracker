@@ -8,7 +8,15 @@
 
       <!-- 车型名称 -->
       <section class="section">
-        <div class="section-title">车型名称</div>
+        <div class="section-title">
+          <svg aria-hidden="true" class="section-icon" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 6h12M2 6L3.5 3h7L12 6"/>
+            <rect x="1" y="6" width="12" height="2.5" rx="1.2"/>
+            <circle cx="4" cy="8.5" r="1"/>
+            <circle cx="10" cy="8.5" r="1"/>
+          </svg>
+          车型名称
+        </div>
         <input
           type="text"
           class="field-input"
@@ -19,7 +27,15 @@
 
       <!-- 电池类型可视化选择 -->
       <section class="section">
-        <div class="section-title">电池类型</div>
+        <div class="section-title">
+          <svg aria-hidden="true" class="section-icon" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="2" width="11" height="6" rx="1.2"/>
+            <path d="M12 4.5h1.2a.3.3 0 0 1 0 1H12"/>
+            <line x1="4" y1="2" x2="4" y2="8"/>
+            <line x1="7" y1="2" x2="7" y2="8"/>
+          </svg>
+          电池类型
+        </div>
         <div class="battery-grid">
           <button
             v-for="opt in batteryOptions"
@@ -32,14 +48,24 @@
             <div class="battery-icon" v-html="opt.svg" />
             <div class="battery-name">{{ opt.label }}</div>
             <div class="battery-days">{{ opt.days ? `${opt.days}天` : '自设' }}</div>
-            <div v-if="settings.batteryType === opt.value" class="battery-check">✓</div>
+            <div v-if="settings.batteryType === opt.value" class="battery-check">
+              <svg aria-hidden="true" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="2 5.5 4.2 7.5 8 3"/>
+              </svg>
+            </div>
           </button>
         </div>
       </section>
 
       <!-- 满充间隔可视化滑块 -->
       <section class="section">
-        <div class="section-title">满充间隔</div>
+        <div class="section-title">
+          <svg aria-hidden="true" class="section-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 1a6 6 0 1 0 .01 0"/>
+            <polyline points="7 4.5 7 7.5 9 9"/>
+          </svg>
+          满充间隔
+        </div>
         <div class="slider-card">
           <div class="slider-header">
             <span class="slider-label-text">每隔多少天满充一次</span>
@@ -61,6 +87,10 @@
             <span>90天</span>
           </div>
           <div v-if="settings.batteryType !== 'custom'" class="slider-locked">
+            <svg aria-hidden="true" class="lock-icon" viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="6" width="8" height="7" rx="1.5"/>
+              <path d="M4 6V4.5a2 2 0 0 1 4 0V6"/>
+            </svg>
             由电池类型决定，切换至「自定义」可修改
           </div>
         </div>
@@ -68,7 +98,14 @@
 
       <!-- 数据管理 -->
       <section class="section section--danger">
-        <div class="section-title">数据管理</div>
+        <div class="section-title">
+          <svg aria-hidden="true" class="section-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="7" cy="4" rx="5" ry="2"/>
+            <path d="M2 4v6c0 1.1 2.24 2 5 2s5-.9 5-2V4"/>
+            <path d="M2 7c0 1.1 2.24 2 5 2s5-.9 5-2"/>
+          </svg>
+          数据管理
+        </div>
 
         <!-- 第一步：显示警告按钮 -->
         <div v-if="clearStep === 0">
@@ -85,7 +122,14 @@
 
         <!-- 第二步：滑动确认 -->
         <div v-else class="clear-confirm">
-          <p class="clear-confirm-text">⚠️ 确认清空所有记录？</p>
+          <p class="clear-confirm-text">
+            <svg aria-hidden="true" class="warn-icon" viewBox="0 0 16 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 1L1 13h14L8 1z"/>
+              <line x1="8" y1="6" x2="8" y2="9.5"/>
+              <circle cx="8" cy="11.5" r="0.7" fill="currentColor" stroke="none"/>
+            </svg>
+            确认清空所有记录？
+          </p>
           <div class="slider-confirm-wrap">
             <div
               class="slider-confirm-track"
@@ -299,6 +343,16 @@ function selectBatteryType(value) {
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.section-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  opacity: 0.7;
 }
 
 .field-input {
@@ -376,11 +430,21 @@ function selectBatteryType(value) {
 
 .battery-check {
   position: absolute;
-  top: 6px;
-  right: 7px;
-  font-size: 10px;
+  top: 5px;
+  right: 6px;
+  width: 14px;
+  height: 14px;
   color: var(--color-on-dark);
-  font-weight: 700;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.battery-check svg {
+  width: 9px;
+  height: 9px;
 }
 
 /* 滑块卡片 */
@@ -463,6 +527,16 @@ function selectBatteryType(value) {
   font-size: 11px;
   color: var(--color-text-muted);
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.lock-icon {
+  width: 11px;
+  height: 12px;
+  flex-shrink: 0;
 }
 
 /* 危险区 */
@@ -503,6 +577,15 @@ function selectBatteryType(value) {
   font-size: 13px;
   font-weight: 600;
   color: var(--color-danger);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.warn-icon {
+  width: 15px;
+  height: 13px;
+  flex-shrink: 0;
 }
 
 .slider-confirm-wrap {

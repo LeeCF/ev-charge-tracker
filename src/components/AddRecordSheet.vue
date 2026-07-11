@@ -8,7 +8,16 @@
             <div class="sheet-handle" />
 
             <!-- 标题 -->
-            <div class="sheet-title">{{ props.editRecord ? '编辑充电记录' : '添加充电记录' }}</div>
+            <div class="sheet-title">
+              <svg v-if="props.editRecord" aria-hidden="true" class="sheet-title-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 2l3 3-8 8H3v-3L11 2z"/>
+              </svg>
+              <svg v-else aria-hidden="true" class="sheet-title-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="2" x2="8" y2="14"/>
+                <line x1="2" y1="8" x2="14" y2="8"/>
+              </svg>
+              {{ props.editRecord ? '编辑充电记录' : '添加充电记录' }}
+            </div>
 
             <!-- 表单 -->
             <div class="sheet-body">
@@ -42,7 +51,23 @@
                     class="type-btn"
                     :class="{ active: form.type === t.value }"
                     @click="form.type = t.value"
-                  >{{ t.label }}</button>
+                  >
+                    <!-- 慢充：半弧 -->
+                    <svg v-if="t.value === 'slow'" aria-hidden="true" class="type-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                      <path d="M4 11a5 5 0 1 1 6 0"/>
+                      <line x1="7" y1="6" x2="7" y2="9"/>
+                    </svg>
+                    <!-- 快充：单闪电 -->
+                    <svg v-else-if="t.value === 'fast'" aria-hidden="true" class="type-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M8.5 1.5L5 7.5h4L5.5 12.5l7-7H8.5l1-4z"/>
+                    </svg>
+                    <!-- 超快充：双闪电 -->
+                    <svg v-else aria-hidden="true" class="type-icon" viewBox="0 0 16 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M6.5 1.5L3 7.5h3.5L4 12.5l6.5-7H7l1.5-4z"/>
+                      <path d="M11 3L8.5 8h3L9.5 12.5"/>
+                    </svg>
+                    {{ t.label }}
+                  </button>
                 </div>
               </div>
 
@@ -140,6 +165,9 @@
             <!-- 保存按钮 -->
             <div class="sheet-footer">
               <button class="btn-save" :disabled="!isValid" @click="submit">
+                <svg aria-hidden="true" class="save-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 8.5 6.5 12 13 5"/>
+                </svg>
                 {{ props.editRecord ? '保存修改' : '保存记录' }}
               </button>
             </div>
@@ -260,6 +288,16 @@ function submit() {
   color: var(--color-text);
   padding: 14px 18px 10px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.sheet-title-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--color-accent);
 }
 
 .sheet-body {
@@ -382,15 +420,25 @@ function submit() {
 
 .type-btn {
   flex: 1;
-  padding: 10px 0;
+  padding: 10px 0 9px;
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-btn);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--color-text-secondary);
   background: var(--color-surface-2);
   transition: all 0.15s;
   min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.type-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .type-btn.active {
@@ -472,6 +520,16 @@ function submit() {
   box-shadow: var(--shadow-fab);
   transition: opacity 0.15s, transform 0.08s;
   letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.save-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .btn-save:not(:disabled):active { transform: scale(0.98); }

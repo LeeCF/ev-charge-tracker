@@ -19,7 +19,13 @@
         <div class="pending-delete-title">已删除</div>
         <div class="pending-delete-sub">{{ record.date }} · {{ typeLabel }}</div>
       </div>
-      <button class="pending-undo-btn" @click.stop="$emit('undo-delete', record.id)">撤销</button>
+      <button class="pending-undo-btn" @click.stop="$emit('undo-delete', record.id)">
+        <svg aria-hidden="true" class="undo-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3.5 6.5H9a4 4 0 0 1 0 8H5"/>
+          <polyline points="3.5 3 3.5 6.5 7 6.5"/>
+        </svg>
+        撤销
+      </button>
     </div>
 
     <!-- Normal card: shown when NOT pendingDelete -->
@@ -38,7 +44,15 @@
 
       <div class="record-main">
         <div class="record-left">
-          <span class="record-date">{{ record.date }}</span>
+          <span class="record-date">
+            <svg aria-hidden="true" class="date-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+              <rect x="1" y="2" width="10" height="9" rx="1.2"/>
+              <line x1="1" y1="5" x2="11" y2="5"/>
+              <line x1="4" y1="0.8" x2="4" y2="3.2"/>
+              <line x1="8" y1="0.8" x2="8" y2="3.2"/>
+            </svg>
+            {{ record.date }}
+          </span>
           <div class="tags">
             <span class="tag tag--type">{{ typeLabel }}</span>
             <span class="tag" :class="record.isFull ? 'tag--full' : 'tag--partial'">
@@ -312,13 +326,22 @@ function triggerDelete() {
 .record-left { flex: 1; }
 
 .record-date {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 14px;
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: 3px;
   font-family: var(--font-body);
   letter-spacing: 0;
+}
+
+.date-icon {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
 }
 
 .tags { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -452,5 +475,12 @@ function triggerDelete() {
   min-height: 44px;
   display: flex;
   align-items: center;
+  gap: 5px;
+}
+
+.undo-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 </style>
