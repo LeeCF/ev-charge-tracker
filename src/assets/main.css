@@ -88,4 +88,4 @@ input, textarea {
   font-size: inherit;
 }
 
-* { scroll-behavior: smooth; }
+.app-content { scroll-behavior: smooth; }

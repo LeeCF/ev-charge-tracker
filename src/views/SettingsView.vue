@@ -113,7 +113,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useSettingsStore } from '../stores/settings.js'
 import { useRecordsStore } from '../stores/records.js'
 
@@ -124,7 +124,11 @@ const recordsStore = useRecordsStore()
 const clearStep = ref(0)
 const sliderTrack = ref(null)
 const slideX = ref(0)
-const slideMax = 200 // 滑动到底触发，实际由轨道宽度决定
+
+const slideMax = computed(() => {
+  const trackW = sliderTrack.value?.offsetWidth ?? 280
+  return trackW - 52
+})
 
 let slideStartX = 0
 
@@ -134,15 +138,13 @@ function onSlideStart(e) {
 
 function onSlideMove(e) {
   const dx = e.touches[0].clientX - slideStartX
-  const trackW = sliderTrack.value?.offsetWidth ?? 280
-  const max = trackW - 52 // thumb宽度48 + 2
+  const max = slideMax.value
   slideX.value = Math.max(0, Math.min(dx, max))
   if (slideX.value >= max - 4) executeClear()
 }
 
 function onSlideEnd() {
-  const trackW = sliderTrack.value?.offsetWidth ?? 280
-  const max = trackW - 52
+  const max = slideMax.value
   if (slideX.value < max - 4) slideX.value = 0
 }
 
@@ -150,14 +152,12 @@ function onSlideMouseDown(e) {
   slideStartX = e.clientX
   const onMove = (e) => {
     const dx = e.clientX - slideStartX
-    const trackW = sliderTrack.value?.offsetWidth ?? 280
-    const max = trackW - 52
+    const max = slideMax.value
     slideX.value = Math.max(0, Math.min(dx, max))
     if (slideX.value >= max - 4) executeClear()
   }
   const onUp = () => {
-    const trackW = sliderTrack.value?.offsetWidth ?? 280
-    const max = trackW - 52
+    const max = slideMax.value
     if (slideX.value < max - 4) slideX.value = 0
     window.removeEventListener('mousemove', onMove)
     window.removeEventListener('mouseup', onUp)
@@ -267,7 +267,7 @@ const batteryOptions = [
 function selectBatteryType(value) {
   settings.batteryType = value
   const opt = batteryOptions.find(o => o.value === value)
-  if (opt.days) settings.fullChargeIntervalDays = opt.days
+  if (opt?.days) settings.fullChargeIntervalDays = opt.days
 }
 </script>
 

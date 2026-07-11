@@ -9,7 +9,7 @@
     </main>
 
     <nav class="tab-bar">
-      <router-link to="/" class="tab-item" active-class="tab-item--active" exact>
+      <router-link to="/" class="tab-item" exact-active-class="tab-item--active">
         <div class="tab-icon-wrap">
           <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
@@ -63,7 +63,7 @@ watch(() => recordsStore.editingRecordId, (id) => {
     editingRecord.value = { ...record }
     showSheet.value = true
   }
-  recordsStore.editingRecordId = null  // always reset, even if record not found
+  recordsStore.clearEditingId()  // always reset, even if record not found
 })
 
 function onSheetSaved() {

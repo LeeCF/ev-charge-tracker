@@ -111,7 +111,7 @@
           <span class="section-hint">↕ 可滚动</span>
         </div>
 
-        <div v-if="sortedRecords.length === 0" class="record-empty">
+        <div v-if="filteredRecords.length === 0" class="record-empty">
           <!-- 插画：电动车充电桩 -->
           <svg class="empty-illustration" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <!-- 地面 -->
@@ -136,8 +136,8 @@
             <circle cx="92" cy="46" r="1.2" fill="#0066FF" opacity="0.18"/>
             <circle cx="85" cy="50" r="1.5" fill="#0066FF" opacity="0.2"/>
           </svg>
-          <div class="empty-title">还没有充电记录</div>
-          <div class="empty-desc">点击右下角「记录充电」<br>开始追踪你的充电习惯</div>
+          <div class="empty-title">{{ hasFilter ? '没有符合条件的记录' : '还没有充电记录' }}</div>
+          <div class="empty-desc">{{ hasFilter ? '试试修改筛选条件' : '点击右下角「记录充电」\n开始追踪你的充电习惯' }}</div>
         </div>
 
         <div v-else class="record-scroll" ref="scrollEl" @scroll="onScroll">
@@ -155,7 +155,7 @@
         </div>
 
         <!-- 底部渐变遮罩，提示可滚动 -->
-        <div class="record-fade" :class="{ hidden: scrolledToBottom || sortedRecords.length === 0 }" />
+        <div class="record-fade" :class="{ hidden: scrolledToBottom || filteredRecords.length === 0 }" />
       </div>
     </div>
 
@@ -282,16 +282,22 @@ const typeLabels = { slow: '慢充', fast: '快充', superfast: '超快充' }
 const lastTypeLabel = computed(() => typeLabels[lastRecord.value?.type] ?? '')
 const daysAgo = computed(() => {
   if (!lastRecord.value?.date) return 0
-  const diff = Date.now() - new Date(lastRecord.value.date).getTime()
-  return Math.max(0, Math.floor(diff / 86400000))
+  const [y, m, d] = lastRecord.value.date.split('-').map(Number)
+  const recordDate = new Date(y, m - 1, d)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return Math.max(0, Math.floor((today - recordDate) / 86400000))
 })
 
 // 本月花费
-const thisMonth = computed(() => new Date().toISOString().slice(0, 7))
+function localYYYYMM(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+}
+const thisMonth = computed(() => localYYYYMM())
 const lastMonth = computed(() => {
   const d = new Date()
   d.setMonth(d.getMonth() - 1)
-  return d.toISOString().slice(0, 7)
+  return localYYYYMM(d)
 })
 const currentMonthCost = computed(() => {
   const item = recordsStore.monthlyCosts.find(m => m.label === thisMonth.value)

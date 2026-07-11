@@ -90,7 +90,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 
 const props = defineProps({ record: Object, isNew: Boolean })
 const emit = defineEmits(['edit', 'pending-delete', 'undo-delete'])
@@ -170,10 +170,13 @@ function onTouchEnd() {
 }
 
 // Mouse (desktop drag support)
+let mouseMoveFn = null
+let mouseUpFn = null
+
 function onMouseDown(e) {
   startX = e.clientX
   isSwiping = false
-  const onMove = (e) => {
+  mouseMoveFn = (e) => {
     const dx = startX - e.clientX
     if (!dragging.value) {
       if (Math.abs(dx) < 4) return
@@ -182,19 +185,26 @@ function onMouseDown(e) {
     }
     rawX.value = Math.max(0, dx)
   }
-  const onUp = () => {
+  mouseUpFn = () => {
     dragging.value = false
     if (rawX.value >= THRESHOLD) {
       triggerDelete()
     } else {
       rawX.value = 0
     }
-    window.removeEventListener('mousemove', onMove)
-    window.removeEventListener('mouseup', onUp)
+    window.removeEventListener('mousemove', mouseMoveFn)
+    window.removeEventListener('mouseup', mouseUpFn)
+    mouseMoveFn = null
+    mouseUpFn = null
   }
-  window.addEventListener('mousemove', onMove)
-  window.addEventListener('mouseup', onUp)
+  window.addEventListener('mousemove', mouseMoveFn)
+  window.addEventListener('mouseup', mouseUpFn)
 }
+
+onUnmounted(() => {
+  if (mouseMoveFn) window.removeEventListener('mousemove', mouseMoveFn)
+  if (mouseUpFn) window.removeEventListener('mouseup', mouseUpFn)
+})
 
 function onCardClick() {
   if (isSwiping) {

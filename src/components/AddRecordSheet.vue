@@ -170,7 +170,8 @@ const chargeTypes = [
 ]
 
 function todayStr() {
-  return new Date().toISOString().slice(0, 10)
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 const form = reactive({
@@ -197,7 +198,12 @@ watch(() => props.editRecord, (record) => {
   // No else: close() handles form reset via Object.assign
 }, { immediate: true })
 
-const isValid = computed(() => form.date && form.type)
+const isValid = computed(() => {
+  if (!form.date || !form.type) return false
+  if (!form.isFull && form.endSoc != null && (form.endSoc < 1 || form.endSoc > 99)) return false
+  if (form.cost != null && form.cost !== '' && Number(form.cost) < 0) return false
+  return true
+})
 
 function close() {
   emit('update:visible', false)

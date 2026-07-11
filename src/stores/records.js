@@ -13,6 +13,7 @@ import { useSettingsStore } from './settings.js'
 export const useRecordsStore = defineStore('records', () => {
   const records = ref([])
   const lastAddedId = ref(null)  // 最新添加的记录 id，用于触发飞入动画
+  const settings = useSettingsStore()
 
   function load() {
     records.value = loadRecords()
@@ -76,32 +77,30 @@ export const useRecordsStore = defineStore('records', () => {
   }
 
   const sortedRecords = computed(() =>
-    [...records.value].sort((a, b) => b.date.localeCompare(a.date))
+    [...records.value].sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))
   )
 
   const lastFullRecord = computed(() =>
     sortedRecords.value.find(r => r.isFull) ?? null
   )
 
-  const nextFullChargeDate = computed(() => {
-    const settings = useSettingsStore()
-    return getNextFullChargeDate(
+  const nextFullChargeDate = computed(() =>
+    getNextFullChargeDate(
       lastFullRecord.value?.date ?? null,
       settings.fullChargeIntervalDays
     )
-  })
+  )
 
   const daysUntilNextFullCharge = computed(() =>
     getDaysUntilNextFullCharge(nextFullChargeDate.value)
   )
 
-  const progressPercent = computed(() => {
-    const settings = useSettingsStore()
-    return getProgressPercent(
+  const progressPercent = computed(() =>
+    getProgressPercent(
       lastFullRecord.value?.date ?? null,
       settings.fullChargeIntervalDays
     )
-  })
+  )
 
   const recentLocations = computed(() =>
     getRecentLocations(records.value)
@@ -111,7 +110,7 @@ export const useRecordsStore = defineStore('records', () => {
   const monthlyCosts = computed(() => {
     const map = {}
     for (const r of records.value) {
-      if (r.cost == null) continue
+      if (r.cost == null || !r.date) continue
       const month = r.date.slice(0, 7)
       map[month] = (map[month] ?? 0) + r.cost
     }
@@ -141,6 +140,10 @@ export const useRecordsStore = defineStore('records', () => {
     editingRecordId.value = id
   }
 
+  function clearEditingId() {
+    editingRecordId.value = null
+  }
+
   return {
     records,
     lastAddedId,
@@ -159,6 +162,7 @@ export const useRecordsStore = defineStore('records', () => {
     markPendingDelete,
     restoreRecord,
     requestEdit,
+    clearEditingId,
     clearAll,
   }
 })

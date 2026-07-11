@@ -1,53 +1,63 @@
 <template>
-  <div v-if="bars.length >= 2" ref="cardEl" class="cost-chart-card" :class="{ 'chart-visible': isVisible }">
-    <div class="chart-header">
-      <span class="chart-title">近{{ bars.length }}月花费</span>
-      <span class="chart-current">¥{{ currentMonthCost?.toFixed(0) ?? '--' }} 本月</span>
-    </div>
-    <div class="chart-wrap">
-      <svg :width="svgWidth" :height="svgHeight" :viewBox="`0 0 ${svgWidth} ${svgHeight}`">
-        <defs>
-          <linearGradient id="bar-current" x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="#0044DD"/>
-            <stop offset="100%" stop-color="#0088FF"/>
-          </linearGradient>
-          <linearGradient id="bar-past" x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="#0066FF" stop-opacity="0.5"/>
-            <stop offset="100%" stop-color="#60B0FF" stop-opacity="0.5"/>
-          </linearGradient>
-        </defs>
+  <div ref="cardEl" class="cost-chart-card" :class="{ 'chart-visible': isVisible }">
+    <div v-if="bars.length >= 2">
+      <div class="chart-header">
+        <span class="chart-title">近{{ bars.length }}月花费</span>
+        <span class="chart-current">¥{{ currentMonthCost?.toFixed(0) ?? '--' }} 本月</span>
+      </div>
+      <div class="chart-wrap">
+        <svg :width="svgWidth" :height="svgHeight" :viewBox="`0 0 ${svgWidth} ${svgHeight}`">
+          <defs>
+            <linearGradient :id="`bar-current-${uid}`" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stop-color="#0044DD"/>
+              <stop offset="100%" stop-color="#0088FF"/>
+            </linearGradient>
+            <linearGradient :id="`bar-past-${uid}`" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stop-color="#0066FF" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#60B0FF" stop-opacity="0.5"/>
+            </linearGradient>
+          </defs>
 
-        <g v-for="(bar, i) in bars" :key="bar.label">
-          <rect
-            :x="bar.x"
-            :y="bar.y"
-            :width="barWidth - 4"
-            :height="bar.height"
-            :rx="3"
-            :fill="bar.isCurrent ? 'url(#bar-current)' : 'url(#bar-past)'"
-            class="bar-rect"
-            :style="{ animationDelay: isVisible ? `${i * 60}ms` : '9999s' }"
-          />
-          <text
-            :x="bar.x + (barWidth - 4) / 2"
-            :y="bar.y - 4"
-            text-anchor="middle"
-            :font-size="9"
-            :fill="bar.isCurrent ? '#0066FF' : '#B0C8E0'"
-            font-family="DM Sans, PingFang SC, sans-serif"
-            font-weight="600"
-          >¥{{ bar.total.toFixed(0) }}</text>
-          <text
-            :x="bar.x + (barWidth - 4) / 2"
-            :y="svgHeight - 2"
-            text-anchor="middle"
-            :font-size="9"
-            :fill="bar.isCurrent ? '#0066FF' : '#B0C8E0'"
-            font-family="DM Sans, PingFang SC, sans-serif"
-            :font-weight="bar.isCurrent ? '700' : '400'"
-          >{{ bar.monthLabel }}</text>
-        </g>
-      </svg>
+          <g v-for="(bar, i) in bars" :key="bar.label">
+            <rect
+              :x="bar.x"
+              :y="bar.y"
+              :width="barWidth - 4"
+              :height="bar.height"
+              :rx="3"
+              :fill="bar.isCurrent ? `url(#bar-current-${uid})` : `url(#bar-past-${uid})`"
+              class="bar-rect"
+              :style="{ animationDelay: isVisible ? `${i * 60}ms` : '9999s' }"
+            />
+            <text
+              :x="bar.x + (barWidth - 4) / 2"
+              :y="bar.y - 4"
+              text-anchor="middle"
+              :font-size="9"
+              :fill="bar.isCurrent ? '#0066FF' : '#B0C8E0'"
+              font-family="DM Sans, PingFang SC, sans-serif"
+              font-weight="600"
+            >¥{{ bar.total.toFixed(0) }}</text>
+            <text
+              :x="bar.x + (barWidth - 4) / 2"
+              :y="svgHeight - 2"
+              text-anchor="middle"
+              :font-size="9"
+              :fill="bar.isCurrent ? '#0066FF' : '#B0C8E0'"
+              font-family="DM Sans, PingFang SC, sans-serif"
+              :font-weight="bar.isCurrent ? '700' : '400'"
+            >{{ bar.monthLabel }}</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div v-else class="chart-empty">
+      <div class="chart-empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+      </div>
+      <div class="chart-empty-text">记录2个月带费用的充电后<br>显示趋势图</div>
     </div>
   </div>
 </template>
@@ -59,6 +69,10 @@ const props = defineProps({
   monthlyCosts: { type: Array, default: () => [] },
   currentMonth: { type: String, default: '' },
 })
+
+// Unique ID per instance to avoid SVG gradient ID collisions
+let _uidCounter = 0
+const uid = ++_uidCounter
 
 const cardEl = ref(null)
 const isVisible = ref(false)
@@ -147,6 +161,33 @@ const barWidth = computed(() => svgWidth / Math.max(bars.value.length, 1))
 .chart-wrap svg {
   width: 100%;
   height: auto;
+}
+
+.chart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0 4px;
+}
+
+.chart-empty-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--color-border-strong);
+  opacity: 0.6;
+}
+
+.chart-empty-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-empty-text {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.6;
 }
 
 .bar-rect {
