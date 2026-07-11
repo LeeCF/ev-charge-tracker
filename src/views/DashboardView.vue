@@ -646,13 +646,13 @@ function clearFilter() {
 .filter-btn.active {
   background: var(--color-accent);
   border-color: transparent;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 102, 255, 0.28);
+  color: var(--color-on-dark);
+  box-shadow: 0 2px 8px var(--color-accent-glow);
 }
 
 .filter-badge {
   background: rgba(255, 255, 255, 0.25);
-  color: white;
+  color: var(--color-on-dark);
   font-size: 9px;
   font-weight: 700;
   width: 16px;

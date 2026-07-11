@@ -315,7 +315,7 @@ function selectBatteryType(value) {
 
 .field-input:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(0,102,255,0.1);
+  box-shadow: 0 0 0 3px var(--color-accent-focus);
 }
 
 /* 电池卡片网格 */
@@ -344,7 +344,7 @@ function selectBatteryType(value) {
 .battery-card.active {
   background: var(--color-accent-gradient);
   border-color: transparent;
-  box-shadow: 0 3px 12px rgba(0,102,255,0.3);
+  box-shadow: 0 3px 12px var(--color-accent-glow);
 }
 
 .battery-icon {
@@ -366,20 +366,20 @@ function selectBatteryType(value) {
   font-weight: 600;
   color: var(--color-text);
 }
-.battery-card.active .battery-name { color: white; }
+.battery-card.active .battery-name { color: var(--color-on-dark); }
 
 .battery-days {
   font-size: 10px;
   color: var(--color-text-muted);
 }
-.battery-card.active .battery-days { color: rgba(255,255,255,0.7); }
+.battery-card.active .battery-days { color: var(--color-on-dark-secondary); }
 
 .battery-check {
   position: absolute;
   top: 6px;
   right: 7px;
   font-size: 10px;
-  color: white;
+  color: var(--color-on-dark);
   font-weight: 700;
 }
 
@@ -440,8 +440,8 @@ function selectBatteryType(value) {
   height: 20px;
   border-radius: 50%;
   background: var(--color-accent);
-  box-shadow: 0 2px 8px rgba(0,102,255,0.35);
-  border: 3px solid white;
+  box-shadow: 0 2px 8px var(--color-accent-glow-sm);
+  border: 3px solid var(--color-surface);
   cursor: pointer;
 }
 
@@ -530,7 +530,7 @@ function selectBatteryType(value) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--color-on-dark);
   cursor: grab;
   z-index: 1;
   touch-action: none;

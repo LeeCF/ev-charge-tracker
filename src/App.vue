@@ -100,7 +100,7 @@ function onSheetSaved() {
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-top: 1px solid rgba(0, 40, 120, 0.06);
+  border-top: 1px solid var(--color-overlay-light);
   box-shadow: var(--shadow-tab);
   height: 49px;
   padding-bottom: env(safe-area-inset-bottom, 0);

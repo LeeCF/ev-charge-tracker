@@ -254,9 +254,8 @@ function triggerDelete() {
   justify-content: flex-end;
   padding-right: 24px;
   gap: 6px;
-  color: white;
+  color: var(--color-on-dark);
   border-radius: var(--radius-card);
-}
 
 .delete-bg svg { width: 20px; height: 20px; }
 .delete-bg span { font-size: 13px; font-weight: 600; letter-spacing: 0.3px; }
@@ -277,7 +276,7 @@ function triggerDelete() {
 }
 
 .record-item:active {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-card-press);
   transform: scale(0.985);
   transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
@@ -419,7 +418,7 @@ function triggerDelete() {
 .expand-enter-from, .expand-leave-to { opacity: 0; transform: scaleY(0.85); }
 
 .pending-delete-card {
-  background: linear-gradient(145deg, #0A1E3D, #0D2D5A);
+  background: var(--color-hero);
   border-radius: var(--radius-card-sm);
   padding: 12px 14px 12px 16px;
   display: flex;
@@ -430,20 +429,20 @@ function triggerDelete() {
 
 .pending-delete-title {
   font-size: 12px;
-  color: rgba(255,255,255,0.45);
+  color: var(--color-on-dark-muted);
   margin-bottom: 2px;
 }
 
 .pending-delete-sub {
   font-size: 13px;
   font-weight: 500;
-  color: rgba(255,255,255,0.75);
+  color: var(--color-on-dark-secondary);
 }
 
 .pending-undo-btn {
   font-size: 13px;
   font-weight: 700;
-  color: #60B4FF;
+  color: var(--color-accent-end);
   background: none;
   border: none;
   padding: 4px 0 4px 16px;

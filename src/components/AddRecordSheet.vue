@@ -230,7 +230,7 @@ function submit() {
 .sheet-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: var(--color-overlay);
   z-index: 200;
   display: flex;
   align-items: flex-end;
@@ -337,7 +337,7 @@ function submit() {
 
 .form-input:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(0,102,255,0.12);
+  box-shadow: 0 0 0 3px var(--color-accent-focus);
 }
 
 .form-input-sm {
@@ -354,7 +354,7 @@ function submit() {
 
 .form-input-sm:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(0,102,255,0.12);
+  box-shadow: 0 0 0 3px var(--color-accent-focus);
 }
 
 .form-date {
@@ -396,9 +396,9 @@ function submit() {
 .type-btn.active {
   background: var(--color-accent-gradient);
   border-color: transparent;
-  color: white;
+  color: var(--color-on-dark);
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0,102,255,0.3);
+  box-shadow: 0 2px 8px var(--color-accent-glow);
 }
 
 /* Toggle */
@@ -422,8 +422,8 @@ function submit() {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: white;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  background: var(--color-surface);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
   transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
 }
 
@@ -466,7 +466,7 @@ function submit() {
   background: var(--color-accent-gradient);
   border: none;
   border-radius: 12px;
-  color: white;
+  color: var(--color-on-dark);
   font-size: 16px;
   font-weight: 700;
   box-shadow: var(--shadow-fab);

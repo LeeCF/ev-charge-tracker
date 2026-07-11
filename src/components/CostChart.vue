@@ -1,20 +1,20 @@
 <template>
   <div ref="cardEl" class="cost-chart-card" :class="{ 'chart-visible': isVisible }">
-    <div v-if="bars.length >= 2">
+    <div v-if="bars.length >= 1">
       <div class="chart-header">
-        <span class="chart-title">近{{ bars.length }}月花费</span>
+        <span class="chart-title">{{ bars.length >= 2 ? `近${bars.length}月花费` : '本月花费' }}</span>
         <span class="chart-current">¥{{ currentMonthCost?.toFixed(0) ?? '--' }} 本月</span>
       </div>
       <div class="chart-wrap">
         <svg aria-hidden="true" :width="svgWidth" :height="svgHeight" :viewBox="`0 0 ${svgWidth} ${svgHeight}`">
           <defs>
             <linearGradient :id="`bar-current-${uid}`" x1="0%" y1="100%" x2="0%" y2="0%">
-              <stop offset="0%" stop-color="#0044DD"/>
-              <stop offset="100%" stop-color="#0088FF"/>
+              <stop offset="0%" stop-color="#003FCC"/>
+              <stop offset="100%" stop-color="#0090FF"/>
             </linearGradient>
             <linearGradient :id="`bar-past-${uid}`" x1="0%" y1="100%" x2="0%" y2="0%">
-              <stop offset="0%" stop-color="#0066FF" stop-opacity="0.5"/>
-              <stop offset="100%" stop-color="#60B0FF" stop-opacity="0.5"/>
+              <stop offset="0%" stop-color="#0057FF" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#00A3FF" stop-opacity="0.3"/>
             </linearGradient>
           </defs>
 
@@ -34,7 +34,7 @@
               :y="bar.y - 4"
               text-anchor="middle"
               :font-size="9"
-              :fill="bar.isCurrent ? '#0066FF' : '#B0C8E0'"
+              :fill="bar.isCurrent ? '#0057FF' : '#AEAEB2'"
               font-family="DM Sans, PingFang SC, sans-serif"
               font-weight="600"
             >¥{{ bar.total.toFixed(0) }}</text>
@@ -43,7 +43,7 @@
               :y="svgHeight - 2"
               text-anchor="middle"
               :font-size="9"
-              :fill="bar.isCurrent ? '#0066FF' : '#B0C8E0'"
+              :fill="bar.isCurrent ? '#0057FF' : '#AEAEB2'"
               font-family="DM Sans, PingFang SC, sans-serif"
               :font-weight="bar.isCurrent ? '700' : '400'"
             >{{ bar.monthLabel }}</text>
@@ -57,7 +57,7 @@
           <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
         </svg>
       </div>
-      <div class="chart-empty-text">记录2个月带费用的充电后<br>显示趋势图</div>
+      <div class="chart-empty-text">记录带费用的充电后<br>显示花费图表</div>
     </div>
   </div>
 </template>
@@ -94,7 +94,7 @@ const maxBars = 6
 
 const bars = computed(() => {
   const recent = [...props.monthlyCosts].slice(0, maxBars).reverse()
-  if (recent.length < 2) return []
+  if (recent.length < 1) return []
 
   const maxTotal = Math.max(...recent.map(m => m.total), 1)
   const bw = svgWidth / recent.length

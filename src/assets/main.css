@@ -5,34 +5,48 @@
 }
 
 :root {
-  /* 主色 — 电气蓝 */
-  --color-accent: #0066FF;
-  --color-accent-end: #00AAFF;
-  --color-accent-light: #E0EDFF;
-  --color-accent-text: #0055DD;
-  --color-accent-gradient: linear-gradient(135deg, #0055E0 0%, #0088FF 100%);
+  /* 主色 — 纯粹电气蓝 */
+  --color-accent: #0057FF;
+  --color-accent-end: #00A3FF;
+  --color-accent-light: #EBF2FF;
+  --color-accent-text: #0040CC;
+  --color-accent-gradient: linear-gradient(135deg, #003FCC 0%, #0062FF 55%, #0090FF 100%);
+  --color-accent-glow: rgba(0, 87, 255, 0.28);
+  --color-accent-glow-sm: rgba(0, 87, 255, 0.14);
+  --color-accent-focus: rgba(0, 87, 255, 0.12);
 
-  /* 英雄卡 */
-  --color-hero: linear-gradient(145deg, #0A1E3D 0%, #0D2D5A 60%, #0A3070 100%);
+  /* 英雄卡（深海军蓝）*/
+  --color-hero: linear-gradient(145deg, #07101F 0%, #0A1C3E 50%, #0C2B62 100%);
+  --color-hero-start: #07101F;
+  --color-hero-end: #0C2B62;
 
   /* 背景与表面 */
-  --color-bg: #F4F7FB;
+  --color-bg: #F2F2F7;
   --color-surface: #FFFFFF;
-  --color-surface-2: #F8FAFD;
-  --color-border: #E4ECF4;
-  --color-border-strong: #A8CEFF;
+  --color-surface-2: #FAFAFA;
+  --color-border: #E0E0E5;
+  --color-border-strong: #B0C4FF;
+
+  /* 遮罩 */
+  --color-overlay: rgba(0, 0, 0, 0.45);
+  --color-overlay-light: rgba(0, 0, 0, 0.06);
+
+  /* 白色 token（在深色背景上使用）*/
+  --color-on-dark: #FFFFFF;
+  --color-on-dark-secondary: rgba(255, 255, 255, 0.75);
+  --color-on-dark-muted: rgba(255, 255, 255, 0.45);
 
   /* 文字层级 */
-  --color-text: #061525;
-  --color-text-secondary: #4D86B8;
-  --color-text-muted: #8BA8C4;
+  --color-text: #1C1C1E;
+  --color-text-secondary: #636366;
+  --color-text-muted: #8E8E93;
 
   /* 功能色 */
-  --color-danger: #EF4444;
-  --color-danger-bg: #FEF2F2;
-  --color-danger-text: #B91C1C;
-  --color-success: #16A34A;
-  --color-success-bg: #EDFDF4;
+  --color-danger: #FF3B30;
+  --color-danger-bg: #FFF1F0;
+  --color-danger-text: #C0180F;
+  --color-success: #34C759;
+  --color-success-bg: #EDFDF2;
 
   /* 圆角 */
   --radius-hero: 18px;
@@ -52,10 +66,11 @@
   --space-2xl: 32px;
 
   /* 阴影 */
-  --shadow-card: 0 2px 14px rgba(0, 40, 120, 0.08);
-  --shadow-card-sm: 0 1px 6px rgba(0, 40, 120, 0.05);
-  --shadow-fab: 0 4px 20px rgba(0, 102, 255, 0.42);
-  --shadow-tab: 0 -1px 0 rgba(0, 40, 120, 0.06), 0 -4px 16px rgba(0, 40, 120, 0.04);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 18px rgba(0, 0, 0, 0.08);
+  --shadow-card-sm: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-card-press: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-fab: 0 2px 8px rgba(0, 87, 255, 0.22), 0 6px 28px rgba(0, 87, 255, 0.38);
+  --shadow-tab: 0 -1px 0 rgba(0, 0, 0, 0.06), 0 -4px 20px rgba(0, 0, 0, 0.06);
 
   /* 字体 */
   --font-display: 'Syne', 'PingFang SC', sans-serif;
