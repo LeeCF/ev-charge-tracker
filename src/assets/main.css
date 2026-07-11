@@ -16,16 +16,16 @@
   --color-hero: linear-gradient(145deg, #0A1E3D 0%, #0D2D5A 60%, #0A3070 100%);
 
   /* 背景与表面 */
-  --color-bg: #F0F6FF;
+  --color-bg: #F4F7FB;
   --color-surface: #FFFFFF;
-  --color-surface-2: #F5F9FF;
-  --color-border: #D9ECFF;
+  --color-surface-2: #F8FAFD;
+  --color-border: #E4ECF4;
   --color-border-strong: #A8CEFF;
 
   /* 文字层级 */
   --color-text: #061525;
   --color-text-secondary: #4D86B8;
-  --color-text-muted: #B0C8E0;
+  --color-text-muted: #8BA8C4;
 
   /* 功能色 */
   --color-danger: #EF4444;
@@ -42,6 +42,14 @@
   --radius-chip: 20px;
   --radius-fab: 16px;
   --radius-fab-extended: 28px;
+
+  /* 间距 */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
 
   /* 阴影 */
   --shadow-card: 0 2px 14px rgba(0, 40, 120, 0.08);

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="bars.length >= 2" class="cost-chart-card">
+  <div v-if="bars.length >= 2" ref="cardEl" class="cost-chart-card" :class="{ 'chart-visible': isVisible }">
     <div class="chart-header">
       <span class="chart-title">近{{ bars.length }}月花费</span>
       <span class="chart-current">¥{{ currentMonthCost?.toFixed(0) ?? '--' }} 本月</span>
@@ -26,7 +26,7 @@
             :rx="3"
             :fill="bar.isCurrent ? 'url(#bar-current)' : 'url(#bar-past)'"
             class="bar-rect"
-            :style="{ animationDelay: `${i * 50}ms` }"
+            :style="{ animationDelay: isVisible ? `${i * 60}ms` : '9999s' }"
           />
           <text
             :x="bar.x + (barWidth - 4) / 2"
@@ -53,12 +53,25 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   monthlyCosts: { type: Array, default: () => [] },
   currentMonth: { type: String, default: '' },
 })
+
+const cardEl = ref(null)
+const isVisible = ref(false)
+
+let observer = null
+onMounted(() => {
+  observer = new IntersectionObserver(
+    ([entry]) => { if (entry.isIntersecting) { isVisible.value = true; observer?.disconnect() } },
+    { threshold: 0.2 }
+  )
+  if (cardEl.value) observer.observe(cardEl.value)
+})
+onUnmounted(() => observer?.disconnect())
 
 const svgWidth = 280
 const svgHeight = 90
@@ -71,7 +84,6 @@ const bars = computed(() => {
 
   const maxTotal = Math.max(...recent.map(m => m.total), 1)
   const bw = svgWidth / recent.length
-  // bw mirrors the barWidth computed (svgWidth / length) — kept local to avoid circular dependency
 
   return recent.map((m, i) => {
     const height = Math.max(4, (m.total / maxTotal) * barAreaHeight)
@@ -138,9 +150,14 @@ const barWidth = computed(() => svgWidth / Math.max(bars.value.length, 1))
 }
 
 .bar-rect {
-  animation: bar-rise 0.4s ease-out both;
   transform-box: fill-box;
   transform-origin: bottom;
+  transform: scaleY(0);
+}
+
+/* 进入视口后触发动画 */
+.chart-visible .bar-rect {
+  animation: bar-rise 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 @keyframes bar-rise {

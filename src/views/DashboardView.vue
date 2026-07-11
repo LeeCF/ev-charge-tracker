@@ -390,19 +390,22 @@ function clearFilter() {
 }
 
 .header-eyebrow {
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 500;
   color: var(--color-text-secondary);
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
   margin-bottom: 2px;
+  opacity: 0.7;
 }
 
 .page-title {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
   color: var(--color-text);
-  letter-spacing: -0.5px;
+  letter-spacing: -0.8px;
   font-family: var(--font-display);
+  line-height: 1.1;
 }
 
 .content {
@@ -435,6 +438,11 @@ function clearFilter() {
   border-radius: var(--radius-card);
   padding: 13px 12px;
   box-shadow: var(--shadow-card-sm);
+  transition: transform 0.08s ease;
+}
+
+.summary-card:active {
+  transform: scale(0.97);
 }
 
 .summary-label {
@@ -630,13 +638,14 @@ function clearFilter() {
 }
 
 .filter-btn.active {
-  background: var(--color-accent-light);
-  border-color: var(--color-accent);
-  color: var(--color-accent-text);
+  background: var(--color-accent);
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 102, 255, 0.28);
 }
 
 .filter-badge {
-  background: var(--color-accent);
+  background: rgba(255, 255, 255, 0.25);
   color: white;
   font-size: 9px;
   font-weight: 700;

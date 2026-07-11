@@ -277,11 +277,12 @@ function selectBatteryType(value) {
 .page-header { padding: 16px 16px 12px; }
 
 .page-title {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
   color: var(--color-text);
-  letter-spacing: -0.5px;
+  letter-spacing: -0.8px;
   font-family: var(--font-display);
+  line-height: 1.1;
 }
 
 .content {

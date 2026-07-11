@@ -268,6 +268,8 @@ function triggerDelete() {
 
 .record-item:active {
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transform: scale(0.985);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
 
 /* Accent bar */
