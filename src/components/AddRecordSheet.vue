@@ -16,7 +16,7 @@
               <!-- 日期行 -->
               <div class="form-row">
                 <span class="form-label">
-                  <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                  <svg aria-hidden="true" class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                     <rect x="2" y="3" width="12" height="11" rx="1.5"/>
                     <line x1="10" y1="1.5" x2="10" y2="4.5"/>
                     <line x1="6" y1="1.5" x2="6" y2="4.5"/>
@@ -30,7 +30,7 @@
               <!-- 充电类型 -->
               <div class="form-row form-row--col">
                 <span class="form-label">
-                  <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <svg aria-hidden="true" class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 2L5 9h5l-3 5 6-8H8l1-4z"/>
                   </svg>
                   充电类型
@@ -49,7 +49,7 @@
               <!-- 满充行 -->
               <div class="form-row">
                 <span class="form-label">
-                  <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                  <svg aria-hidden="true" class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                     <rect x="1" y="5" width="12" height="7" rx="1.5"/>
                     <path d="M13 8h1.5a.5.5 0 0 1 0 2H13"/>
                     <rect x="3" y="7" width="7" height="3" rx="0.8" fill="currentColor" stroke="none" class="battery-fill"/>
@@ -65,7 +65,7 @@
               <Transition name="field-fade">
                 <div v-if="!form.isFull" class="form-row">
                   <span class="form-label">
-                    <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                    <svg aria-hidden="true" class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                       <rect x="1" y="5" width="12" height="7" rx="1.5"/>
                       <path d="M13 8h1.5a.5.5 0 0 1 0 2H13"/>
                       <rect x="3" y="7" width="4" height="3" rx="0.8" fill="currentColor" stroke="none" class="battery-fill"/>
@@ -82,7 +82,7 @@
               <!-- 地点 -->
               <div class="form-row form-row--col">
                 <span class="form-label">
-                  <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                  <svg aria-hidden="true" class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                     <path d="M8 1C5.24 1 3 3.24 3 6c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5z"/>
                     <circle cx="8" cy="6" r="1.5"/>
                   </svg>
@@ -110,7 +110,7 @@
               <!-- 费用行 -->
               <div class="form-row">
                 <span class="form-label">
-                  <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <svg aria-hidden="true" class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="8" cy="8" r="6.5"/>
                     <path d="M8 4.5v7M5.5 6.5c0-1.1.9-2 2.5-2s2.5.9 2.5 2c0 2-5 2-5 4 0 1.1.9 2 2.5 2s2.5-.9 2.5-2"/>
                   </svg>
@@ -125,7 +125,7 @@
               <!-- 备注行 -->
               <div class="form-row form-row--col">
                 <span class="form-label">
-                  <svg class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                  <svg aria-hidden="true" class="field-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                     <rect x="2" y="2" width="12" height="12" rx="2"/>
                     <line x1="5" y1="6" x2="11" y2="6"/>
                     <line x1="5" y1="9" x2="9" y2="9"/>

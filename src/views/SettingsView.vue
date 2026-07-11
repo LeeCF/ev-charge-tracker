@@ -73,7 +73,7 @@
         <!-- 第一步：显示警告按钮 -->
         <div v-if="clearStep === 0">
           <button class="btn-danger" @click="clearStep = 1">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="2 4 4 4 14 4"/>
               <path d="M13 4l-.7 9a1.5 1.5 0 0 1-1.5 1.4H5.2a1.5 1.5 0 0 1-1.5-1.4L3 4"/>
               <path d="M6.5 4V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 9.5 3v1"/>
@@ -99,7 +99,7 @@
                 @touchend="onSlideEnd"
                 @mousedown="onSlideMouseDown"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </div>
               <span class="slider-confirm-label" :style="{ opacity: 1 - slideX / slideMax }">向右滑动确认删除</span>
             </div>
@@ -178,7 +178,7 @@ const batteryOptions = [
     label: '磷酸铁锂',
     days: 14,
     // 深海蓝 — 稳定晶格，满电感，3格全亮
-    svg: `<svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    svg: `<svg aria-hidden="true" width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="lfp-bg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#1A4FCC"/>
@@ -208,7 +208,7 @@ const batteryOptions = [
     label: '三元锂',
     days: 30,
     // 琥珀橙紫 — 高密度，3格全亮，闪光符号标识高能量
-    svg: `<svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    svg: `<svg aria-hidden="true" width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="nmc-bg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#7C3A8A"/>
@@ -238,7 +238,7 @@ const batteryOptions = [
     label: '自定义',
     days: null,
     // 青色 — 开放轮廓，虚线格，可变感
-    svg: `<svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    svg: `<svg aria-hidden="true" width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="cus-bg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#0E3A4A"/>

@@ -4,7 +4,7 @@
 
     <!-- Delete background revealed on swipe -->
     <div class="delete-bg" :style="{ opacity: Math.min(1, rawX / THRESHOLD) }">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="3 6 5 6 21 6"/>
         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
         <path d="M10 11v6M14 11v6"/>
@@ -49,13 +49,13 @@
         <div class="record-right">
           <span v-if="record.cost != null" class="record-cost">¥{{ record.cost.toFixed(2) }}</span>
           <span v-if="record.location" class="record-location">
-            <svg viewBox="0 0 12 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <svg aria-hidden="true" viewBox="0 0 12 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
               <path d="M6 1C3.24 1 1 3.24 1 6c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5z"/>
               <circle cx="6" cy="6" r="1.5"/>
             </svg>
             {{ record.location }}
           </span>
-          <svg
+          <svg aria-hidden="true"
             class="expand-chevron"
             :class="{ 'expand-chevron--open': expanded }"
             viewBox="0 0 12 8" fill="none"
@@ -70,7 +70,7 @@
       <transition name="expand">
         <div v-if="expanded" class="record-expand">
           <div v-if="record.note" class="record-note">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
               <rect x="2" y="2" width="12" height="12" rx="2"/>
               <line x1="5" y1="6" x2="11" y2="6"/>
               <line x1="5" y1="9" x2="9" y2="9"/>
@@ -78,7 +78,7 @@
             {{ record.note }}
           </div>
           <button class="btn-edit" @click.stop="$emit('edit', record)">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M11 2l3 3-8 8H3v-3L11 2z"/>
             </svg>
             编辑记录

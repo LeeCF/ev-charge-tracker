@@ -6,7 +6,7 @@
         <span class="chart-current">¥{{ currentMonthCost?.toFixed(0) ?? '--' }} 本月</span>
       </div>
       <div class="chart-wrap">
-        <svg :width="svgWidth" :height="svgHeight" :viewBox="`0 0 ${svgWidth} ${svgHeight}`">
+        <svg aria-hidden="true" :width="svgWidth" :height="svgHeight" :viewBox="`0 0 ${svgWidth} ${svgHeight}`">
           <defs>
             <linearGradient :id="`bar-current-${uid}`" x1="0%" y1="100%" x2="0%" y2="0%">
               <stop offset="0%" stop-color="#0044DD"/>
@@ -53,7 +53,7 @@
     </div>
     <div v-else class="chart-empty">
       <div class="chart-empty-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
         </svg>
       </div>
