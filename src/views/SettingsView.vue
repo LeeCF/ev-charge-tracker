@@ -386,7 +386,7 @@ function selectBatteryType(value) {
   padding: 12px 8px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.18s;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.08s ease;
   position: relative;
   min-height: 80px;
   display: flex;

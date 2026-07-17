@@ -427,13 +427,15 @@ function submit() {
   font-weight: 500;
   color: var(--color-text-secondary);
   background: var(--color-surface-2);
-  transition: all 0.15s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s, transform 0.08s ease;
   min-height: 44px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
 }
+
+.type-btn:active { transform: scale(0.95); }
 
 .type-icon {
   width: 14px;
@@ -490,8 +492,10 @@ function submit() {
   color: var(--color-text-secondary);
   background: var(--color-surface-2);
   min-height: 32px;
-  transition: all 0.15s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.08s ease;
 }
+
+.chip:active { transform: scale(0.93); }
 
 .chip.active {
   border-color: var(--color-accent);
@@ -536,12 +540,28 @@ function submit() {
 .btn-save:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
 
 /* 过渡动画 */
-.overlay-fade-enter-active, .overlay-fade-leave-active { transition: opacity 0.25s; }
+/* ── Overlay — scrim dims as sheet arrives ── */
+.overlay-fade-enter-active { transition: opacity 0.32s ease-out; }
+.overlay-fade-leave-active { transition: opacity 0.22s ease-in; }
 .overlay-fade-enter-from, .overlay-fade-leave-to { opacity: 0; }
 
-.sheet-slide-enter-active { transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); }
-.sheet-slide-leave-active  { transition: transform 0.26s cubic-bezier(0.4,0,1,1); }
-.sheet-slide-enter-from, .sheet-slide-leave-to { transform: translateY(100%); }
+/* ── Sheet — materialize: slide + scale-up + corner-radius arrive together ── */
+.sheet-slide-enter-active {
+  transition: transform 0.42s cubic-bezier(0.32, 0.72, 0, 1),
+              border-radius 0.42s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.sheet-slide-leave-active {
+  transition: transform 0.28s cubic-bezier(0.4, 0, 1, 1),
+              border-radius 0.28s cubic-bezier(0.4, 0, 1, 1);
+}
+.sheet-slide-enter-from {
+  transform: translateY(100%) scaleX(0.96);
+  border-radius: 0 !important;
+}
+.sheet-slide-leave-to {
+  transform: translateY(100%) scaleX(0.98);
+  border-radius: 0 !important;
+}
 
 .field-fade-enter-active, .field-fade-leave-active { transition: opacity 0.2s, transform 0.2s; }
 .field-fade-enter-from, .field-fade-leave-to { opacity: 0; transform: translateY(-6px); }

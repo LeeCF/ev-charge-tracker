@@ -506,11 +506,12 @@ function clearFilter() {
   border-radius: var(--radius-card);
   padding: 13px 12px;
   box-shadow: var(--shadow-card-sm);
-  transition: transform 0.08s ease;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
 
 .summary-card:active {
   transform: scale(0.97);
+  box-shadow: var(--shadow-card-press);
 }
 
 .summary-label {
@@ -811,9 +812,12 @@ function clearFilter() {
   font-weight: 500;
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all 0.15s;
+  /* Color state change 0.15s; press scale is instant */
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.08s ease;
   min-height: 32px;
 }
+
+.filter-chip:active { transform: scale(0.94); }
 
 .filter-chip.active {
   background: var(--color-accent-light);

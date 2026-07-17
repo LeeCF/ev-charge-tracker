@@ -126,6 +126,36 @@ let startX = 0
 let startY = 0
 let isSwiping = false   // confirmed horizontal swipe, suppress click
 
+// Velocity tracking — keep last few frames for release velocity
+const velHistory = []
+const VEL_WINDOW = 80 // ms window for velocity calculation
+
+function recordVelocity(x) {
+  const now = performance.now()
+  velHistory.push({ x, t: now })
+  // Keep only recent frames within window
+  while (velHistory.length > 1 && now - velHistory[0].t > VEL_WINDOW) {
+    velHistory.shift()
+  }
+}
+
+function getReleaseVelocity() {
+  if (velHistory.length < 2) return 0
+  const newest = velHistory[velHistory.length - 1]
+  const oldest = velHistory[0]
+  const dt = newest.t - oldest.t
+  if (dt < 1) return 0
+  // px/ms, positive = leftward
+  return (newest.x - oldest.x) / dt
+}
+
+// Apple momentum projection: project resting point from velocity
+function project(velocityPxMs, decelerationRate = 0.998) {
+  // convert to px/s for the formula
+  const v = velocityPxMs * 1000
+  return (v / 1000) * decelerationRate / (1 - decelerationRate)
+}
+
 // Progressive damping: card moves less and less as finger travels further.
 // Formula: visual = raw * k / (1 + raw * k / maxVisual)
 // k=0.55, maxVisual=72 → at raw=130 finger gives ~48px card travel, feels heavy.
@@ -138,6 +168,9 @@ function dampedX(raw) {
 // Expose damped value for delete-bg opacity
 const dragX = computed(() => dampedX(rawX.value))
 
+// snapBackDuration tracks release velocity for snap-back spring feel
+const snapBackDuration = ref(0.35)
+
 const cardStyle = computed(() => {
   if (deleting.value) {
     return { transform: 'translateX(-110%)', transition: 'transform 0.28s cubic-bezier(0.4,0,0.6,1)' }
@@ -146,8 +179,8 @@ const cardStyle = computed(() => {
     return { transform: `translateX(${-dragX.value}px)`, transition: 'none' }
   }
   if (rawX.value > 0) {
-    // snap back with spring
-    return { transform: 'translateX(0)', transition: 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1)' }
+    // snap back — faster if released with low velocity, slower if high
+    return { transform: 'translateX(0)', transition: `transform ${snapBackDuration.value}s cubic-bezier(0.34,1.56,0.64,1)` }
   }
   return {}
 })
@@ -158,6 +191,7 @@ function onTouchStart(e) {
   startY = e.touches[0].clientY
   isSwiping = false
   dragging.value = false
+  velHistory.length = 0
 }
 
 function onTouchMove(e) {
@@ -172,15 +206,22 @@ function onTouchMove(e) {
   }
 
   rawX.value = Math.max(0, dx)
+  recordVelocity(rawX.value)
 }
 
 function onTouchEnd() {
   dragging.value = false
-  if (rawX.value >= THRESHOLD) {
+  const vel = getReleaseVelocity() // px/ms leftward
+  const projectedEnd = rawX.value + project(vel)
+
+  if (rawX.value >= THRESHOLD || projectedEnd >= THRESHOLD) {
     triggerDelete()
   } else {
+    // Tune snap-back speed based on velocity — fast flick = quick snap back
+    snapBackDuration.value = vel > 0.3 ? 0.22 : 0.35
     rawX.value = 0
   }
+  velHistory.length = 0
 }
 
 // Mouse (desktop drag support)
@@ -190,6 +231,7 @@ let mouseUpFn = null
 function onMouseDown(e) {
   startX = e.clientX
   isSwiping = false
+  velHistory.length = 0
   mouseMoveFn = (e) => {
     const dx = startX - e.clientX
     if (!dragging.value) {
@@ -198,14 +240,19 @@ function onMouseDown(e) {
       isSwiping = true
     }
     rawX.value = Math.max(0, dx)
+    recordVelocity(rawX.value)
   }
   mouseUpFn = () => {
     dragging.value = false
-    if (rawX.value >= THRESHOLD) {
+    const vel = getReleaseVelocity()
+    const projectedEnd = rawX.value + project(vel)
+    if (rawX.value >= THRESHOLD || projectedEnd >= THRESHOLD) {
       triggerDelete()
     } else {
+      snapBackDuration.value = vel > 0.3 ? 0.22 : 0.35
       rawX.value = 0
     }
+    velHistory.length = 0
     window.removeEventListener('mousemove', mouseMoveFn)
     window.removeEventListener('mouseup', mouseUpFn)
     mouseMoveFn = null

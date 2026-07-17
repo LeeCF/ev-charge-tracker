@@ -2,7 +2,7 @@
   <div class="app-shell">
     <main class="app-content">
       <router-view v-slot="{ Component, route }">
-        <transition name="slide-fade" mode="out-in">
+        <transition :name="transitionName" mode="out-in">
           <component :is="Component" :key="route.path" />
         </transition>
       </router-view>
@@ -40,8 +40,8 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useRecordsStore } from './stores/records.js'
 import FabButton from './components/FabButton.vue'
 import AddRecordSheet from './components/AddRecordSheet.vue'
@@ -50,6 +50,19 @@ const showSheet = ref(false)
 const editingRecord = ref(null)
 const recordsStore = useRecordsStore()
 const route = useRoute()
+const router = useRouter()
+
+// Route order map — higher index = deeper in hierarchy (slides in from right)
+const routeOrder = { '/': 0, '/settings': 1 }
+let prevOrder = 0
+const transitionName = ref('slide-left')
+
+router.beforeEach((to, from) => {
+  const toOrder = routeOrder[to.path] ?? 0
+  const fromOrder = routeOrder[from.path] ?? 0
+  transitionName.value = toOrder > fromOrder ? 'slide-left' : 'slide-right'
+  prevOrder = toOrder
+})
 
 function openAddSheet() {
   editingRecord.value = null
@@ -160,9 +173,15 @@ function onSheetSaved() {
 .tab-label { letter-spacing: 0.2px; }
 .tab-item--active .tab-label { font-weight: 700; }
 
-/* slide-fade 过渡 */
-.slide-fade-enter-active { transition: opacity 0.22s ease-out, transform 0.22s ease-out; }
-.slide-fade-leave-active { transition: opacity 0.18s ease-in, transform 0.18s ease-in; }
-.slide-fade-enter-from { opacity: 0; transform: translateX(16px); }
-.slide-fade-leave-to   { opacity: 0; transform: translateX(-16px); }
+/* 向左推入（主 → 次层级）*/
+.slide-left-enter-active  { transition: opacity 0.24s ease-out, transform 0.24s cubic-bezier(0.25,0.46,0.45,0.94); }
+.slide-left-leave-active  { transition: opacity 0.18s ease-in,  transform 0.18s cubic-bezier(0.55,0,1,0.45); }
+.slide-left-enter-from    { opacity: 0; transform: translateX(28px); }
+.slide-left-leave-to      { opacity: 0; transform: translateX(-20px); }
+
+/* 向右推回（次 → 主层级）*/
+.slide-right-enter-active { transition: opacity 0.24s ease-out, transform 0.24s cubic-bezier(0.25,0.46,0.45,0.94); }
+.slide-right-leave-active { transition: opacity 0.18s ease-in,  transform 0.18s cubic-bezier(0.55,0,1,0.45); }
+.slide-right-enter-from   { opacity: 0; transform: translateX(-28px); }
+.slide-right-leave-to     { opacity: 0; transform: translateX(20px); }
 </style>
